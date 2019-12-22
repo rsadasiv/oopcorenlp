@@ -1,0 +1,17 @@
+Western Union	ORGANIZATION	LOCATION
+Shukran Jaffer	PERSON
+Hindi	LANGUAGE
+Urdu	LANGUAGE
+Pahar Ganj	LOCATION
+river Krishna	LOCATION
+Alaka	PERSON
+Tamil	LANGUAGE
+Tamil Nadu	LOCATION
+Santacruz	LOCATION
+Vashi	LOCATION
+Kavya	PERSON
+Pramila	PERSON	LOCATION
+Shahani	PERSON	LOCATION
+Sibanarayan	PERSON	LOCATION
+Kshetramohan	PERSON	LOCATION
+Ratnakar	PERSON

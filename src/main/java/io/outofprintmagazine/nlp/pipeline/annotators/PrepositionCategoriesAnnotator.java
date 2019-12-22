@@ -1,0 +1,80 @@
+package io.outofprintmagazine.nlp.pipeline.annotators;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.Annotator;
+import edu.stanford.nlp.pipeline.CoreDocument;
+import edu.stanford.nlp.pipeline.CoreSentence;
+import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
+import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+
+public class PrepositionCategoriesAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+	
+	@SuppressWarnings("unused")
+	private static final Logger logger = LogManager.getLogger(PrepositionCategoriesAnnotator.class);
+	private Map<String,String> scoreLabelMap = new HashMap<String,String>();
+	
+	public PrepositionCategoriesAnnotator() {
+		super();
+		this.setTags(Arrays.asList("IN", "CC"));
+		initScoreLabelMap();
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));	
+	}
+	
+	protected void initScoreLabelMap() {
+		scoreLabelMap.put("IN", "subordinating");
+		scoreLabelMap.put("CC", "coordinating");
+	}
+	
+	public PrepositionCategoriesAnnotator(Properties properties) {
+		this();
+		this.properties = properties;
+	}
+	
+	@Override
+	public void init(Map<String, Object> properties) {
+	}
+	
+	@Override
+	public Class getAnnotationClass() {
+		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPrepositionCategoriesAnnotation.class;
+	}
+	
+	@Override
+	public Class getAggregateClass() {
+		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPrepositionCategoriesAnnotationAggregate.class;
+	}
+	
+	@Override
+	public void annotate(Annotation annotation) {
+		CoreDocument document = new CoreDocument(annotation);
+		for (CoreSentence sentence : document.sentences()) {
+			for (CoreLabel token : sentence.tokens()) {
+				Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
+				String score = scoreTag(token);
+				if (score != null) {
+					scoreMap.put(scoreLabelMap.get(score), new BigDecimal(1));
+					token.set(getAnnotationClass(), scoreMap);
+				}
+			}
+		}
+		score(document);
+	}
+	
+	@Override
+	public String getDescription() {
+		return "IN, CC. subordinating, coordinating.";
+	}
+}

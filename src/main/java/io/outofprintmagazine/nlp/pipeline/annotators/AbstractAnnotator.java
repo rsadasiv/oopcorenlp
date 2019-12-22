@@ -1,0 +1,127 @@
+package io.outofprintmagazine.nlp.pipeline.annotators;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import edu.stanford.nlp.ling.CoreAnnotation;
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.Annotator;
+import edu.stanford.nlp.pipeline.CoreDocument;
+import edu.stanford.nlp.util.ArraySet;
+import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
+import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+
+public abstract class AbstractAnnotator implements Annotator, OOPAnnotator {
+	
+	@SuppressWarnings("unused")
+	private static final Logger logger = LogManager.getLogger(AbstractAnnotator.class);
+	
+	protected Scorer scorer;
+	protected Serializer serializer;
+	Properties properties;
+	protected List<String> punctuationMarks = Arrays.asList("``", "''","?", "??", "!", ":", ";", ",", "--", "-", ".", "\"", "`", "'", "‘", "’", "“", "”", ".", "*");
+	protected List<String> nonDictionaryPOS = Arrays.asList("NNP", "NNPS", "CD", "LS", "SYM", "POS", "FW");
+	
+	public AbstractAnnotator() {
+		super();
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
+	}
+
+	public AbstractAnnotator(Properties properties) {
+		this();
+		this.properties = properties;
+	}
+	
+	protected Serializer getSerializer() {
+		return serializer;
+	}
+
+	protected void setSerializer(Serializer serializer) {
+		this.serializer = serializer;
+	}
+	
+	protected Scorer getScorer() {
+		return scorer;
+	}
+
+	protected void setScorer(Scorer scorer) {
+		this.scorer = scorer;
+	}
+
+	@Override
+	public abstract Class getAnnotationClass();
+	
+	
+	@Override
+	public abstract void init(Map<String,Object> properties);
+		
+	@Override
+	public Set<Class<? extends CoreAnnotation>> requirementsSatisfied() {
+		Set<Class<? extends CoreAnnotation>> retval = new ArraySet<Class<? extends CoreAnnotation>>();
+		retval.add(getAnnotationClass());
+		return retval;
+	}
+
+	@Override
+	public abstract Set<Class<? extends CoreAnnotation>> requires();
+	
+	@Override
+	public abstract void annotate(Annotation annotation);
+	
+	@Override
+	public void score(CoreDocument document) {
+		getScorer().score(document);
+	}
+	
+	@Override
+	public void serialize(CoreDocument document, ObjectNode json) {
+		getSerializer().serialize(document, json);
+	}
+	
+	public boolean isPunctuationMark(CoreLabel token) {
+		return punctuationMarks.contains(token.lemma());
+	}
+	
+	public boolean hasPunctuationMark(CoreLabel token) {
+		for (String punctuationMark : punctuationMarks) {
+			if (token.lemma().contains(punctuationMark)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isDictionaryWord(CoreLabel token) {
+		if (isPunctuationMark(token) || hasPunctuationMark(token)) {
+			return false;
+		}
+		return !nonDictionaryPOS.contains(token.tag());
+	}
+
+	
+	public List<CoreLabel> getContextWords(CoreDocument document, CoreLabel token) {
+		List<CoreLabel> retval = new ArrayList<CoreLabel>();
+		int sentenceIndex = token.sentIndex();
+		for (CoreLabel sentenceToken : document.sentences().get(sentenceIndex).tokens()) {
+			if (isDictionaryWord(sentenceToken)) {
+				
+				retval.add(sentenceToken);
+			}
+		}
+		return retval;
+	}
+}
