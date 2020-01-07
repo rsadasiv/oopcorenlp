@@ -27,6 +27,7 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreEntityMention;
+import edu.stanford.nlp.pipeline.CoreQuote;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.CoreNlpUtils;
@@ -168,18 +169,19 @@ public class PeopleAnnotator extends AbstractAggregatePosAnnotator implements An
 				}
 			}
 		}
-		//second pass?
-		for (String entityName : entityAliases.keySet()) {
-			if (entityName.contains(" ")) {
-				for (String shortEntityName : entityAliases.keySet()) {
-					if (entityName.contains(shortEntityName)) {
-						entityAliases.put(shortEntityName, entityAliases.get(entityName));
-					}
-				}
-			}
-		}
+
 		return entityAliases;
 		
+	}
+	
+	private String getNNPNameAlias(String nnpName, Map<String, String> entityAliases) {
+		String retval = nnpName;
+		for (String entityName : entityAliases.keySet()) {
+			if (entityName.contains(nnpName.toLowerCase())) {
+				retval = entityAliases.get(entityName);
+			}
+		}
+		return retval;
 	}
 	
 	private void annotatePerson(CoreDocument document) {
@@ -223,10 +225,10 @@ public class PeopleAnnotator extends AbstractAggregatePosAnnotator implements An
 			for (CoreLabel token : sentence.tokens()) {
 				if (scoreTag(token) != null) {
 					String personName = null;
-					if (!"LOCATION".equals(token.ner()) && !"DATE".equals(token.ner())) {
+					if (token.ner() == null || "O".equals(token.ner()) || "MISC".equals(token.ner())) {
 						personName = allEntityAliases.get(token.lemma().toLowerCase());
 						if (personName == null && properNouns.contains(token.tag())) {
-							personName = token.lemma();
+							personName = getNNPNameAlias(token.lemma(), allEntityAliases);
 						}
 					}
 					if (personName != null) {
@@ -339,9 +341,21 @@ public class PeopleAnnotator extends AbstractAggregatePosAnnotator implements An
 			for (int i = 0; i < tokens.size(); i++) {
 				CoreLabel token = tokens.get(i);
 				if (token.lemma().equals("I")) {
-					Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
-					scoreMap.put(token.lemma(), new BigDecimal(1));
-					token.set(getAnnotationClass(), scoreMap);
+					boolean shouldScore = true;
+					for (CoreQuote quote : document.quotes()) {
+						if (
+							token.beginPosition() >= quote.quoteCharOffsets().first.intValue() 
+							&& token.endPosition() <= quote.quoteCharOffsets().second.intValue() 
+						) {
+							shouldScore = false;
+							break;
+						}
+					}
+					if (shouldScore) {
+						Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
+						scoreMap.put(token.lemma(), new BigDecimal(1));
+						token.set(getAnnotationClass(), scoreMap);
+					}
 				}
 			}
 		}

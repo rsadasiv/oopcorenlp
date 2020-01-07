@@ -1,6 +1,7 @@
 package io.outofprintmagazine.nlp;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -19,6 +20,10 @@ import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -249,6 +254,11 @@ public class WikipediaUtils {
 									&& !categoryName.startsWith("Portal")
 									&& !categoryName.startsWith("Coordinates")
 									&& !categoryName.startsWith("Redirects")
+									&& !categoryName.startsWith("Unprintworthy")
+									&& !categoryName.startsWith("Printworthy")
+									&& !categoryName.startsWith("Days")
+									&& !categoryName.startsWith("Months")
+									&& !categoryName.startsWith("Dynamic lists")
 									&& !categoryName.startsWith("ISO")) {
 								//System.out.println(categoryName);
 								BigDecimal existingScore = scoreMap.get(categoryName);
@@ -287,16 +297,28 @@ public class WikipediaUtils {
 		return topicPages;
     }
 	
-    
-    
-/*    public String getWikipediaPageText(String topic) {
-    	if (getFailedPages().contains(topic)) {
-    		return null;
-    	}
-		String retval = getPageCache(topic);
-		if (retval != null) {
-			return retval;
+    public List<String> getWikipediaPagesForList(String topic) throws IOException {
+    	List<String> topicPages = new ArrayList<String>();
+    	ObjectMapper objectMapper = new ObjectMapper();
+		topic = topic.replace(' ', '_');
+		JsonNode rootNode = objectMapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=links&page="+(URLEncoder.encode(topic, "UTF-8"))), JsonNode.class);
+		//TODO - pagination?
+		if (rootNode.get("parse") != null && rootNode.get("parse").get("links") != null) {
+			JsonNode pagesNode = rootNode.get("parse").get("links");
+			if (pagesNode != null && pagesNode.isArray()) {
+				for (final JsonNode pageNode : pagesNode) {
+					if (pageNode.get("*") != null ) {
+						topicPages.add(pageNode.get("*").asText().replace(' ', '_'));
+					}
+				}
+			}
 		}
+		return topicPages;
+    }
+    
+    
+    public String getWikipediaPageText(String topic) {
+		topic = topic.replace(' ', '_');
 		try {
 			StringWriter buf = new StringWriter();
 			Document homepage = Jsoup.connect("https://en.wikipedia.org/wiki/" + topic).get();
@@ -306,14 +328,13 @@ public class WikipediaUtils {
 				buf.write('\n');
 				buf.write('\n');
 			}
-			putPageCache(topic, buf.toString());
+
 			return buf.toString();
 		}
 		catch (IOException e) {
-			getFailedPages().add(topic);
 			return null;
 		}
-    }*/
+    }
     
 /*    public Map<String,BigDecimal> getNounsForTopicPages(List<String> topicPages) {
     	Map<String,BigDecimal> retval = new HashMap<String,BigDecimal>();

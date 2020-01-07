@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -86,6 +87,7 @@ public class FleschKincaidAnnotator extends AbstractAggregatePosAnnotator implem
 				CoreLabel token = tokens.get(i);
 				if (!isDictionaryWord(token)) {
 					wordCount++;
+					wordCount+=StringUtils.countMatches(token.lemma(), "-");
 					sentenceWordCount++;
 					if (token.containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSyllablesAnnotation.class)) {
 						BigDecimal rawScore = (BigDecimal) token.get(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSyllablesAnnotation.class);

@@ -1,0 +1,46 @@
+>.*
+----------.*
+From:.*
+Date:.*
+Subject:.*
+To:.*
+Name:.*
+\*Name:.*
+\*Postal.*
+\*Email.*
+\*Phone.*
+Ph:.*
+ph:.*
+Address:.*
+address:.*
+Email.*
+\*Email.*
+email:.*
+Mobile.*
+mobile:.*
+cell:.*
+Phone:.*
+phone:.*
+Telephone Number.*
+\*Telephone Number.*
+Phone Number.*
+\*Phone Number.*
+Telephone.*
+telephone.*
+phone number.*
+Mobile Number.*
+\*Postal address.*
+Postal address.*
+postal address.*
+Dear Editors.*
+Dear Editor.*
+Dear Sir.*
+Dear Madam.*
+2017 DNA-OUT of PRINT Short Fiction Special.*
+.*Out of Print Magazine.*
+at Out of Print.*
+.*<http://www.outofprintmagazine.co.in>.*
+.*<http://outofprintmagazine.blogspot.com>.*
+.*<https://www.facebook.com/Outofprintmagazine>.*
+.*<https://twitter.com/OutofPrintOnlne>.*
+.*<outofprintmagazine@gmail.com>.*

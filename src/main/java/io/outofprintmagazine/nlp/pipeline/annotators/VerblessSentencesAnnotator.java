@@ -1,8 +1,10 @@
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -14,10 +16,9 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
-import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.util.DocumentAggregateScore;
 
 public class VerblessSentencesAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
 	
@@ -27,7 +28,6 @@ public class VerblessSentencesAnnotator extends AbstractAggregatePosAnnotator im
 	public VerblessSentencesAnnotator() {
 		super();
 		this.setTags(Arrays.asList("VB","VBD","VBG","VBN","VBP","VBZ","MD"));
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
 		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
 	}
 	
@@ -73,5 +73,53 @@ public class VerblessSentencesAnnotator extends AbstractAggregatePosAnnotator im
 	public String getDescription() {
 		return "VB,VBD,VBG,VBN,VBP,VBZ,MD not in sentence.";
 	}
+	
+	@Override
+	public void score(CoreDocument document) {
+		scoreDocument(document);
+		scoreDocumentAggregate(document);
+	}
+
+
+	public void scoreDocument(CoreDocument document) {
+		if (! document.annotation().containsKey(getAnnotationClass())) {
+			ArrayList<Map<String, BigDecimal>> rawScores = new ArrayList<Map<String, BigDecimal>>();
+			for (CoreSentence sentence : document.sentences()) {
+				if (sentence.coreMap().containsKey(getAnnotationClass())) {
+					rawScores.add((Map<String, BigDecimal>) sentence.coreMap().get(getAnnotationClass()));
+				}
+			}
+			document.annotation().set(getAnnotationClass(), aggregateScores(rawScores));
+		}
+	}
+	
+	public void scoreDocumentAggregate(CoreDocument document) {
+		if (document.annotation().containsKey(getAnnotationClass())) {
+			document.annotation().set(
+				getAggregateClass(),
+				new DocumentAggregateScore(
+					getAnnotationClass().getCanonicalName() + "Aggregate", 
+					(Map<String, BigDecimal>) document.annotation().get(getAnnotationClass()),
+					new BigDecimal(document.tokens().size())
+				)
+			);
+		}
+	}
+
+	public Map<String, BigDecimal> aggregateScores(List<Map<String, BigDecimal>> allScores) {
+		Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
+		for (Map<String, BigDecimal> rawScore : allScores) {
+			for (String key : rawScore.keySet()) {
+				BigDecimal existingScore = scoreMap.get(key);
+				if (existingScore == null) {
+					scoreMap.put(key, rawScore.get(key));
+				} else {
+					scoreMap.put(key, existingScore.add(rawScore.get(key)));
+				}
+			}
+		}
+		return scoreMap;
+	}
+
 	
 }
