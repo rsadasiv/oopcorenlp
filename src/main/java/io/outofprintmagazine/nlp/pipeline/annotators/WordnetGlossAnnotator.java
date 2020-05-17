@@ -1,8 +1,5 @@
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -15,21 +12,26 @@ import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import io.outofprintmagazine.nlp.WordnetUtils;
-import io.outofprintmagazine.nlp.pipeline.scorers.MapListScorer;
 import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
-import io.outofprintmagazine.nlp.pipeline.serializers.MapListSerializer;
+import io.outofprintmagazine.nlp.pipeline.scorers.StringScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.StringSerializer;
 
 public class WordnetGlossAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WordnetGlossAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public WordnetGlossAnnotator() {
 		super();
 		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/COCA/Dolch.txt");
-		this.setScorer((Scorer)new MapListScorer(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new MapListSerializer(this.getAnnotationClass()));
+		this.setScorer((Scorer) new StringScorer(this.getAnnotationClass()));
+		this.setSerializer((Serializer) new StringSerializer(this.getAnnotationClass()));
 	}
 	
 	public WordnetGlossAnnotator(Properties properties) {
@@ -51,7 +53,6 @@ public class WordnetGlossAnnotator extends AbstractPosAnnotator implements Annot
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
 			for (CoreLabel token : sentence.tokens()) {
-				Map<String, List<String>> scoreMap = new HashMap<String, List<String>>();
 				if (isDictionaryWord(token)) {
 					if (!getTags().contains(token.lemma().toLowerCase())) {
 						try {
@@ -59,8 +60,8 @@ public class WordnetGlossAnnotator extends AbstractPosAnnotator implements Annot
 							if (gloss == null) {
 								gloss = "iWordless word";
 							}
-							scoreMap.put(token.lemma(), Arrays.asList(gloss));
-							token.set(getAnnotationClass(), scoreMap);
+							//scoreMap.put(toAlphaNumeric(token.lemma()), Arrays.asList(gloss));
+							token.set(getAnnotationClass(), gloss);
 						}
 						catch (Exception e) {
 							logger.error(e);

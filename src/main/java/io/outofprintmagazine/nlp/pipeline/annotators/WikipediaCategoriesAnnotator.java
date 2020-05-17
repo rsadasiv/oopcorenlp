@@ -25,16 +25,22 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class WikipediaCategoriesAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class WikipediaCategoriesAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WikipediaCategoriesAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	private MapSum scoreAggregator = new MapSum();
 	
 	public WikipediaCategoriesAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));	
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));	
 	}
 	
 	public WikipediaCategoriesAnnotator(Properties properties) {
@@ -65,12 +71,7 @@ public class WikipediaCategoriesAnnotator extends AbstractAggregatePosAnnotator 
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPWikipediaCategoriesAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPWikipediaCategoriesAnnotationAggregate.class;
-	}
-	
+
 	public Class getTopicsAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPTopicsAnnotation.class;
 	}

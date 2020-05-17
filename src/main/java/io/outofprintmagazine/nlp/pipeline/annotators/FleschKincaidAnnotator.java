@@ -25,16 +25,21 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.BigDecimalSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class FleschKincaidAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class FleschKincaidAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(FleschKincaidAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public FleschKincaidAnnotator() {
 		super();
 		this.setTags(Arrays.asList("NNP", "NNPS", "FW"));
-		this.setScorer((Scorer)new BigDecimalAvg(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new BigDecimalSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new BigDecimalAvg(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new BigDecimalSerializer(this.getAnnotationClass()));
 	}
 	
 	public FleschKincaidAnnotator(Properties properties) {
@@ -52,11 +57,6 @@ public class FleschKincaidAnnotator extends AbstractAggregatePosAnnotator implem
 	}
 	
 	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPFleschKincaidAnnotationAggregate.class;
-	}
-		
-	@Override
 	public Set<Class<? extends CoreAnnotation>> requires() {
 		return Collections.unmodifiableSet(
 			new ArraySet<>(
@@ -64,7 +64,7 @@ public class FleschKincaidAnnotator extends AbstractAggregatePosAnnotator implem
 					CoreAnnotations.TextAnnotation.class, 
 					CoreAnnotations.TokensAnnotation.class,
 					CoreAnnotations.SentencesAnnotation.class,
-					io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSyllablesAnnotation.class
+					io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSyllableCountAnnotation.class
 				)
 			)
 		);
@@ -89,8 +89,8 @@ public class FleschKincaidAnnotator extends AbstractAggregatePosAnnotator implem
 					wordCount++;
 					wordCount+=StringUtils.countMatches(token.lemma(), "-");
 					sentenceWordCount++;
-					if (token.containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSyllablesAnnotation.class)) {
-						BigDecimal rawScore = (BigDecimal) token.get(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSyllablesAnnotation.class);
+					if (token.containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSyllableCountAnnotation.class)) {
+						BigDecimal rawScore = (BigDecimal) token.get(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSyllableCountAnnotation.class);
 						syllableCount += rawScore.intValue();
 						sentenceSyllableCount += rawScore.intValue();
 					}

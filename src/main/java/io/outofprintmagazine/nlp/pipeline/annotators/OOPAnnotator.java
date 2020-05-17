@@ -16,6 +16,8 @@ public interface OOPAnnotator {
 	
 	public void serialize(CoreDocument document, ObjectNode json);
 	
+	public void serializeAggregateDocument(CoreDocument document, ObjectNode json);
+	
 	public void init(Map<String,Object> properties);
 
 }

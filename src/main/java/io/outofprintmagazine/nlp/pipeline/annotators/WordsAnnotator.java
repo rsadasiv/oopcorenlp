@@ -24,15 +24,20 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class WordsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class WordsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WordsAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public WordsAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 	}
 	
 	public WordsAnnotator(Properties properties) {
@@ -48,12 +53,7 @@ public class WordsAnnotator extends AbstractAggregatePosAnnotator implements Ann
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPWordsAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPWordsAnnotationAggregate.class;
-	}
-	
+
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
@@ -61,7 +61,7 @@ public class WordsAnnotator extends AbstractAggregatePosAnnotator implements Ann
 			for (CoreLabel token : sentence.tokens()) {
 				Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
 				if (isDictionaryWord(token)) {
-					scoreMap.put(token.lemma(), new BigDecimal(1));
+					addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}

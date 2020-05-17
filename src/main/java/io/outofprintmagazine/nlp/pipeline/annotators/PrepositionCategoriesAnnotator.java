@@ -19,18 +19,24 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class PrepositionCategoriesAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class PrepositionCategoriesAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PrepositionCategoriesAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	private Map<String,String> scoreLabelMap = new HashMap<String,String>();
 	
 	public PrepositionCategoriesAnnotator() {
 		super();
 		this.setTags(Arrays.asList("IN", "CC"));
 		initScoreLabelMap();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));	
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));	
 	}
 	
 	protected void initScoreLabelMap() {
@@ -51,12 +57,7 @@ public class PrepositionCategoriesAnnotator extends AbstractAggregatePosAnnotato
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPrepositionCategoriesAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPrepositionCategoriesAnnotationAggregate.class;
-	}
-	
+
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
@@ -65,7 +66,7 @@ public class PrepositionCategoriesAnnotator extends AbstractAggregatePosAnnotato
 				Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
 				String score = scoreTag(token);
 				if (score != null) {
-					scoreMap.put(scoreLabelMap.get(score), new BigDecimal(1));
+					addToScoreMap(scoreMap, scoreLabelMap.get(score), new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}

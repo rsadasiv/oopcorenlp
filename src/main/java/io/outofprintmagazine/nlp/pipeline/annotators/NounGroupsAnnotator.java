@@ -21,16 +21,21 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class NounGroupsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class NounGroupsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(NounGroupsAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public NounGroupsAnnotator() {
 		super();
 		this.setTags(Arrays.asList("NN","NNS"));
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 	}
 	
 	public NounGroupsAnnotator(Properties properties) {
@@ -48,11 +53,6 @@ public class NounGroupsAnnotator extends AbstractAggregatePosAnnotator implement
 	}
 	
 	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPNounGroupsAnnotationAggregate.class;
-	}
-
-	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
 		for (int i=0;i<document.sentences().size();i++) {
@@ -66,7 +66,7 @@ public class NounGroupsAnnotator extends AbstractAggregatePosAnnotator implement
 								score = score.substring(score.lastIndexOf('.')+1);
 							}
 							Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-							scoreMap.put(score, new BigDecimal(1));
+							addToScoreMap(scoreMap, score, new BigDecimal(1));
 							token.set(getAnnotationClass(), scoreMap);
 						}
 					} 

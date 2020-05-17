@@ -8,10 +8,14 @@ fine
 first
 general
 good
+heavy
+huge
+interesting
 last
 left
 least
 less
+light
 little
 long
 many
@@ -20,6 +24,7 @@ more
 most
 much
 next
+nice
 okay
 only
 other

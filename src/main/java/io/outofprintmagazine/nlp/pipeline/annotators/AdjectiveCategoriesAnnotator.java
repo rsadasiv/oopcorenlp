@@ -20,10 +20,15 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class AdjectiveCategoriesAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class AdjectiveCategoriesAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(AdjectiveCategoriesAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 
 	private List<String> descriptive = Arrays.asList("JJ");
 	private List<String> comparative = Arrays.asList("JJR");
@@ -31,8 +36,8 @@ public class AdjectiveCategoriesAnnotator extends AbstractAggregatePosAnnotator 
 	
 	public AdjectiveCategoriesAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 	}
 	
 	public AdjectiveCategoriesAnnotator(Properties properties) {
@@ -51,24 +56,19 @@ public class AdjectiveCategoriesAnnotator extends AbstractAggregatePosAnnotator 
 	}
 	
 	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPAdjectiveCategoriesAnnotationAggregate.class;
-	}
-	
-	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
 			for (CoreLabel token : sentence.tokens()) {
 				Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
 				if (scoreLemma(token, descriptive) != null) {
-					scoreMap.put("descriptive", new BigDecimal(1));
+					addToScoreMap(scoreMap, "descriptive", new BigDecimal(1));
 				}
 				else if (scoreLemma(token, comparative) != null) {
-					scoreMap.put("comparative", new BigDecimal(1));
+					addToScoreMap(scoreMap, "comparative", new BigDecimal(1));
 				}
 				else if (scoreLemma(token, superlative) != null) {
-					scoreMap.put("superlative", new BigDecimal(1));
+					addToScoreMap(scoreMap, "superlative", new BigDecimal(1));
 				}
 				if (scoreMap.size() > 0) {
 					token.set(getAnnotationClass(), scoreMap);

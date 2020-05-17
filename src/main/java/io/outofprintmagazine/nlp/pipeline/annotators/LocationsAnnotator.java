@@ -25,15 +25,20 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class LocationsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class LocationsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(LocationsAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 
 	public LocationsAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));			
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));			
 	}
 	
 	public LocationsAnnotator(Properties properties) {
@@ -48,11 +53,6 @@ public class LocationsAnnotator extends AbstractAggregatePosAnnotator implements
 	@Override
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPLocationsAnnotation.class;
-	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPLocationsAnnotationAggregate.class;
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -80,10 +80,10 @@ public class LocationsAnnotator extends AbstractAggregatePosAnnotator implements
 				if (mention.entityType().equals("LOCATION")) {
 					Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
 					if (mention.canonicalEntityMention().isPresent()) {
-						scoreMap.put(mention.canonicalEntityMention().get().toString(), new BigDecimal(1));
+						addToScoreMap(scoreMap, mention.canonicalEntityMention().get().toString(), new BigDecimal(1));
 					}
 					else {
-						scoreMap.put(mention.tokens().get(0).originalText(), new BigDecimal(1));
+						addToScoreMap(scoreMap, mention.tokens().get(0).originalText(), new BigDecimal(1));
 					}
 					mention.tokens().get(0).set(getAnnotationClass(), scoreMap);
 				}

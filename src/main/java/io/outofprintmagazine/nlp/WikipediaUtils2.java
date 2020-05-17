@@ -16,6 +16,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.ServiceUnavailableRetryStrategy;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -27,6 +29,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.stanford.nlp.util.StringUtils;
 
 
 public class WikipediaUtils2 {
@@ -141,6 +145,8 @@ public class WikipediaUtils2 {
                 			}
                 		})
                 .setRedirectStrategy(new LaxRedirectStrategy())
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setCookieSpec(CookieSpecs.STANDARD).build())
                 .build();
         try {
 //          Earth|Jupiter|Mars|Saturn|Neptune
@@ -186,8 +192,15 @@ public class WikipediaUtils2 {
 			while (resultIter.hasNext()) {
 				String resultName = resultIter.next();
 				JsonNode result = pages.get(resultName);
-				if (result.has("pageid")) {
-					retval.put(result.get("title").asText(),result.get("extract").asText() );
+				if (
+						result.has("pageid") 
+						&& result.has("extract") 
+						&& !(
+								result.get("extract").asText().endsWith("may refer to:") 
+								|| result.get("extract").asText().endsWith("commonly refers to:")
+						)
+				) {
+					retval.put(result.get("title").asText(),StringUtils.toAscii(StringUtils.normalize(result.get("extract").asText())).trim());
 				}
 	    	}
     	}

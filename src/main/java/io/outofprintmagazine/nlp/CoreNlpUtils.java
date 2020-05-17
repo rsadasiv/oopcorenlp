@@ -48,7 +48,6 @@ public class CoreNlpUtils {
 	
 	private StanfordCoreNLP pipeline;
 	private ArrayList<OOPAnnotator> customAnnotators = new ArrayList<OOPAnnotator>();
-
 	
 	public static Properties getDefaultProps() {
 		// set up pipeline properties
@@ -62,18 +61,27 @@ public class CoreNlpUtils {
 	            "io.outofprintmagazine.nlp.pipeline.annotators.GenderAnnotator");
 	    props.put("customAnnotatorClass.oop_pronouns",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.PronounAnnotator");
-	    props.put("customAnnotatorClass.oop_documentLength",
-	            "io.outofprintmagazine.nlp.pipeline.annotators.DocumentLengthAnnotator");
-	    props.put("customAnnotatorClass.oop_syllables",
-	            "io.outofprintmagazine.nlp.pipeline.annotators.SyllablesAnnotator");
+	    props.put("customAnnotatorClass.oop_charCount",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.count.CharCountAnnotator");
+	    props.put("customAnnotatorClass.oop_paragraphCount",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.count.ParagraphCountAnnotator");
+	    props.put("customAnnotatorClass.oop_sentenceCount",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.count.SentenceCountAnnotator");
+	    props.put("customAnnotatorClass.oop_syllableCount",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.count.SyllableCountAnnotator");	    
+	    props.put("customAnnotatorClass.oop_tokenCount",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.count.TokenCountAnnotator");
+	    props.put("customAnnotatorClass.oop_wordCount",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.count.WordCountAnnotator");	    
+
 	    props.put("customAnnotatorClass.oop_fleschKincaid",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.FleschKincaidAnnotator");
 	    props.put("customAnnotatorClass.core_sentiment",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.CoreNlpSentimentAnnotator");
 	    props.put("customAnnotatorClass.vader_sentiment",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.VaderSentimentAnnotator");
-	    props.put("customAnnotatorClass.vader_rollingSentiment",
-	            "io.outofprintmagazine.nlp.pipeline.annotators.VaderRollingSentimentAnnotator");	    
+//	    props.put("customAnnotatorClass.vader_rollingSentiment",
+//	            "io.outofprintmagazine.nlp.pipeline.annotators.VaderRollingSentimentAnnotator");	    
 	    props.put("customAnnotatorClass.oop_tense",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.VerbTenseAnnotator");	    
 	    props.put("customAnnotatorClass.oop_punctuation",
@@ -118,8 +126,12 @@ public class CoreNlpUtils {
 	            "io.outofprintmagazine.nlp.pipeline.annotators.WikipediaCategoriesAnnotator");
 	    props.put("customAnnotatorClass.oop_nonAffirmative",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.NonAffirmativeAnnotator");	    
-	    props.put("customAnnotatorClass.oop_simile",
-	            "io.outofprintmagazine.nlp.pipeline.annotators.SimileAnnotator");
+//	    props.put("customAnnotatorClass.oop_simile",
+//	            "io.outofprintmagazine.nlp.pipeline.annotators.SimileAnnotator");
+	    props.put("customAnnotatorClass.oop_like",
+	    		"io.outofprintmagazine.nlp.pipeline.annotators.simile.LikeAnnotator");
+	    props.put("customAnnotatorClass.oop_as",
+	    		"io.outofprintmagazine.nlp.pipeline.annotators.simile.AsAnnotator");	    
 	    props.put("customAnnotatorClass.oop_colors",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.ColorsAnnotator");
 	    props.put("customAnnotatorClass.oop_flavors",
@@ -130,10 +142,14 @@ public class CoreNlpUtils {
 	            "io.outofprintmagazine.nlp.pipeline.annotators.WordlessWordsAnnotator");
 	    props.put("customAnnotatorClass.oop_wordnetGloss",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.WordnetGlossAnnotator");
+	    props.put("customAnnotatorClass.oop_perfecttense",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.PerfecttenseAnnotator");
 	    props.put("customAnnotatorClass.oop_uncommonWords",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.UncommonWordsAnnotator");
 	    props.put("customAnnotatorClass.oop_commonWords",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.CommonWordsAnnotator");
+	    props.put("customAnnotatorClass.oop_functionWords",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.FunctionWordsAnnotator");
 	    props.put("customAnnotatorClass.oop_americanize",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.AmericanizeAnnotator");
 	    props.put("customAnnotatorClass.oop_anglicise",
@@ -150,24 +166,44 @@ public class CoreNlpUtils {
 	            "io.outofprintmagazine.nlp.pipeline.annotators.NounHypernymsAnnotator");
 	    props.put("customAnnotatorClass.oop_temporalNGrams",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.TemporalNGramsAnnotator");
-	    props.put("customAnnotatorClass.oop_wha",
-	            "io.outofprintmagazine.nlp.pipeline.annotators.WhaAnnotator");
+//	    props.put("customAnnotatorClass.oop_wha",
+//	            "io.outofprintmagazine.nlp.pipeline.annotators.WhaAnnotator");
+	    props.put("customAnnotatorClass.oop_who",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhatAnnotator");	    
+	    props.put("customAnnotatorClass.oop_what",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhoAnnotator");
+	    props.put("customAnnotatorClass.oop_when",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhenAnnotator");	    
+	    props.put("customAnnotatorClass.oop_where",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhereAnnotator");
+	    props.put("customAnnotatorClass.oop_why",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhyAnnotator");
+	    props.put("customAnnotatorClass.oop_how",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.HowAnnotator");
 	    props.put("customAnnotatorClass.oop_locations",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.LocationsAnnotator");
 	    props.put("customAnnotatorClass.oop_people",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.PeopleAnnotator");
 	    props.put("customAnnotatorClass.oop_actors",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.ActorsAnnotator");
+	    props.put("customAnnotatorClass.oop_settings",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.SettingsAnnotator");	    
 	    props.put("customAnnotatorClass.oop_biber",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.BiberAnnotator");
 	    props.put("customAnnotatorClass.oop_biberDimensions",
-	            "io.outofprintmagazine.nlp.pipeline.annotators.BiberDimensionsAnnotator");	    
+	            "io.outofprintmagazine.nlp.pipeline.annotators.BiberDimensionsAnnotator");
+	    props.put("customAnnotatorClass.oop_myersBriggs",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.MyersBriggsAnnotator");
 	    props.put("customAnnotatorClass.oop_words",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.WordsAnnotator");
 	    props.put("customAnnotatorClass.oop_dates",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.DatesAnnotator");
-	    props.put("customAnnotatorClass.oop_questions",
-	            "io.outofprintmagazine.nlp.pipeline.annotators.QuestionsAnnotator");
+//	    props.put("customAnnotatorClass.oop_questions",
+//	            "io.outofprintmagazine.nlp.pipeline.annotators.QuestionsAnnotator");
+	    props.put("customAnnotatorClass.oop_if",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.conditional.IfAnnotator");
+	    props.put("customAnnotatorClass.oop_because",
+	            "io.outofprintmagazine.nlp.pipeline.annotators.conditional.BecauseAnnotator");	    
 	    props.put("customAnnotatorClass.oop_quotes",
 	            "io.outofprintmagazine.nlp.pipeline.annotators.QuotesAnnotator");
 	
@@ -193,8 +229,12 @@ public class CoreNlpUtils {
 	    		+ "core_gender,"
 	    		+ "oop_gender,"
 	    		+ "oop_pronouns,"
-	    		+ "oop_documentLength,"
-	    		+ "oop_syllables,"
+	    		+ "oop_charCount,"
+	    		+ "oop_paragraphCount,"
+	    		+ "oop_sentenceCount,"
+	    		+ "oop_syllableCount,"
+	    		+ "oop_tokenCount,"
+	    		+ "oop_wordCount,"	    		
 	    		+ "core_sentiment,"
 	    		+ "vader_sentiment,"
 	    		+ "oop_tense,"
@@ -215,29 +255,42 @@ public class CoreNlpUtils {
 //	    		+ "oop_untaggedTopics,"
 	    		+ "oop_svo,"
 	    		+ "oop_nonAffirmative,"	    		
-	    		+ "oop_simile,"
+//	    		+ "oop_simile,"
+	    		+ "oop_like,"
+	    		+ "oop_as,"	    		
 	    		+ "oop_colors,"
 	    		+ "oop_flavors,"
 	    		+ "oop_verblessSentences,"
 	    		+ "oop_wordlessWords,"
 	    		+ "oop_wordnetGloss,"
+	    		+ "oop_perfecttense,"
 	    		+ "oop_uncommonWords,"
 	    		+ "oop_commonWords,"
+	    		+ "oop_functionWords,"
 	    		+ "oop_anglicise,"
 	    		+ "oop_americanize,"
 	    		+ "oop_verbGroups,"
 	    		+ "oop_verbnetGroups,"
 	    		+ "oop_nounGroups,"	    		
 	    		+ "oop_temporalNGrams,"
-	    		+ "oop_wha,"
+//	    		+ "oop_wha,"
+	    		+ "oop_who,"
+	    		+ "oop_what,"
+	    		+ "oop_when,"
+	    		+ "oop_where,"
+	    		+ "oop_why,"		    		
+	    		+ "oop_how,"
 	    		+ "oop_locations,"
 	    		+ "oop_people,"
+	    		+ "oop_myersBriggs,"	    		
 	    		+ "oop_biberDimensions,"	    		
 	    		+ "oop_dates,"
-	    		+ "oop_questions,"
+//	    		+ "oop_questions,"
+	    		+ "oop_if,"
+	    		+ "oop_because,"	 
 	    		+ "oop_quotes,"
 	    		+ "oop_words,"
-	    		+ "vader_rollingSentiment,"
+//	    		+ "vader_rollingSentiment,"
 	    		+ "oop_fleschKincaid,"
 	    		+ "oop_verbHypernyms,"
 	    	    + "oop_nounHypernyms,"
@@ -246,6 +299,7 @@ public class CoreNlpUtils {
 //	    		+ "oop_wikipediaRelated,"
 	    		+ "oop_wikipediaCategories,"	    		
 	    		+ "oop_actors,"
+	    		+ "oop_settings"
 	    );
 	    //props.setProperty("annotators","tokenize,ssplit,pos,lemma,ner,parse,sentiment,oop_paragraphs,oop_gender");
 	    //API call w/annotators tokenize,ssplit,pos,lemma,ner,parse,depparse,coref,kbp,sentiment
@@ -294,9 +348,13 @@ public class CoreNlpUtils {
 			String key = (String) keyIter.next();
 			if (key.startsWith("customAnnotatorClass")) {
 				String annotatorClassName = CoreNlpUtils.getDefaultProps().getProperty(key);
-				OOPAnnotator annotator = (OOPAnnotator) Class.forName(annotatorClassName).newInstance();
-				annotator.init(null);
-				customAnnotators.add(annotator);
+				Object annotator = Class.forName(annotatorClassName).newInstance();
+				if (annotator instanceof OOPAnnotator) {
+					OOPAnnotator oopAnnotator = (OOPAnnotator) annotator;
+					oopAnnotator.init(null);
+					customAnnotators.add(oopAnnotator);
+				}
+
 			}
 		}		
 	}
@@ -318,13 +376,22 @@ public class CoreNlpUtils {
 		}	
 	}
 	
+	public void serializeAggregates(CoreDocument document, ObjectNode json) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if (customAnnotators.size() == 0) {
+			initAnnotators();
+		}
+		for (OOPAnnotator annotator : customAnnotators) {
+			annotator.serializeAggregateDocument(document, json);
+		}	
+	}
+	
 	public void describeAnnotations(ObjectNode json) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		ArrayNode annotatorList = json.putArray("annotations");
 		if (customAnnotators.size() == 0) {
 			initAnnotators();
 		}
 		for (OOPAnnotator annotator : customAnnotators) {
-			annotatorList.addObject().put(annotator.getAnnotationClass().getName(), annotator.getDescription());
+			annotatorList.addObject().put(annotator.getAnnotationClass().getSimpleName(), annotator.getDescription());
 		}	
 	}
 	

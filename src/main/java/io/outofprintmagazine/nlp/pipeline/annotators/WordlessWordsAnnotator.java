@@ -21,14 +21,19 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class WordlessWordsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class WordlessWordsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
 	private static final Logger logger = LogManager.getLogger(WordlessWordsAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public WordlessWordsAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/COCA/Dolch.txt");
 	}
 	
@@ -45,12 +50,7 @@ public class WordlessWordsAnnotator extends AbstractAggregatePosAnnotator implem
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPWordlessWordsAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPWordlessWordsAnnotationAggregate.class;
-	}
-	
+
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
@@ -74,7 +74,7 @@ public class WordlessWordsAnnotator extends AbstractAggregatePosAnnotator implem
 							String wordCache = WiktionaryUtils.getInstance().getWordCache(token.originalText().toLowerCase());
 							if (wordCache == null) {
 								Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-								scoreMap.put(token.lemma(), new BigDecimal(1));
+								addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
 								token.set(getAnnotationClass(), scoreMap);
 							}
 						}

@@ -65,7 +65,7 @@ public class CoreNlpParagraphAnnotator extends edu.stanford.nlp.paragraphs.Parag
 			CoreSentence sentence = coreNlpSentencesIter.next();
 			ObjectNode sentenceNode = (ObjectNode) jsonSentencesIter.next();
 			if (sentence.coreMap().containsKey(getAnnotationClass())) {
-				sentenceNode.put(CoreAnnotations.ParagraphIndexAnnotation.class.getName(), sentence.coreMap().get(CoreAnnotations.ParagraphIndexAnnotation.class));
+				sentenceNode.put(CoreAnnotations.ParagraphIndexAnnotation.class.getSimpleName(), sentence.coreMap().get(CoreAnnotations.ParagraphIndexAnnotation.class));
 			}
 		}
 	}
@@ -78,6 +78,11 @@ public class CoreNlpParagraphAnnotator extends edu.stanford.nlp.paragraphs.Parag
 	@Override
 	public String getDescription() {
 		return "CoreAnnotations.ParagraphIndexAnnotation.class. Recorded per sentence, index starts at 1.";
+	}
+	
+	@Override
+	public void serializeAggregateDocument(CoreDocument document, ObjectNode json) {
+		//pass
 	}
 	
 }

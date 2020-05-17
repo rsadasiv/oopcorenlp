@@ -25,14 +25,19 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.BigDecimalSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class VaderSentimentAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class VaderSentimentAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 
 	private static final Logger logger = LogManager.getLogger(VaderSentimentAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public VaderSentimentAnnotator() {
 		super();
-		this.setScorer((Scorer)new BigDecimalAvg(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new BigDecimalSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new BigDecimalAvg(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new BigDecimalSerializer(this.getAnnotationClass()));
 	}
 	
 	public VaderSentimentAnnotator(String name, Properties props) {
@@ -69,11 +74,6 @@ public class VaderSentimentAnnotator extends AbstractAggregatePosAnnotator imple
 	@Override
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.VaderSentimentAnnotation.class;
-	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.VaderSentimentAnnotationAggregate.class;
 	}
 
 	@Override

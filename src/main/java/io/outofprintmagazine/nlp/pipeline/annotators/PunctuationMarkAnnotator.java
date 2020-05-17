@@ -18,18 +18,23 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class PunctuationMarkAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class PunctuationMarkAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PunctuationMarkAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 
 	private Map<String,String> scoreLabelMap = new HashMap<String,String>();
 	
 	public PunctuationMarkAnnotator() {
 		super();
 		this.initScoreLabelMap();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 	}
 	
 	public PunctuationMarkAnnotator(Properties properties) {
@@ -59,12 +64,7 @@ public class PunctuationMarkAnnotator extends AbstractAggregatePosAnnotator impl
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPunctuationMarkAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPunctuationMarkAnnotationAggregate.class;
-	}
-	
+
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
@@ -73,7 +73,7 @@ public class PunctuationMarkAnnotator extends AbstractAggregatePosAnnotator impl
 				Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
 				if (isPunctuationMark(token)) {
 					if (scoreLabelMap.get(token.originalText()) != null) {
-						scoreMap.put(scoreLabelMap.get(token.originalText()), new BigDecimal(1));
+						addToScoreMap(scoreMap, scoreLabelMap.get(token.originalText()), new BigDecimal(1));
 					}
 				}
 				if (scoreMap.size() > 0) {

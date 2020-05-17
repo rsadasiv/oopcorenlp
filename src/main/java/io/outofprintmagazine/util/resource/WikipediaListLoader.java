@@ -31,32 +31,43 @@ public class WikipediaListLoader {
 //		List<String> wikiResources = me.loadWikipediaFile("C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\src\\main\\resources\\io\\outofprintmagazine\\nlp\\models\\List of Indian film actors - Wikipedia.html");
 //		List<String> wikiResources = me.loadWikipediaFile("C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\src\\main\\resources\\io\\outofprintmagazine\\nlp\\models\\List of Pakistani actors - Wikipedia.html");
 //		List<String> wikiResources = me.loadWikipediaFile("C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\src\\main\\resources\\io\\outofprintmagazine\\nlp\\models\\List of Indian film actresses - Wikipedia.html");
-		List<String> wikiResources = me.loadWikipediaFile("C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\src\\main\\resources\\io\\outofprintmagazine\\nlp\\models\\List of Pakistani actresses - Wikipedia.html");
+		//List<String> wikiResources = me.loadWikipediaFile("C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\src\\main\\resources\\io\\outofprintmagazine\\nlp\\models\\List of Pakistani actresses - Wikipedia.html");
 
-		List<String> existingResources = me.readResourceFromFile("C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\src\\main\\resources\\io\\outofprintmagazine\\nlp\\models\\FemaleNames.txt");
+		//List<String> existingResources = me.readResourceFromFile("C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\src\\main\\resources\\io\\outofprintmagazine\\nlp\\models\\FemaleNames.txt");
+
+		List<String> wikiResources = me.loadWikipediaFile("C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\src\\main\\resources\\io\\outofprintmagazine\\nlp\\models\\List of culinary herbs and spices - Wikipedia.html");
+		List<String> existingResources = new ArrayList<String>();
 		for (String resource : wikiResources) {
 			if (!existingResources.contains(resource)) {
 				existingResources.add(resource);
 			}
 		}
 		Collections.sort(existingResources);
-		me.writeResourceToFile(existingResources, "C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\src\\main\\resources\\io\\outofprintmagazine\\nlp\\models\\FemaleNames.txt");
+		me.writeResourceToFile(existingResources, "C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\src\\main\\resources\\io\\outofprintmagazine\\nlp\\models\\Spices.txt");
 	}
 	
 	protected List<String> loadWikipediaFile(String fileName) throws IOException {
-		File input = new File(fileName);
-		Document doc = Jsoup.parse(input, "UTF-8", "");
-		return parseWikipediaPage(doc);
+		logger.debug(fileName);
+		if (fileName.startsWith("http")) {
+			return parseWikipediaPage(Jsoup.parse(fileName));
+		}
+		else {
+			File input = new File(fileName);
+			Document doc = Jsoup.parse(input, "UTF-8", "");
+			return parseWikipediaPage(doc);
+		}
 	}
 	
 	protected List<String> parseWikipediaPage(Document doc) {
 		List<String> resources = new ArrayList<String>();
-		Elements mwpages = doc.select("#mw-content-text > div > div > ul > li >a");
+		//#mw-content-text > div > div:nth-child(13) > ul > li:nth-child(8) > a
+		Elements mwpages = doc.select("#mw-content-text > div > div > ul > li > a");
 		for (Element body : mwpages) {
 			String[] linkTextEntries = body.html().split(" ");
 			if (linkTextEntries.length > 0) {
-				if (linkTextEntries[0].length()>2) {
-					resources.add(linkTextEntries[0].toLowerCase());
+				//if (linkTextEntries[0].length()>2) {
+				if (! resources.contains(linkTextEntries[0].replaceAll(",","").toLowerCase())) {
+					resources.add(linkTextEntries[0].replaceAll(",","").toLowerCase());
 				}
 			}
 		}

@@ -21,7 +21,6 @@ public class BigDecimalSerializer implements Serializer {
 	private static final Logger logger = LogManager.getLogger(BigDecimalSerializer.class);
 
 	private Class annotationClass;
-	protected Class aggregateClass = null;
 
 	public BigDecimalSerializer() {
 		super();
@@ -30,12 +29,6 @@ public class BigDecimalSerializer implements Serializer {
 	public BigDecimalSerializer(Class annotationClass) {
 		super();
 		this.setAnnotationClass(annotationClass);
-	}
-	
-	public BigDecimalSerializer(Class annotationClass, Class aggregateClass) {
-		super();
-		this.setAnnotationClass(annotationClass);
-		this.setAggregateClass(aggregateClass);
 	}
 
 	public void setAnnotationClass(Class annotationClass) {
@@ -46,29 +39,18 @@ public class BigDecimalSerializer implements Serializer {
 		return this.annotationClass;
 	}
 	
-	public Class getAggregateClass() {
-		return aggregateClass;
-	}
-
-	public void setAggregateClass(Class aggregateClass) {
-		this.aggregateClass = aggregateClass;
-	}
-
 	@Override
 	public void serialize(CoreDocument document, ObjectNode json) {
 		serializeTokens(document, json);
 		serializeSentences(document, json);
 		serializeDocument(document, json);
-		if (getAggregateClass() != null) {
-			serializeDocumentAggregate(document, json);
-		}
 	}
 
 	@SuppressWarnings("unchecked")
 	protected void serializeDocument(CoreDocument coreNlpDocument, ObjectNode jsonDocument) {
 		if (coreNlpDocument.annotation().containsKey(getAnnotationClass())) {
 			BigDecimal rawScore = (BigDecimal) coreNlpDocument.annotation().get(getAnnotationClass());
-			jsonDocument.put(getAnnotationClass().getName(), rawScore.toPlainString());
+			jsonDocument.put(getAnnotationClass().getSimpleName(), rawScore.toPlainString());
 		}
 	}
 
@@ -80,7 +62,7 @@ public class BigDecimalSerializer implements Serializer {
 			ObjectNode sentenceNode = (ObjectNode) jsonSentencesIter.next();
 			if (sentence.coreMap().containsKey(getAnnotationClass())) {
 				BigDecimal rawScore = (BigDecimal) sentence.coreMap().get(getAnnotationClass());
-				sentenceNode.put(getAnnotationClass().getName(), rawScore.toPlainString());
+				sentenceNode.put(getAnnotationClass().getSimpleName(), rawScore.toPlainString());
 			}
 		}
 	}
@@ -96,15 +78,17 @@ public class BigDecimalSerializer implements Serializer {
 				ObjectNode tokenNode = (ObjectNode) jsonTokensIter.next();
 				if (token.containsKey(getAnnotationClass())) {
 					BigDecimal rawScore = (BigDecimal) token.get(getAnnotationClass());
-					tokenNode.put(getAnnotationClass().getName(), rawScore.toPlainString());
+					tokenNode.put(getAnnotationClass().getSimpleName(), rawScore.toPlainString());
 				}
 			}
 		}
 	}
-	
-	protected void serializeDocumentAggregate(CoreDocument coreNlpDocument, ObjectNode jsonDocument) {
+
+	@Override
+	public void serializeAggregate(Object aggregate, ObjectNode json) {
 		ObjectMapper mapper = new ObjectMapper();
-		jsonDocument.set(getAggregateClass().getName(), mapper.valueToTree(coreNlpDocument.annotation().get(getAggregateClass())));
+		json.set(getAnnotationClass().getSimpleName(), mapper.valueToTree(aggregate));
+		
 	}
 
 }

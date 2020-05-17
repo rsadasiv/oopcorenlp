@@ -31,17 +31,21 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class SVOAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class SVOAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(SVOAnnotator.class);
 
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 	
 	public SVOAnnotator() {
 		super();
 		this.setTags(Arrays.asList("VB","VBD","VBG","VBN","VBP","VBZ"));
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 	}
 	
 	public SVOAnnotator(Properties properties) {
@@ -58,12 +62,6 @@ public class SVOAnnotator extends AbstractAggregatePosAnnotator implements Annot
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSVOAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSVOAnnotationAggregate.class;
-	}
-	
 
 	@Override
 	public Set<Class<? extends CoreAnnotation>> requires() {

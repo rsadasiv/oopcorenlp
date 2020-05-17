@@ -20,10 +20,15 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class VerbTenseAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class VerbTenseAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(VerbTenseAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 
 	private List<String> past = Arrays.asList("VBD","VBN");
 	private List<String> present = Arrays.asList("VB","VBP","VBZ");
@@ -33,8 +38,8 @@ public class VerbTenseAnnotator extends AbstractAggregatePosAnnotator implements
 	
 	public VerbTenseAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 	}
 	
 	public VerbTenseAnnotator(Properties properties) {
@@ -50,12 +55,7 @@ public class VerbTenseAnnotator extends AbstractAggregatePosAnnotator implements
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPVerbTenseAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPVerbTenseAnnotationAggregate.class;
-	}
-	
+
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
@@ -64,20 +64,20 @@ public class VerbTenseAnnotator extends AbstractAggregatePosAnnotator implements
 				CoreLabel token = sentence.tokens().get(i);
 				Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
 				if (scoreLemma(token, past) != null) {
-					scoreMap.put("past", new BigDecimal(1));
+					addToScoreMap(scoreMap, "past", new BigDecimal(1));
 				}
 				else if (scoreLemma(token, present) != null) {
-					scoreMap.put("present", new BigDecimal(1));
+					addToScoreMap(scoreMap, "present", new BigDecimal(1));
 				}
 				else if (scoreLemma(token, progressive) != null) {
-					scoreMap.put("progressive", new BigDecimal(1));
+					addToScoreMap(scoreMap, "progressive", new BigDecimal(1));
 				}
 				else if (scoreLemma(token, future) != null) {
-					scoreMap.put("future", new BigDecimal(1));
+					addToScoreMap(scoreMap, "future", new BigDecimal(1));
 				}
 				else if (scoreLemma(token, infinitive) != null) {
 					if (i < sentence.tokens().size() && sentence.tokens().get(i).tag().equals("VB")) {
-						scoreMap.put("infinitive", new BigDecimal(1));
+						addToScoreMap(scoreMap, "infinitive", new BigDecimal(1));
 					}
 				}
 				if (scoreMap.size() > 0) {

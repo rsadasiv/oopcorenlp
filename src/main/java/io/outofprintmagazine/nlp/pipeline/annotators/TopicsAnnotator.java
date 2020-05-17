@@ -26,10 +26,16 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class TopicsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class TopicsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(TopicsAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	private List<String> nouns = Arrays.asList("NN","NNS");
 	private List<String> properNouns = Arrays.asList("NNP", "NNPS");
 	
@@ -39,8 +45,8 @@ public class TopicsAnnotator extends AbstractAggregatePosAnnotator implements An
 		allTags.addAll(nouns);
 		allTags.addAll(properNouns);
 		this.setTags(allTags);
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));		
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));		
 	}
 	
 	public TopicsAnnotator(Properties properties) {
@@ -55,11 +61,6 @@ public class TopicsAnnotator extends AbstractAggregatePosAnnotator implements An
 	@Override
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPTopicsAnnotation.class;
-	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPTopicsAnnotationAggregate.class;
 	}
 
 	@Override
@@ -86,7 +87,7 @@ public class TopicsAnnotator extends AbstractAggregatePosAnnotator implements An
 //					scoreMap.put(token.lemma(), new BigDecimal(1));
 //				}
 				if (properNouns.contains(token.tag())) {
-					scoreMap.put(token.lemma(), new BigDecimal(1));
+					addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
 				}
 				if (scoreMap.size() > 0) {	
 					token.set(getAnnotationClass(), scoreMap);

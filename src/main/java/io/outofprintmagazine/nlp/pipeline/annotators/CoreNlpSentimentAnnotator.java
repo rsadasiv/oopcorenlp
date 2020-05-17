@@ -10,6 +10,8 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import edu.stanford.nlp.coref.CorefCoreAnnotations;
 import edu.stanford.nlp.ling.CoreAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations;
@@ -32,8 +34,8 @@ public class CoreNlpSentimentAnnotator extends AbstractAnnotator implements Anno
 	
 	public CoreNlpSentimentAnnotator() {
 		super();
-		this.setScorer((Scorer)new BigDecimalAvg(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new BigDecimalSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new BigDecimalAvg(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new BigDecimalSerializer(this.getAnnotationClass()));
 	}
 	
 	public CoreNlpSentimentAnnotator(String name, Properties props) {
@@ -77,11 +79,6 @@ public class CoreNlpSentimentAnnotator extends AbstractAnnotator implements Anno
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.CoreNlpSentimentAnnotation.class;
 	}
 	
-
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.CoreNlpSentimentAnnotationAggregate.class;
-	}
-	
 	/*requirementsSatisfied() on SentimentAnnotator is broken. 
 	 * public Set<Class<? extends CoreAnnotation>> requirementsSatisfied() {
      * 	return Collections.emptySet();
@@ -118,6 +115,11 @@ public class CoreNlpSentimentAnnotator extends AbstractAnnotator implements Anno
 	@Override
 	public String getDescription() {
 		return "edu.stanford.nlp.sentiment.SentimentCoreAnnotations.SentimentClass scaled from 0 to 1";
+	}
+	
+	@Override
+	public void serializeAggregateDocument(CoreDocument document, ObjectNode json) {
+		getSerializer().serializeAggregate(getScorer().aggregateDocument(document), json);
 	}
 
 }

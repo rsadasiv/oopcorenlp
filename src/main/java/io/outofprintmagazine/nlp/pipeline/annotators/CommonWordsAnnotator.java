@@ -18,15 +18,20 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class CommonWordsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class CommonWordsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(CommonWordsAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public CommonWordsAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/COCA/Dolch.txt");
 	}
 	
@@ -50,11 +55,6 @@ public class CommonWordsAnnotator extends AbstractAggregatePosAnnotator implemen
 	}
 	
 	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPCommonWordsAnnotationAggregate.class;
-	}
-	
-	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
@@ -62,7 +62,7 @@ public class CommonWordsAnnotator extends AbstractAggregatePosAnnotator implemen
 				if (isDictionaryWord(token)) {
 					if ((getTags().contains(token.lemma())) || (getTags().contains(token.lemma().toLowerCase()))) {
 						Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
-						scoreMap.put(token.lemma(), new BigDecimal(1));
+						addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}

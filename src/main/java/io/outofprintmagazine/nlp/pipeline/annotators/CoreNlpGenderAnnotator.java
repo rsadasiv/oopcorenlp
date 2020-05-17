@@ -41,14 +41,14 @@ public class CoreNlpGenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnno
 	
 	public CoreNlpGenderAnnotator() {
 		super("gender", CoreNlpGenderAnnotator.getDefaultProperties());
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));		
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));		
 	}
 	
 	public CoreNlpGenderAnnotator(String annotatorName, Properties props) {
 		super(annotatorName, props);
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));	
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));	
 	}
 	
 	protected Serializer getSerializer() {
@@ -96,11 +96,6 @@ public class CoreNlpGenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnno
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.CoreNlpGenderAnnotation.class;
 	}
-
-	@SuppressWarnings("rawtypes")
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.CoreNlpGenderAnnotationAggregate.class;
-	}
 	
 	@Override
 	public void score(CoreDocument document) {
@@ -121,5 +116,10 @@ public class CoreNlpGenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnno
 	@Override
 	public String getDescription() {
 		return "edu/stanford/nlp/models/gender/male_first_names.txt edu/stanford/nlp/models/gender/female_first_names.txt";
+	}
+
+	@Override
+	public void serializeAggregateDocument(CoreDocument document, ObjectNode json) {
+		getSerializer().serializeAggregate(getScorer().aggregateDocument(document), json);
 	}
 }

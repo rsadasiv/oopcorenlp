@@ -55,6 +55,7 @@ never
 no
 not
 now
+obviously
 off
 often
 once

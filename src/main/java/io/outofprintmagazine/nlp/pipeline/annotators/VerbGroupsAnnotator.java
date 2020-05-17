@@ -21,15 +21,20 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class VerbGroupsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class VerbGroupsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(VerbGroupsAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 
 	public VerbGroupsAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 		this.setTags(Arrays.asList("VB","VBD","VBG","VBN","VBP","VBZ"));
 	}
 	
@@ -46,13 +51,7 @@ public class VerbGroupsAnnotator extends AbstractAggregatePosAnnotator implement
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPVerbGroupsAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPVerbGroupsAnnotationAggregate.class;
-	}
 
-	
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
@@ -67,7 +66,7 @@ public class VerbGroupsAnnotator extends AbstractAggregatePosAnnotator implement
 								score = score.substring(score.lastIndexOf('.')+1);
 							}
 							Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-							scoreMap.put(score, new BigDecimal(1));
+							addToScoreMap(scoreMap, score, new BigDecimal(1));
 							token.set(getAnnotationClass(), scoreMap);
 						}
 					} 

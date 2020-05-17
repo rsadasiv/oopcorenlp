@@ -30,15 +30,20 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class BiberAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class BiberAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BiberAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public BiberAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));		
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));		
 	}
 
 	public BiberAnnotator(Properties properties) {
@@ -51,10 +56,6 @@ public class BiberAnnotator extends AbstractAggregatePosAnnotator implements Ann
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPBiberAnnotation.class;
 	}
 
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPBiberAnnotationAggregate.class;
-	}
 	@Override
 	public void init(Map<String, Object> properties) {
 		// TODO Auto-generated method stub
@@ -173,7 +174,7 @@ public class BiberAnnotator extends AbstractAggregatePosAnnotator implements Ann
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("VBD", new BigDecimal(1));
+					addToScoreMap(scoreMap, "VBD", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -199,14 +200,14 @@ or negations.
 				if (i<sentence.tokens().size()-1) {
 					if (sentence.tokens().get(i).lemma().equals("have") && posTags.contains(sentence.tokens().get(i+1).tag())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-						scoreMap.put("PEAS", new BigDecimal(1));
+						addToScoreMap(scoreMap, "PEAS", new BigDecimal(1));
 						sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 					}					
 				}
 				if (i<sentence.tokens().size()-2) {
 					if (sentence.tokens().get(i).lemma().equals("have") && (sentence.tokens().get(i+1).tag().equals("RB") || sentence.tokens().get(i+1).lemma().equals("not")) && posTags.contains(sentence.tokens().get(i+2).tag())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-						scoreMap.put("PEAS", new BigDecimal(1));
+						addToScoreMap(scoreMap, "PEAS", new BigDecimal(1));
 						sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 					}					
 				}
@@ -221,7 +222,7 @@ or negations.
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("VPRT", new BigDecimal(1));
+					addToScoreMap(scoreMap, "VPRT", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -238,7 +239,7 @@ or negations.
 					if (!posTags.contains(token.tag())) {
 						if (tags.contains(token.lemma())) {
 							Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-							scoreMap.put("PLACE", new BigDecimal(1));
+							addToScoreMap(scoreMap, "PLACE", new BigDecimal(1));
 							token.set(getAnnotationClass(), scoreMap);
 						}
 					}
@@ -260,7 +261,7 @@ or negations.
 				for (CoreLabel token : sentence.tokens()) {
 					if (tags.contains(token.lemma()) || (soonAs && token.lemma().equals("as"))) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-						scoreMap.put("TIME", new BigDecimal(1));
+						addToScoreMap(scoreMap, "TIME", new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 					if (token.lemma().equals("soon")) {
@@ -284,7 +285,7 @@ or negations.
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("FPP1", new BigDecimal(1));
+					addToScoreMap(scoreMap, "FPP1", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -298,7 +299,7 @@ or negations.
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("SPP2", new BigDecimal(1));
+					addToScoreMap(scoreMap, "SPP2", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -312,7 +313,7 @@ or negations.
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("TPP3", new BigDecimal(1));
+					addToScoreMap(scoreMap, "TPP3", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -326,7 +327,7 @@ or negations.
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("PIT", new BigDecimal(1));
+					addToScoreMap(scoreMap, "PIT", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -352,7 +353,7 @@ been already tagged as a TOBJ, TSUB, THAC or THVC.
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("INPR", new BigDecimal(1));
+					addToScoreMap(scoreMap, "INPR", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -375,7 +376,7 @@ list of WH pronouns is in Biber (1988)).
 					if (sentence.tokens().get(i).lemma().equals("do") && !sentence.tokens().get(i+1).tag().startsWith("V") && (!sentence.tokens().get(i+1).tag().equals("RB"))) {
 						if (i>0 && !sentence.tokens().get(i-1).tag().equals("WP") && !isPunctuationMark(sentence.tokens().get(i-1))) {
 							Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-							scoreMap.put("PROD", new BigDecimal(1));
+							addToScoreMap(scoreMap, "PROD", new BigDecimal(1));
 							sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 						}
 					}					
@@ -402,7 +403,7 @@ improved by excluding WH words such as however or whatever that do not introduce
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("WHQU", new BigDecimal(1));
+					addToScoreMap(scoreMap, "WHQU", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -419,7 +420,7 @@ improved by excluding WH words such as however or whatever that do not introduce
 				for (String ending : tags) {
 					if (token.lemma().endsWith(ending) && (token.lemma().length() > (ending.length()+2))) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-						scoreMap.put("NOMZ", new BigDecimal(1));
+						addToScoreMap(scoreMap, "NOMZ", new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -438,7 +439,7 @@ improved by excluding WH words such as however or whatever that do not introduce
 					//if (token.lemma().endsWith(ending) && (token.lemma().length() > 10)) {
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("GER", new BigDecimal(1));
+					addToScoreMap(scoreMap, "GER", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -454,7 +455,7 @@ improved by excluding WH words such as however or whatever that do not introduce
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
 					if (scoreMap.get("GER") == null && scoreMap.get("NOMZ") == null) {
-						scoreMap.put("NN", new BigDecimal(1));
+						addToScoreMap(scoreMap, "NN", new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -480,7 +481,7 @@ which a negation precedes the nominal form of pattern (b).
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag()) && wasBe) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("PASS", new BigDecimal(1));
+					addToScoreMap(scoreMap, "PASS", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 				if (token.lemma().equals("be")) {
@@ -502,7 +503,7 @@ which a negation precedes the nominal form of pattern (b).
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma()) && wasPASS) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("BYPA", new BigDecimal(1));
+					addToScoreMap(scoreMap, "BYPA", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 				if (getBiberAnnotation(token).get("PASS") != null) {
@@ -534,7 +535,7 @@ not appear before the pattern; (b) the cardinal numbers (CD) tag and the persona
 				if (i<sentence.tokens().size()-1) {
 					if (sentence.tokens().get(i).lemma().equals("be") && !posTags.contains(sentence.tokens().get(i+1).tag())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-						scoreMap.put("BEMA", new BigDecimal(1));
+						addToScoreMap(scoreMap, "BEMA", new BigDecimal(1));
 						sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 					}					
 				}
@@ -549,7 +550,7 @@ not appear before the pattern; (b) the cardinal numbers (CD) tag and the persona
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("EX", new BigDecimal(1));
+					addToScoreMap(scoreMap, "EX", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -581,7 +582,7 @@ four words that are not nouns (N).
 				}
 				if (token != null) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("THVC", new BigDecimal(1));
+					addToScoreMap(scoreMap, "THVC", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -598,7 +599,7 @@ four words that are not nouns (N).
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma()) && wasJJPRED) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("THAC", new BigDecimal(1));
+					addToScoreMap(scoreMap, "THAC", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 				if (token.tag().equals("JJ") || token.tag().equals("PRED")) {
@@ -633,7 +634,7 @@ verbs, or a form of DO, or a form of HAVE, or a form of BE).
 				}
 				if (token != null) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("WHCL", new BigDecimal(1));
+					addToScoreMap(scoreMap, "WHCL", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -667,7 +668,7 @@ therefore identifying occurrences of infinitive clauses.
 				}
 				if (token != null) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("TO", new BigDecimal(1));
+					addToScoreMap(scoreMap, "TO", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -689,7 +690,7 @@ QUAN, CD), a WH pronoun, a WH possessive pronoun (WP$), any WH word, any pronoun
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("PRESP", new BigDecimal(1));
+					addToScoreMap(scoreMap, "PRESP", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -709,7 +710,7 @@ past participial form of a verb (VBN) followed by a preposition (PIN) or an adve
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("PASTP", new BigDecimal(1));
+					addToScoreMap(scoreMap, "PASTP", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -738,7 +739,7 @@ or an adverb (RB) or a form of BE.
 				}
 				if (token != null) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("WZPAST", new BigDecimal(1));
+					addToScoreMap(scoreMap, "WZPAST", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -764,7 +765,7 @@ This tag is assigned a present participial form of a verb (VBG) is preceded by a
 				}
 				if (token != null) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("WZPRES", new BigDecimal(1));
+					addToScoreMap(scoreMap, "WZPRES", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -792,7 +793,7 @@ verb (V), with the possibility of an intervening adverb (RB) or negation (XX0).
 				}
 				if (token != null) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("TSUB", new BigDecimal(1));
+					addToScoreMap(scoreMap, "TSUB", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -823,7 +824,7 @@ distinguish between simple complements to nouns and true relative clauses.
 				}
 				if (token != null) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("TOBJ", new BigDecimal(1));
+					addToScoreMap(scoreMap, "TOBJ", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -853,7 +854,7 @@ between the WH pronoun and the verb.
 				}
 				if (token != null) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("WHSUB", new BigDecimal(1));
+					addToScoreMap(scoreMap, "WHSUB", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -883,7 +884,7 @@ HAVE, BE or DO).
 				}
 				if (token != null) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("WHOBJ", new BigDecimal(1));
+					addToScoreMap(scoreMap, "WHOBJ", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -900,7 +901,7 @@ HAVE, BE or DO).
 				for (CoreLabel token : sentence.tokens()) {
 					if (posTags.contains(token.lemma()) && wasPIN) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-						scoreMap.put("PIRE", new BigDecimal(1));
+						addToScoreMap(scoreMap, "PIRE", new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 					if (tags.contains(token.lemma())) {
@@ -925,7 +926,7 @@ HAVE, BE or DO).
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma()) && wasPunct) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("SERE", new BigDecimal(1));
+					addToScoreMap(scoreMap, "SERE", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 				if (isPunctuationMark(token)) {
@@ -945,7 +946,7 @@ HAVE, BE or DO).
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("CAUS", new BigDecimal(1));
+					addToScoreMap(scoreMap, "CAUS", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -959,7 +960,7 @@ HAVE, BE or DO).
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("CONC", new BigDecimal(1));
+					addToScoreMap(scoreMap, "CONC", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -973,7 +974,7 @@ HAVE, BE or DO).
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("COND", new BigDecimal(1));
+					addToScoreMap(scoreMap, "COND", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -996,13 +997,13 @@ as, only the first word is tagged as OSUB and the other words are tagged with th
 			for (int i=0;i<sentence.tokens().size();i++) {
 				if (tags.contains(sentence.tokens().get(i).lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-					scoreMap.put("OSUB", new BigDecimal(1));
+					addToScoreMap(scoreMap, "OSUB", new BigDecimal(1));
 					sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 				}
 				if (i<sentence.tokens().size()-2) {
 					if ((sentence.tokens().get(i).lemma().equals("such") || sentence.tokens().get(i).lemma().equals("so")) && sentence.tokens().get(i+1).lemma().equals("that") && !posTags.contains(sentence.tokens().get(i+2).tag())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-						scoreMap.put("OSUB", new BigDecimal(1));
+						addToScoreMap(scoreMap, "OSUB", new BigDecimal(1));
 						sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 					}					
 				}
@@ -1018,7 +1019,7 @@ as, only the first word is tagged as OSUB and the other words are tagged with th
 				for (CoreLabel token : sentence.tokens()) {
 					if (tags.contains(token.lemma())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-						scoreMap.put("PIN", new BigDecimal(1));
+						addToScoreMap(scoreMap, "PIN", new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -1036,7 +1037,7 @@ as, only the first word is tagged as OSUB and the other words are tagged with th
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("JJ", new BigDecimal(1));
+					addToScoreMap(scoreMap, "JJ", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -1062,7 +1063,7 @@ coordinator (see below). This pattern accounts for cases such as: the horse is b
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag()) && wasBe) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("PRED", new BigDecimal(1));
+					addToScoreMap(scoreMap, "PRED", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 				if (token.lemma().equals("be")) {
@@ -1082,7 +1083,7 @@ coordinator (see below). This pattern accounts for cases such as: the horse is b
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("RB", new BigDecimal(1));
+					addToScoreMap(scoreMap, "RB", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -1104,7 +1105,7 @@ coordinator (see below). This pattern accounts for cases such as: the horse is b
 		try {
 			if (characters > 0 && words > 0) {
 				Map<String, BigDecimal> scoreMap = getBiberAnnotation(annotation);
-				scoreMap.put("AWL", new BigDecimal(characters/words));
+				addToScoreMap(scoreMap, "AWL", new BigDecimal(characters/words));
 				annotation.set(getAnnotationClass(), scoreMap);
 			}
 		}
@@ -1137,7 +1138,7 @@ coordinator (see below). This pattern accounts for cases such as: the horse is b
 		try {
 			if (words > 0) {
 				Map<String, BigDecimal> scoreMap = getBiberAnnotation(annotation);
-				scoreMap.put("TTR", new BigDecimal(typeCount.size()/words));
+				addToScoreMap(scoreMap, "TTR", new BigDecimal(typeCount.size()/words));
 				annotation.set(getAnnotationClass(), scoreMap);
 			}
 		}
@@ -1168,7 +1169,7 @@ words are tagged with the tag NULL.
 				for (CoreLabel token : sentence.tokens()) {
 					if (tags.contains(token.lemma())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-						scoreMap.put("CONJ", new BigDecimal(1));
+						addToScoreMap(scoreMap, "CONJ", new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -1186,7 +1187,7 @@ words are tagged with the tag NULL.
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("DWNT", new BigDecimal(1));
+					addToScoreMap(scoreMap, "DWNT", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -1208,30 +1209,30 @@ word is tagged as HDG and the other words are tagged with the tag NULL.
 			for (int i=0;i<sentence.tokens().size();i++) {
 				if (sentence.tokens().get(i).lemma().equals("maybe")) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-					scoreMap.put("HDG", new BigDecimal(1));
+					addToScoreMap(scoreMap, "HDG", new BigDecimal(1));
 					sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 				}
 				if (i<sentence.tokens().size()-1) {
 					if (sentence.tokens().get(i).lemma().equals("at") && sentence.tokens().get(i+1).lemma().equals("about")) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-						scoreMap.put("HDG", new BigDecimal(1));
+						addToScoreMap(scoreMap, "HDG", new BigDecimal(1));
 						sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 					}
 					if (sentence.tokens().get(i).lemma().equals("something") && sentence.tokens().get(i+1).lemma().equals("like")) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-						scoreMap.put("HDG", new BigDecimal(1));
+						addToScoreMap(scoreMap, "HDG", new BigDecimal(1));
 						sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 					}
 				}
 				if (i<sentence.tokens().size()-2) {				
 					if (sentence.tokens().get(i).lemma().equals("more") && sentence.tokens().get(i+1).lemma().equals("or") && sentence.tokens().get(i+2).lemma().equals("less")) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-						scoreMap.put("HDG", new BigDecimal(1));
+						addToScoreMap(scoreMap, "HDG", new BigDecimal(1));
 						sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 					}
 					if ((sentence.tokens().get(i).lemma().equals("sort") || sentence.tokens().get(i).lemma().equals("kind")) && sentence.tokens().get(i+1).lemma().equals("of") && !posTags.contains(sentence.tokens().get(i+2).tag())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-						scoreMap.put("HDG", new BigDecimal(1));
+						addToScoreMap(scoreMap, "HDG", new BigDecimal(1));
 						sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -1246,7 +1247,7 @@ word is tagged as HDG and the other words are tagged with the tag NULL.
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("AMP", new BigDecimal(1));
+					addToScoreMap(scoreMap, "AMP", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -1266,7 +1267,7 @@ tagged with the tag NULL.
 			for (int i=0;i<sentence.tokens().size();i++) {
 				if (tags.contains(sentence.tokens().get(i).lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-					scoreMap.put("EMPH", new BigDecimal(1));
+					addToScoreMap(scoreMap, "EMPH", new BigDecimal(1));
 					sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 				}
 				if (i<sentence.tokens().size()-1) {
@@ -1284,7 +1285,7 @@ tagged with the tag NULL.
 							(sentence.tokens().get(i).lemma().equals("do") && sentence.tokens().get(i+1).tag().startsWith("V"))
 						) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-						scoreMap.put("EMPH", new BigDecimal(1));
+						addToScoreMap(scoreMap, "EMPH", new BigDecimal(1));
 						sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -1301,7 +1302,7 @@ tagged with the tag NULL.
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma()) && wasPunct) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("DPAR", new BigDecimal(1));
+					addToScoreMap(scoreMap, "DPAR", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 				if (isPunctuationMark(token)) {
@@ -1323,7 +1324,7 @@ tagged with the tag NULL.
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
 					if (scoreMap.get("DEMP") == null && scoreMap.get("TOBJ") == null && scoreMap.get("TSUB") == null && scoreMap.get("THAC") == null && scoreMap.get("THVC") == null) {
-						scoreMap.put("DEMO", new BigDecimal(1));
+						addToScoreMap(scoreMap, "DEMO", new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -1338,7 +1339,7 @@ tagged with the tag NULL.
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("POMD", new BigDecimal(1));
+					addToScoreMap(scoreMap, "POMD", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -1352,7 +1353,7 @@ tagged with the tag NULL.
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("NEMD", new BigDecimal(1));
+					addToScoreMap(scoreMap, "NEMD", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -1366,7 +1367,7 @@ tagged with the tag NULL.
 			for (CoreLabel token : sentence.tokens()) {
 				if (tags.contains(token.lemma())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("PRMD", new BigDecimal(1));
+					addToScoreMap(scoreMap, "PRMD", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -1382,7 +1383,7 @@ tagged with the tag NULL.
 				for (CoreLabel token : sentence.tokens()) {
 					if (posTags.contains(token.tag()) && tags.contains(token.lemma())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-						scoreMap.put("PUBV", new BigDecimal(1));
+						addToScoreMap(scoreMap, "PUBV", new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -1402,7 +1403,7 @@ tagged with the tag NULL.
 				for (CoreLabel token : sentence.tokens()) {
 					if (posTags.contains(token.tag()) && tags.contains(token.lemma())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-						scoreMap.put("PRIV", new BigDecimal(1));
+						addToScoreMap(scoreMap, "PRIV", new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -1422,7 +1423,7 @@ tagged with the tag NULL.
 				for (CoreLabel token : sentence.tokens()) {
 					if (posTags.contains(token.tag()) && tags.contains(token.lemma())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-						scoreMap.put("SUAV", new BigDecimal(1));
+						addToScoreMap(scoreMap, "SUAV", new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -1443,7 +1444,7 @@ tagged with the tag NULL.
 				for (CoreLabel token : sentence.tokens()) {
 					if (posTags.contains(token.tag()) && tags.contains(token.lemma())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-						scoreMap.put("SEMP", new BigDecimal(1));
+						addToScoreMap(scoreMap, "SEMP", new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -1465,7 +1466,7 @@ word OR any instance of the item n’t.
 			for (CoreLabel token : sentence.tokens()) {
 				if (token.lemma().equals("not") && token.originalText().equals("n\'t")) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("CONT", new BigDecimal(1));
+					addToScoreMap(scoreMap, "CONT", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -1494,7 +1495,7 @@ an intervening adjective (JJ or PRED) between the noun and its preceding word.
 			for (CoreLabel token : sentence.tokens()) {
 				if (wasPIN && isPunctuationMark(token)) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("STPR", new BigDecimal(1));
+					addToScoreMap(scoreMap, "STPR", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 				if (posTags.contains(token.tag())) {
@@ -1528,7 +1529,7 @@ adverbs and a verb base form.
 				}
 				if (token != null) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("SPIN", new BigDecimal(1));
+					addToScoreMap(scoreMap, "SPIN", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -1558,7 +1559,7 @@ base form.
 				}
 				if (token != null) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("SPAU", new BigDecimal(1));
+					addToScoreMap(scoreMap, "SPAU", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
@@ -1574,7 +1575,7 @@ base form.
 				if (i>0 && i<sentence.tokens().size()-1) {
 					if (sentence.tokens().get(i).lemma().equals("and") && posTags.contains(sentence.tokens().get(i-1).tag()) && sentence.tokens().get(i-1).tag().equals(sentence.tokens().get(i+1).tag())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
-						scoreMap.put("PHC", new BigDecimal(1));
+						addToScoreMap(scoreMap, "PHC", new BigDecimal(1));
 						sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
 					}					
 				}
@@ -1601,7 +1602,7 @@ punctuation; (3) followed by a WH pronoun or any WH word, an adverbial subordina
 			for (CoreLabel token : sentence.tokens()) {
 				if (wasNot && posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("SYNE", new BigDecimal(1));
+					addToScoreMap(scoreMap, "SYNE", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 				if (token.lemma().equals("no") || token.lemma().equals("not") || token.lemma().equals("neither")) {
@@ -1620,7 +1621,7 @@ punctuation; (3) followed by a WH pronoun or any WH word, an adverbial subordina
 			for (CoreLabel token : sentence.tokens()) {
 				if (token.lemma().equals("not")) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
-					scoreMap.put("XX0", new BigDecimal(1));
+					addToScoreMap(scoreMap, "XX0", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}

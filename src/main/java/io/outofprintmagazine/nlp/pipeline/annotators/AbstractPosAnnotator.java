@@ -21,6 +21,11 @@ public abstract class AbstractPosAnnotator extends AbstractAnnotator implements 
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(AbstractPosAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 
 	protected List<String> tags = new ArrayList<String>();
 

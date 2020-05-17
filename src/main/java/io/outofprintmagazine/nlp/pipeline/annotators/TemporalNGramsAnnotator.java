@@ -28,16 +28,20 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class TemporalNGramsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class TemporalNGramsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(TemporalNGramsAnnotator.class);
 
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 	
 	public TemporalNGramsAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/COCA/Dolch.txt");
 	}
 	
@@ -109,7 +113,7 @@ public class TemporalNGramsAnnotator extends AbstractAggregatePosAnnotator imple
 							if (wordCache != null && wordCache.size() > 0) {
 								String key = nGramPhraseScoreToTemporalString(wordCache.get(0));
 								Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-								scoreMap.put(key, new BigDecimal(1));
+								addToScoreMap(scoreMap, key, new BigDecimal(1));
 								token.set(getAnnotationClass(), scoreMap);
 							}
 						}
@@ -131,13 +135,7 @@ public class TemporalNGramsAnnotator extends AbstractAggregatePosAnnotator imple
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPTemporalNGramsAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPTemporalNGramsAnnotationAggregate.class;
-	}	
 
-	
 	@Override
 	public Set<Class<? extends CoreAnnotation>> requires() {
 		return Collections.unmodifiableSet(

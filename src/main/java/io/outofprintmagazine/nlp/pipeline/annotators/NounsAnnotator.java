@@ -19,16 +19,21 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class NounsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class NounsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(NounsAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public NounsAnnotator() {
 		super();
 		this.setTags(Arrays.asList("NN","NNS"));
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));			
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));			
 	}
 	
 	public NounsAnnotator(Properties properties) {
@@ -46,11 +51,6 @@ public class NounsAnnotator extends AbstractAggregatePosAnnotator implements Ann
 	}
 	
 	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPNounsAnnotationAggregate.class;
-	}
-	
-	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
@@ -58,7 +58,7 @@ public class NounsAnnotator extends AbstractAggregatePosAnnotator implements Ann
 				String score = scoreLemma(token);
 				if (score != null) {
 					Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-					scoreMap.put(score, new BigDecimal(1));
+					addToScoreMap(scoreMap, score, new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}

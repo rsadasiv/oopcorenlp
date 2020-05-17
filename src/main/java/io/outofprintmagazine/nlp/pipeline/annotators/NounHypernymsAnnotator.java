@@ -27,16 +27,21 @@ import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
 import java.math.BigDecimal;
 
-public class NounHypernymsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class NounHypernymsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(NounHypernymsAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public NounHypernymsAnnotator() {
 		super();
 		this.setTags(Arrays.asList("NN","NNS"));
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));		
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));		
 	}
 	
 	public NounHypernymsAnnotator(Properties properties) {
@@ -51,11 +56,6 @@ public class NounHypernymsAnnotator extends AbstractAggregatePosAnnotator implem
 	@Override
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPNounHypernymsAnnotation.class;
-	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPNounHypernymsAnnotationAggregate.class;
 	}
 
 	@Override

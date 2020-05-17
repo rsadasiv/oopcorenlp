@@ -19,7 +19,6 @@ import org.apache.logging.log4j.Logger;
 import edu.stanford.nlp.coref.CorefCoreAnnotations;
 import edu.stanford.nlp.coref.data.CorefChain;
 import edu.stanford.nlp.coref.data.CorefChain.CorefMention;
-import edu.stanford.nlp.coref.data.Dictionaries;
 import edu.stanford.nlp.ling.CoreAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -36,16 +35,23 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class PeopleAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class PeopleAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PeopleAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
+	
 	private List<String> properNouns = Arrays.asList("NNP","NNPS");
 
 	public PeopleAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 		this.setTags(Arrays.asList("NNP", "NNPS", "NN", "NNS"));
 	}
 	
@@ -61,11 +67,6 @@ public class PeopleAnnotator extends AbstractAggregatePosAnnotator implements An
 	@Override
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPeopleAnnotation.class;
-	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPeopleAnnotationAggregate.class;
 	}
 	
 	@Override
@@ -210,7 +211,7 @@ public class PeopleAnnotator extends AbstractAggregatePosAnnotator implements An
 					if (!token.containsKey(getAnnotationClass())) {
 //						logger.debug("scoreUpdated: " + entityName);
 //						logger.debug("------------");
-						scoreMap.put(entityName, new BigDecimal(1));
+						addToScoreMap(scoreMap, entityName, new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -242,7 +243,7 @@ public class PeopleAnnotator extends AbstractAggregatePosAnnotator implements An
 //							logger.debug("scoreUpdated: " + personName);
 //							logger.debug("------------");
 							Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-							scoreMap.put(personName, new BigDecimal(1));
+							addToScoreMap(scoreMap, personName, new BigDecimal(1));
 							token.set(getAnnotationClass(), scoreMap);
 						}
 					}
@@ -321,7 +322,7 @@ public class PeopleAnnotator extends AbstractAggregatePosAnnotator implements An
 //								logger.debug("------------");
 								if (!token.containsKey(getAnnotationClass())) {
 									Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-									scoreMap.put(corefPersonName, new BigDecimal(1));
+									addToScoreMap(scoreMap, corefPersonName, new BigDecimal(1));
 									token.set(getAnnotationClass(), scoreMap);
 //									logger.debug("scoreUpdated: " + corefPersonName);
 //									logger.debug("------------");
@@ -353,7 +354,7 @@ public class PeopleAnnotator extends AbstractAggregatePosAnnotator implements An
 					}
 					if (shouldScore) {
 						Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
-						scoreMap.put(token.lemma(), new BigDecimal(1));
+						addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -363,6 +364,6 @@ public class PeopleAnnotator extends AbstractAggregatePosAnnotator implements An
 
 	@Override
 	public String getDescription() {
-		return "CoreNLP NER mentions: PERSON minus PRP, PRP$ plus coref";
+		return "CoreNLP NER mentions: I, PERSON minus PRP, PRP$, stray NNP/NNPS; coref";
 	}
 }

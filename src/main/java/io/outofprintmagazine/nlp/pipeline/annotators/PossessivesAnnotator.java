@@ -19,16 +19,21 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class PossessivesAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class PossessivesAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PossessivesAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public PossessivesAnnotator() {
 		super();
 		this.setTags(Arrays.asList("PRP$", "POS", "WP$"));
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));		
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));		
 	}
 	
 	public PossessivesAnnotator(Properties properties) {
@@ -44,12 +49,7 @@ public class PossessivesAnnotator extends AbstractAggregatePosAnnotator implemen
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPossessivesAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPossessivesAnnotationAggregate.class;
-	}
-	
+
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
@@ -58,7 +58,7 @@ public class PossessivesAnnotator extends AbstractAggregatePosAnnotator implemen
 				String score = scoreLemma(token);
 				if (score != null && !score.startsWith("'")) {
 					Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-					scoreMap.put(token.originalText().toLowerCase(), new BigDecimal(1));
+					addToScoreMap(scoreMap, token.originalText().toLowerCase(), new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap );
 				}
 			}

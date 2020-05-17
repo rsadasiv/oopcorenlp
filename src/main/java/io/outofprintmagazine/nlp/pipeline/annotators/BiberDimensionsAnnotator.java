@@ -24,10 +24,15 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class BiberDimensionsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class BiberDimensionsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BiberDimensionsAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 
 	/*
 	 * Involved vs Informational production
@@ -137,8 +142,8 @@ public class BiberDimensionsAnnotator extends AbstractAggregatePosAnnotator impl
 	
 	public BiberDimensionsAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));		
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));		
 	}
 
 	public BiberDimensionsAnnotator(Properties properties) {
@@ -151,10 +156,6 @@ public class BiberDimensionsAnnotator extends AbstractAggregatePosAnnotator impl
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPBiberDimensionsAnnotation.class;
 	}
 
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPBiberDimensionsAnnotationAggregate.class;
-	}
 	
 	@Override
 	public void init(Map<String, Object> properties) {

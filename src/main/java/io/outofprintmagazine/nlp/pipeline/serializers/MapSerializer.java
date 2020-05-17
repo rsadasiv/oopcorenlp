@@ -9,14 +9,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
-import io.outofprintmagazine.util.DocumentAggregateScore;
 
 public class MapSerializer implements Serializer {
 
@@ -25,7 +23,6 @@ public class MapSerializer implements Serializer {
 
 	@SuppressWarnings("rawtypes")
 	protected Class annotationClass = null;
-	protected Class aggregateClass = null;
 
 	public MapSerializer() {
 		super();
@@ -36,13 +33,7 @@ public class MapSerializer implements Serializer {
 		super();
 		this.setAnnotationClass(annotationClass);
 	}
-	
-	@SuppressWarnings("rawtypes")
-	public MapSerializer(Class annotationClass, Class aggregateClass) {
-		super();
-		this.setAnnotationClass(annotationClass);
-		this.setAggregateClass(aggregateClass);
-	}
+
 
 	@SuppressWarnings("rawtypes")
 	public void setAnnotationClass(Class annotationClass) {
@@ -53,23 +44,18 @@ public class MapSerializer implements Serializer {
 	public Class getAnnotationClass() {
 		return this.annotationClass;
 	}
-	
-	public Class getAggregateClass() {
-		return aggregateClass;
-	}
-
-	public void setAggregateClass(Class aggregateClass) {
-		this.aggregateClass = aggregateClass;
-	}
 
 	@Override
 	public void serialize(CoreDocument document, ObjectNode json) {
 		serializeTokens(document, json);
 		serializeSentences(document, json);
 		serializeDocument(document, json);
-		if (getAggregateClass() != null) {
-			serializeDocumentAggregate(document, json);
-		}
+	}
+	
+	@Override
+	public void serializeAggregate(Object aggregate, ObjectNode jsonDocument) {
+		ObjectMapper mapper = new ObjectMapper();
+		jsonDocument.set(getAnnotationClass().getSimpleName(), mapper.valueToTree(aggregate));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -85,17 +71,10 @@ public class MapSerializer implements Serializer {
 			for (String key : rawScores.keySet()) {
 				score.put(key, rawScores.get(key).toPlainString());
 			}
-			jsonDocument.set(getAnnotationClass().getName(), score);
+			jsonDocument.set(getAnnotationClass().getSimpleName(), score);
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	protected void serializeDocumentAggregate(CoreDocument coreNlpDocument, ObjectNode jsonDocument) {
-		ObjectMapper mapper = new ObjectMapper();
-		//trim scores with value 1 ?
-		jsonDocument.set(getAggregateClass().getName(), mapper.valueToTree(coreNlpDocument.annotation().get(getAggregateClass())));
-	}
-
 	@SuppressWarnings("unchecked")
 	protected void serializeSentences(CoreDocument coreNlpDocument, ObjectNode jsonDocument) {
 		ObjectMapper mapper = new ObjectMapper();
@@ -120,7 +99,7 @@ public class MapSerializer implements Serializer {
 						logger.error(key, t);
 					}
 				}
-				sentenceNode.set(getAnnotationClass().getName(), score);
+				sentenceNode.set(getAnnotationClass().getSimpleName(), score);
 			}
 		}
 
@@ -155,7 +134,7 @@ public class MapSerializer implements Serializer {
 							logger.error(key, t);
 						}
 					}
-					tokenNode.set(getAnnotationClass().getName(), score);
+					tokenNode.set(getAnnotationClass().getSimpleName(), score);
 				}
 			}
 		}

@@ -2,7 +2,6 @@ package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -16,22 +15,26 @@ import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import io.outofprintmagazine.nlp.WikipediaUtils2;
-import io.outofprintmagazine.nlp.pipeline.scorers.MapListScorer;
 import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
-import io.outofprintmagazine.nlp.pipeline.serializers.MapListSerializer;
+import io.outofprintmagazine.nlp.pipeline.scorers.StringScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.StringSerializer;
 
 public class WikipediaGlossAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WikipediaGlossAnnotator.class);
-
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 	
 	public WikipediaGlossAnnotator() {
 		super();
 		this.setTags(Arrays.asList("NN","NNS", "NNP", "NNPS"));
-		this.setScorer((Scorer)new MapListScorer(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new MapListSerializer(this.getAnnotationClass()));		
+		this.setScorer((Scorer)new StringScorer(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new StringSerializer(this.getAnnotationClass()));		
 	}
 	
 	public WikipediaGlossAnnotator(Properties properties) {
@@ -68,10 +71,10 @@ public class WikipediaGlossAnnotator extends AbstractPosAnnotator implements Ann
 					String topic = scoreLemma(token);
 					if (topic != null) {
 						String wordCache = WikipediaUtils2.getInstance().getWordCache(token.lemma());
-						if (wordCache != null) {
-							Map<String, List<String>> scoreMap = new HashMap<String, List<String>>();
-							scoreMap.put(token.lemma(), Arrays.asList(wordCache));
-							token.set(getAnnotationClass(), scoreMap);
+						if (wordCache != null && !wordCache.equals("")) {
+							//Map<String, List<String>> scoreMap = new HashMap<String, List<String>>();
+							//scoreMap.put(toAlphaNumeric(token.lemma()), Arrays.asList(wordCache));
+							token.set(getAnnotationClass(), wordCache);
 						}
 					}
 				}

@@ -20,17 +20,23 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class PointlessAdjectivesAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class PointlessAdjectivesAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PointlessAdjectivesAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	private List<String> posTags = Arrays.asList("JJ", "JJR", "JJS");
 	
 	public PointlessAdjectivesAnnotator() {
 		super();
 		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/Adjectives.txt");
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 	}
 	
 	public PointlessAdjectivesAnnotator(Properties properties) {
@@ -48,11 +54,6 @@ public class PointlessAdjectivesAnnotator extends AbstractAggregatePosAnnotator 
 	}
 	
 	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPointlessAdjectivesAnnotationAggregate.class;
-	}
-	
-	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
@@ -60,7 +61,7 @@ public class PointlessAdjectivesAnnotator extends AbstractAggregatePosAnnotator 
 				Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
 				if (posTags.contains(token.tag())) {
 					if (getTags().contains(token.lemma().toLowerCase())) {
-						scoreMap.put(token.lemma(), new BigDecimal(1));
+						addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
 					}
 				}
 				if (scoreMap.size() > 0) {

@@ -11,19 +11,22 @@ import org.apache.logging.log4j.Logger;
 public class MapSum extends MapScorer implements Scorer {
 
 	private static final Logger logger = LogManager.getLogger(MapSum.class);
+	
+	protected Logger getLogger() {
+		return logger;
+	}
 
 	public MapSum() {
 		super();
 	}
-
-	public MapSum(@SuppressWarnings("rawtypes") Class annotationClass) {
+	
+	@SuppressWarnings("rawtypes")
+	public MapSum( Class annotationClass) {
 		super(annotationClass);
 	}
 	
-	public MapSum(@SuppressWarnings("rawtypes") Class annotationClass, Class aggregateClass) {
-		super(annotationClass, aggregateClass);
-	}
 
+	@Override
 	public Map<String, BigDecimal> aggregateScores(List<Map<String, BigDecimal>> allScores) {
 		Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
 		for (Map<String, BigDecimal> rawScore : allScores) {
@@ -38,5 +41,7 @@ public class MapSum extends MapScorer implements Scorer {
 		}
 		return scoreMap;
 	}
+
+
 
 }

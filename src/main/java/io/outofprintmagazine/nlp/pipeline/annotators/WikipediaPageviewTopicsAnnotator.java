@@ -24,15 +24,20 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class WikipediaPageviewTopicsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class WikipediaPageviewTopicsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WikipediaPageviewTopicsAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 		
 	public WikipediaPageviewTopicsAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));			
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));			
 	}
 	
 	public WikipediaPageviewTopicsAnnotator(Properties properties) {
@@ -62,12 +67,7 @@ public class WikipediaPageviewTopicsAnnotator extends AbstractAggregatePosAnnota
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPWikipediaPageviewTopicsAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPWikipediaPageviewTopicsAnnotationAggregate.class;
-	}
-	
+
 	protected Class getTopicsAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPTopicsAnnotation.class;
 	}
@@ -79,7 +79,7 @@ public class WikipediaPageviewTopicsAnnotator extends AbstractAggregatePosAnnota
 		Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
 		for (String topic : topics.keySet()) {
 			try {
-				scoreMap.put(topic, WikipediaUtils.getInstance().getWikipediaPageviewsForTopic(topic).multiply(topics.get(topic)));
+				addToScoreMap(scoreMap, topic, WikipediaUtils.getInstance().getWikipediaPageviewsForTopic(topic).multiply(topics.get(topic)));
 			} 
 			catch (IOException e) {
 				logger.error(e);

@@ -7,8 +7,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Queue;
@@ -23,18 +25,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
 
 import edu.stanford.nlp.io.IOUtils;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.JSONOutputter;
+import edu.stanford.nlp.util.StringUtils;
 import io.outofprintmagazine.nlp.CoreNlpUtils;
-import io.outofprintmagazine.nlp.TextUtils;
-import io.outofprintmagazine.nlp.pipeline.scorers.CorpusScorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.TfidfScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.CoreNLPSerializer;
-import io.outofprintmagazine.util.CorpusDocumentAggregateScore;
-import io.outofprintmagazine.util.CorpusScalarAggregateScore;
 import io.outofprintmagazine.util.InputMessage;
 
 public class Analyzer {
@@ -58,18 +57,18 @@ public class Analyzer {
 	}
 	
 	public void init() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, ParseException {
-		getInputMessages().addAll(
-				TextUtils.getInstance().readEmailDirectory(
-						"C:\\Users\\rsada\\git\\oop_nlp\\similarity\\resources\\Submissions", 
-						"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp_web\\WebContent\\Corpora"
-				)
-		);
-		
-		getInputMessages().addAll(
-				TextUtils.getInstance().readOutOfPrintIssues(
-						"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp_web\\WebContent\\Corpora"
-				)
-		);
+//		getInputMessages().addAll(
+//				TextUtils.getInstance().readEmailDirectory(
+//						"C:\\Users\\rsada\\git\\oop_nlp\\similarity\\resources\\Submissions", 
+//						"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp_web\\WebContent\\Corpora"
+//				)
+//		);
+//		
+//		getInputMessages().addAll(
+//				TextUtils.getInstance().readOutOfPrintIssues(
+//						"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp_web\\WebContent\\Corpora"
+//				)
+//		);
 
 //		Properties metadata = new Properties();
 //		metadata.put(CoreAnnotations.DocIDAnnotation.class.getName(), "d659265c-641f-41b9-a5b2-5db65c308640");
@@ -105,13 +104,14 @@ public class Analyzer {
 			ta.processInputMessage(lastMessage);
 		}
 		if (lastMessage != null) {
-			ta.scoreCorpus(lastMessage.getOutputDirectory());
+			//ta.scoreCorpus(lastMessage.getOutputDirectory());
 		}
+		ta.scoreTfidf(lastMessage.getOutputDirectory());
 		
 	}
 		
 	public void processInputMessage(InputMessage inputMessage) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		String storyText = TextUtils.getInstance().processPlainUnicode(inputMessage.getInputFile());
+		String storyText = StringUtils.toAscii(StringUtils.normalize(inputMessage.getInputFile())).trim();
 		Map<String,ObjectNode> json = analyze(inputMessage.getMetadata(), storyText);
 		
 		//write properties
@@ -249,14 +249,32 @@ public class Analyzer {
 			//logger.debug(JSONOutputter.jsonPrint(document.annotation()));
 		
 			retval.put("STANFORD", (ObjectNode) mapper.readTree(JSONOutputter.jsonPrint(document.annotation())));
-			ObjectNode json = mapper.createObjectNode();
+			
 			CoreNLPSerializer documentSerializer = new CoreNLPSerializer();
+			
+			ObjectNode json = mapper.createObjectNode();
 			documentSerializer.serialize(document, json);
 			CoreNlpUtils.getInstance().serialize(document, json);
 			retval.put("OOP", json);
-			JavaPropsMapper propsMapper = new JavaPropsMapper();
-			ObjectNode properties = propsMapper.valueToTree(CoreNlpUtils.getDefaultProps());
+			
+			ObjectNode aggregates = mapper.createObjectNode();
+			documentSerializer.serializeAggregate(document, aggregates);
+			CoreNlpUtils.getInstance().serializeAggregates(document, aggregates);
+			retval.put("AGGREGATES", aggregates);
+			
+			//JavaPropsMapper propsMapper = new JavaPropsMapper();
+			//ObjectNode properties = propsMapper.valueToTree(CoreNlpUtils.getDefaultProps());
+			ObjectNode properties = mapper.createObjectNode();
+			ArrayNode coreNlpProperties = properties.putArray("coreNlpProperties");
+			Properties defaultProps = CoreNlpUtils.getDefaultProps();
+			for (String propertyName : defaultProps.stringPropertyNames()) {
+				ObjectNode property = coreNlpProperties.addObject();
+				property.put("name", propertyName);
+				property.put("value", defaultProps.getProperty(propertyName));
+			}
+			
 			CoreNlpUtils.getInstance().describeAnnotations(properties);
+			
 			ArrayNode analysisList = properties.putArray("analysis");
 			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 			analysisList.addObject().put("startTime", fmt.format(new java.util.Date(startTime)));
@@ -271,55 +289,112 @@ public class Analyzer {
 			}
 			analysisList.addObject().put("host", ipAddr);
 			retval.put("PIPELINE", properties);
+			
 		}
 		catch (Exception e) {
 			logger.error(e);
+			e.printStackTrace();
 		}
 		return retval;
 	}
 	
-	public void scoreCorpus(String corpusDirectory) throws JsonProcessingException, IOException {
-		CorpusScorer corpusScorer = new CorpusScorer();
-		ObjectMapper mapper = new ObjectMapper();
+//	public void scoreCorpus(String corpusDirectory) throws JsonProcessingException, IOException {
+//		CorpusScorer corpusScorer = new CorpusScorer();
+//		ObjectMapper mapper = new ObjectMapper();
+//		File corpusDir = new File(corpusDirectory);
+//		File inputDir = new File(corpusDir.getPath() + System.getProperty("file.separator", "/") + "Annotations"  + System.getProperty("file.separator", "/") + "OOP" + System.getProperty("file.separator", "/"));
+//		if (inputDir.isDirectory()) {
+//			for (final File inputFile : inputDir.listFiles()) {
+//				logger.debug(inputFile.getPath());
+//				try {
+//					ObjectNode documentScore = (ObjectNode) mapper.readTree(inputFile);
+//					corpusScorer.addDocumentJson(documentScore);
+//				}
+//				catch (Exception e) {
+//					logger.error(e);
+//				}
+//			}
+//		}
+//		for (CorpusDocumentAggregateScore annotationScore : corpusScorer.scoreCorpus()) {
+//			writeFile(
+//				corpusDir.getPath()
+//					+ System.getProperty("file.separator", "/") 
+//					+ "Annotations" 
+//					+ System.getProperty("file.separator", "/")
+//					+ "CORPUS" 
+//					+ System.getProperty("file.separator", "/") 
+//					+ annotationScore.getName()
+//					+ ".json",
+//				mapper.valueToTree(annotationScore)
+//			);
+//		}
+////		for (CorpusScalarAggregateScore annotationScore : corpusScorer.scoreScalarCorpus()) {
+////			writeFile(
+////				corpusDir.getPath()
+////					+ System.getProperty("file.separator", "/") 
+////					+ "Annotations" 
+////					+ System.getProperty("file.separator", "/")
+////					+ "CORPUS" 
+////					+ System.getProperty("file.separator", "/") 
+////					+ annotationScore.getName()
+////					+ ".json",
+////				mapper.valueToTree(annotationScore)
+////			);
+////		}
+//	}
+	
+	public void scoreTfidf(String corpusDirectory) throws JsonProcessingException, IOException {
+		TfidfScorer tfidfScorer = new TfidfScorer();
+		List<String> annotationScores = Arrays.asList(
+			"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWordsAnnotationAggregate",
+			"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPNounsAnnotationAggregate",
+			"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerbsAnnotationAggregate",
+			"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWikipediaCategoriesAnnotationAggregate"
+		);
+				
 		File corpusDir = new File(corpusDirectory);
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		for (String annotationScore : annotationScores) {
+			tfidfScorer.getCorpusAggregates().put(
+					annotationScore, 
+					objectMapper.readTree(
+							corpusDir.getPath()
+							+ System.getProperty("file.separator", "/") 
+							+ "Annotations" 
+							+ System.getProperty("file.separator", "/")
+							+ "CORPUS" 
+							+ System.getProperty("file.separator", "/") 
+							+ annotationScore
+							+ ".json"
+					)
+			);
+		}
+
 		File inputDir = new File(corpusDir.getPath() + System.getProperty("file.separator", "/") + "Annotations"  + System.getProperty("file.separator", "/") + "OOP" + System.getProperty("file.separator", "/"));
 		if (inputDir.isDirectory()) {
 			for (final File inputFile : inputDir.listFiles()) {
 				logger.debug(inputFile.getPath());
 				try {
-					ObjectNode documentScore = (ObjectNode) mapper.readTree(inputFile);
-					corpusScorer.addDocumentJson(documentScore);
+					ObjectNode documentScore = (ObjectNode) objectMapper.readTree(inputFile);
+					ObjectNode tfidfScore = tfidfScorer.scoreDocument(documentScore);
+					writeFile(
+							corpusDir.getPath()
+								+ System.getProperty("file.separator", "/") 
+								+ "Annotations" 
+								+ System.getProperty("file.separator", "/")
+								+ "TFIDF" 
+								+ System.getProperty("file.separator", "/") 
+								+ tfidfScore.get(CoreAnnotations.DocIDAnnotation.class.getName()).asText()
+								+ ".json",
+							objectMapper.valueToTree(tfidfScore)
+						);
 				}
 				catch (Exception e) {
 					logger.error(e);
 				}
 			}
 		}
-		for (CorpusDocumentAggregateScore annotationScore : corpusScorer.scoreCorpus()) {
-			writeFile(
-				corpusDir.getPath()
-					+ System.getProperty("file.separator", "/") 
-					+ "Annotations" 
-					+ System.getProperty("file.separator", "/")
-					+ "CORPUS" 
-					+ System.getProperty("file.separator", "/") 
-					+ annotationScore.getName()
-					+ ".json",
-				mapper.valueToTree(annotationScore)
-			);
-		}
-		for (CorpusScalarAggregateScore annotationScore : corpusScorer.scoreScalarCorpus()) {
-			writeFile(
-				corpusDir.getPath()
-					+ System.getProperty("file.separator", "/") 
-					+ "Annotations" 
-					+ System.getProperty("file.separator", "/")
-					+ "CORPUS" 
-					+ System.getProperty("file.separator", "/") 
-					+ annotationScore.getName()
-					+ ".json",
-				mapper.valueToTree(annotationScore)
-			);
-		}
 	}
+
 }

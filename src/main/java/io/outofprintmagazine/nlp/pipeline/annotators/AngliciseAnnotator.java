@@ -20,15 +20,20 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class AngliciseAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class AngliciseAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(AngliciseAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public AngliciseAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 	}
 	
 	public AngliciseAnnotator(Properties properties) {
@@ -51,21 +56,16 @@ public class AngliciseAnnotator extends AbstractAggregatePosAnnotator implements
 	}
 	
 	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPAngliciseAnnotationAggregate.class;
-	}
-	
-	@Override
 	public void annotate(Annotation annotation) {
 		try {
 			Map<String,String> dictionary = ResourceUtils.getInstance().getDictionary("io/outofprintmagazine/nlp/models/EN_GB/american_spellings.json");
 			CoreDocument document = new CoreDocument(annotation);
 			for (CoreSentence sentence : document.sentences()) {
 				for (CoreLabel token : sentence.tokens()) {
-					String score = dictionary.get(token.lemma());
+					String score = dictionary.get(token.originalText().toLowerCase());
 					if (score != null) {
 						Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
-						scoreMap.put(score, new BigDecimal(1));
+						addToScoreMap(scoreMap, score, new BigDecimal(1));
 						token.set(getAnnotationClass(), scoreMap);
 					}
 				}
@@ -73,7 +73,7 @@ public class AngliciseAnnotator extends AbstractAggregatePosAnnotator implements
 			score(document);
 		}
 		catch (IOException e) {
-			logger.error(e);
+			getLogger().error(e);
 		}
 	}
 }

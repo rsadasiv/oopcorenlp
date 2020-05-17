@@ -48,8 +48,8 @@ public class GenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnnotator i
 	
 	public GenderAnnotator() {
 		super("GenderAnnotator", GenderAnnotator.getProperties());
-		this.setScorer((Scorer) new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer) new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer) new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer) new MapSerializer(this.getAnnotationClass()));
 	}
 
 	protected Serializer getSerializer() {
@@ -97,10 +97,6 @@ public class GenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnnotator i
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPGenderAnnotation.class;
 	}
-	
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPGenderAnnotationAggregate.class;
-	}
 
 	@Override
 	public void score(CoreDocument document) {
@@ -121,5 +117,10 @@ public class GenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnnotator i
 	@Override
 	public String getDescription() {
 		return "io/outofprintmagazine/nlp/models/MaleNames.txt io/outofprintmagazine/nlp/models/FemaleNames.txt";
+	}
+
+	@Override
+	public void serializeAggregateDocument(CoreDocument document, ObjectNode json) {
+		getSerializer().serializeAggregate(getScorer().aggregateDocument(document), json);
 	}
 }

@@ -27,16 +27,22 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class VerbHypernymsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class VerbHypernymsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(VerbHypernymsAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	private List<String> posTags = Arrays.asList("VB","VBD","VBG","VBN","VBP","VBZ");
 	
 	public VerbHypernymsAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/StativeVerbs.txt");
 	}
 	
@@ -53,12 +59,7 @@ public class VerbHypernymsAnnotator extends AbstractAggregatePosAnnotator implem
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPVerbHypernymsAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPVerbHypernymsAnnotationAggregate.class;
-	}
-	
+
 	@Override
 	public Set<Class<? extends CoreAnnotation>> requires() {
 		return Collections.unmodifiableSet(

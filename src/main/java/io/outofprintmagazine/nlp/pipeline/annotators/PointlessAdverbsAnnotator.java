@@ -20,17 +20,23 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class PointlessAdverbsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class PointlessAdverbsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PointlessAdverbsAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	private List<String> posTags = Arrays.asList("RB", "RBR", "RBS");
 	
 	public PointlessAdverbsAnnotator() {
 		super();
 		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/Adverbs.txt");
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));				
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));				
 	}
 	
 	public PointlessAdverbsAnnotator(Properties properties) {
@@ -46,12 +52,7 @@ public class PointlessAdverbsAnnotator extends AbstractAggregatePosAnnotator imp
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPointlessAdverbsAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPointlessAdverbsAnnotationAggregate.class;
-	}
-	
+
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
@@ -60,7 +61,7 @@ public class PointlessAdverbsAnnotator extends AbstractAggregatePosAnnotator imp
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
 					if (getTags().contains(token.lemma().toLowerCase())) {
-						scoreMap.put(token.lemma(), new BigDecimal(1));
+						addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
 					}
 					if (scoreMap.size() > 0) {
 						token.set(getAnnotationClass(), scoreMap);

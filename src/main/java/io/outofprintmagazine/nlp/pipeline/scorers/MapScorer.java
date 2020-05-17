@@ -2,15 +2,20 @@ package io.outofprintmagazine.nlp.pipeline.scorers;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
+import io.outofprintmagazine.util.AggregatedScore;
 import io.outofprintmagazine.util.DocumentAggregateScore;
 
 public abstract class MapScorer implements Scorer {
@@ -18,9 +23,7 @@ public abstract class MapScorer implements Scorer {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(MapScorer.class);
 
-
 	protected Class annotationClass = null;
-	protected Class aggregateClass = null;
 
 	public MapScorer() {
 		super();
@@ -31,26 +34,12 @@ public abstract class MapScorer implements Scorer {
 		this.setAnnotationClass(annotationClass);
 	}
 	
-	public MapScorer(Class annotationClass, Class aggregateClass) {
-		super();
-		this.setAnnotationClass(annotationClass);
-		this.setAggregateClass(aggregateClass);
-	}
-
 	public void setAnnotationClass(Class annotationClass) {
 		this.annotationClass = annotationClass;
 	}
 
-	public void setAggregateClass(Class aggregateClass) {
-		this.aggregateClass = aggregateClass;
-	}
-
 	public Class getAnnotationClass() {
 		return this.annotationClass;
-	}
-	
-	public Class getAggregateClass() {
-		return this.aggregateClass;
 	}
 
 	@Override
@@ -58,9 +47,6 @@ public abstract class MapScorer implements Scorer {
 		scoreTokens(document);
 		scoreSentences(document);
 		scoreDocument(document);
-		if (getAggregateClass() != null) {
-			scoreDocumentAggregate(document);
-		}
 	}
 
 	public void scoreTokens(CoreDocument document) {
@@ -68,16 +54,18 @@ public abstract class MapScorer implements Scorer {
 	}
 
 	public void scoreSentences(CoreDocument document) {
+		//TODO - would we ever need to merge existing and token rollup?
 		for (CoreSentence sentence : document.sentences()) {
-			ArrayList<Map<String, BigDecimal>> rawScores = new ArrayList<Map<String, BigDecimal>>();
-			for (CoreLabel token : sentence.tokens()) {
-				if (token.containsKey(getAnnotationClass())) {
-					rawScores.add((Map<String, BigDecimal>) token.get(getAnnotationClass()));
+			if (! sentence.coreMap().containsKey(getAnnotationClass())) {
+				ArrayList<Map<String, BigDecimal>> rawScores = new ArrayList<Map<String, BigDecimal>>();
+				for (CoreLabel token : sentence.tokens()) {
+					if (token.containsKey(getAnnotationClass())) {
+						rawScores.add((Map<String, BigDecimal>) token.get(getAnnotationClass()));
+					}
 				}
-			}
-			if (rawScores.size() > 0) {
-				//TODO - check if sentence scores already exist? Merge?
-				sentence.coreMap().set(getAnnotationClass(), aggregateScores(rawScores));
+				if (rawScores.size() > 0) {
+					sentence.coreMap().set(getAnnotationClass(), aggregateScores(rawScores));
+				}
 			}
 		}
 	}
@@ -86,27 +74,77 @@ public abstract class MapScorer implements Scorer {
 		if (! document.annotation().containsKey(getAnnotationClass())) {
 			ArrayList<Map<String, BigDecimal>> rawScores = new ArrayList<Map<String, BigDecimal>>();
 			for (CoreSentence sentence : document.sentences()) {
-				for (CoreLabel token : sentence.tokens()) {
-					if (token.containsKey(getAnnotationClass())) {
-						rawScores.add((Map<String, BigDecimal>) token.get(getAnnotationClass()));
+				if (sentence.coreMap().containsKey(getAnnotationClass())) {
+					rawScores.add((Map<String, BigDecimal>)sentence.coreMap().get(getAnnotationClass()));
+				}
+				else {
+					for (CoreLabel token : sentence.tokens()) {
+						if (token.containsKey(getAnnotationClass())) {
+							rawScores.add((Map<String, BigDecimal>) token.get(getAnnotationClass()));
+						}
 					}
 				}
+
 			}
 			document.annotation().set(getAnnotationClass(), aggregateScores(rawScores));
 		}
 	}
 	
-	public void scoreDocumentAggregate(CoreDocument document) {
-		if (document.annotation().containsKey(getAnnotationClass())) {
-			document.annotation().set(
-				getAggregateClass(),
-				new DocumentAggregateScore(
-					getAnnotationClass().getCanonicalName() + "Aggregate", 
-					(Map<String, BigDecimal>) document.annotation().get(getAnnotationClass()),
-					new BigDecimal(document.tokens().size())
-				)
-			);
+	@Override
+	public Object aggregateDocument(CoreDocument document) {
+		Map<String, BigDecimal> rawScores = (Map<String, BigDecimal>) document.annotation().get(getAnnotationClass());
+		BigDecimal normalizer = new BigDecimal(document.tokens().size());
+		DocumentAggregateScore retval = new DocumentAggregateScore(getAnnotationClass().getSimpleName());
+		if (rawScores.size() == 0) {
+			return retval;
 		}
+		double[] primitiveNormalizedScores = new double[rawScores.size()];
+		BigDecimal rawSum = new BigDecimal(0);
+		Iterator<Entry<String,BigDecimal>> rawScoresIter = rawScores.entrySet().iterator();
+
+		for (int i=0; i<rawScores.size() && rawScoresIter.hasNext(); i++) {
+			Entry<String,BigDecimal> rawScore = rawScoresIter.next();
+			rawSum = rawSum.add(rawScore.getValue());
+			primitiveNormalizedScores[i] = rawScore.getValue().divide(normalizer, 10, BigDecimal.ROUND_HALF_UP).doubleValue();
+			retval.getAggregatedScores().add(new AggregatedScore(rawScore.getKey(), rawScore.getValue(), normalizer, rawScore.getValue()));
+		}
+		retval.getScoreStats().getScore().setRaw(rawSum);
+		retval.getScoreStats().getScore().setNormalized(rawSum.divide(normalizer, 10, BigDecimal.ROUND_HALF_UP));
+		retval.getScoreStats().getScore().setCount(new BigDecimal(rawScores.size()));
+		retval.getScoreStats().getStats().setStddev(new BigDecimal(new StandardDeviation().evaluate(primitiveNormalizedScores)));
+		retval.getScoreStats().getStats().setMean(retval.getScoreStats().getScore().getNormalized().divide(new BigDecimal(rawScores.size()), 10, BigDecimal.ROUND_HALF_UP));
+		
+		Collections.sort(retval.getAggregatedScores());
+		Iterator<AggregatedScore> aggregatedScoresIter = retval.getAggregatedScores().iterator();
+		for (int i=0; i<retval.getAggregatedScores().size() && aggregatedScoresIter.hasNext(); i++) {
+			AggregatedScore aggregatedScore = aggregatedScoresIter.next();
+			if (aggregatedScore.getScore().getNormalized().compareTo(new BigDecimal(0)) > 0) {
+				aggregatedScore.getAggregateScore().setPercentage(aggregatedScore.getScore().getNormalized().divide(retval.getScoreStats().getScore().getNormalized(), 10, BigDecimal.ROUND_HALF_UP));
+			}
+			else {
+				aggregatedScore.getAggregateScore().setPercentage(new BigDecimal(0));
+			}
+			if (retval.getScoreStats().getStats().getStddev().compareTo(new BigDecimal(0)) != 0) {
+				aggregatedScore.getAggregateScore().setZ(aggregatedScore.getScore().getNormalized().subtract(retval.getScoreStats().getStats().getMean()).divide(retval.getScoreStats().getStats().getStddev(), 10, BigDecimal.ROUND_HALF_UP));
+			}
+			else {
+				aggregatedScore.getAggregateScore().setZ(new BigDecimal(0));
+			}
+			aggregatedScore.getAggregateScore().setRank(new BigDecimal(i));
+			aggregatedScore.getAggregateScore().setPercentile(new BigDecimal(1).subtract(new BigDecimal(i).divide(new BigDecimal(retval.getAggregatedScores().size()), 10, BigDecimal.ROUND_HALF_UP)));
+			if (retval.getScoreStats().getStats().getMin().equals(new BigDecimal(0)) || retval.getScoreStats().getStats().getMin().compareTo(aggregatedScore.getScore().getNormalized()) > 0) {
+				retval.getScoreStats().getStats().setMin(aggregatedScore.getScore().getNormalized());
+				
+			}
+			if (retval.getScoreStats().getStats().getMax().compareTo(aggregatedScore.getScore().getNormalized()) < 0) {
+				retval.getScoreStats().getStats().setMax(aggregatedScore.getScore().getNormalized());
+			}
+			if (retval.getScoreStats().getStats().getMedian().equals(new BigDecimal(0)) && (i > retval.getAggregatedScores().size()/2)) {
+				retval.getScoreStats().getStats().setMedian(aggregatedScore.getScore().getNormalized());
+			}
+
+		}
+		return retval;
 	}
 
 	public abstract Map<String, BigDecimal> aggregateScores(List<Map<String, BigDecimal>> allScores);

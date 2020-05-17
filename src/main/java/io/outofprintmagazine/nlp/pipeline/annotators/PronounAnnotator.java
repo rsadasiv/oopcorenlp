@@ -20,16 +20,21 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class PronounAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class PronounAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PronounAnnotator.class);
+	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
 
 	public PronounAnnotator() {
 		super();
 		this.setTags(Arrays.asList("PRP"));
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 	}
 	
 	public PronounAnnotator(Properties properties) {
@@ -47,11 +52,6 @@ public class PronounAnnotator extends AbstractAggregatePosAnnotator implements A
 	}
 	
 	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPronounAnnotationAggregate.class;
-	}
-	
-	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
 		for (int sentenceIdx = 0; sentenceIdx < document.sentences().size(); sentenceIdx++) {
@@ -63,7 +63,7 @@ public class PronounAnnotator extends AbstractAggregatePosAnnotator implements A
 				if (!token.lemma().endsWith("self") && !token.lemma().endsWith("selves") && !token.lemma().equals("'s")) {
 					String score = scoreLemma(token);
 					if (score != null) {
-						scoreMap.put(score, new BigDecimal(1));
+						addToScoreMap(scoreMap, score, new BigDecimal(1));
 					}
 				}
 				if (scoreMap.size() > 0) {

@@ -259,7 +259,15 @@ public class WikipediaUtils {
 									&& !categoryName.startsWith("Days")
 									&& !categoryName.startsWith("Months")
 									&& !categoryName.startsWith("Dynamic lists")
-									&& !categoryName.startsWith("ISO")) {
+									&& !categoryName.startsWith("Given names")
+									&& !categoryName.startsWith("Surnames")
+									&& !categoryName.startsWith("Year")
+									&& !categoryName.startsWith("Languages")
+									&& !categoryName.startsWith("ISO")
+									&& !categoryName.startsWith("Types")
+									&& !categoryName.startsWith("Concepts")
+									&& !categoryName.startsWith("Names")
+									&& !categoryName.contains(" ISO ")) {
 								//System.out.println(categoryName);
 								BigDecimal existingScore = scoreMap.get(categoryName);
 								if (existingScore == null) {
@@ -280,14 +288,12 @@ public class WikipediaUtils {
     	List<String> topicPages = new ArrayList<String>();
     	ObjectMapper objectMapper = new ObjectMapper();
 		topic = topic.replace(' ', '_');
-		JsonNode rootNode = objectMapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=query&maxlag=1redirects&format=json&formatversion=2&titles="+(URLEncoder.encode(topic, "UTF-8"))), JsonNode.class);
+		JsonNode rootNode = objectMapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=query&maxlag=1&redirects&format=json&formatversion=2&titles="+(URLEncoder.encode(topic, "UTF-8"))), JsonNode.class);
 		//TODO - pagination?
 		if (rootNode.get("query") != null && rootNode.get("query").get("pages") != null) {
 			JsonNode pagesNode = rootNode.get("query").get("pages");
 			if (pagesNode != null && pagesNode.isArray()) {
 				for (final JsonNode pageNode : pagesNode) {
-					//instead, download the wikipedia page, tokenize/pos, and calculate a tf/idf for all the topics in the text vs all the topics in the wikipedia pages.
-					//TODO - ignore disambiguation pages?
 					if (pageNode.get("missing") == null || !pageNode.get("missing").asBoolean()) {
 						topicPages.add(pageNode.get("title").asText());
 					}

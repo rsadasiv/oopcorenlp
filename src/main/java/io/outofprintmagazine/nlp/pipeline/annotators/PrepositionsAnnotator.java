@@ -19,16 +19,21 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class PrepositionsAnnotator extends AbstractAggregatePosAnnotator implements Annotator, OOPAnnotator {
+public class PrepositionsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PrepositionsAnnotator.class);
 	
+	@Override
+	protected Logger getLogger() {
+		return logger;
+	}
+	
 	public PrepositionsAnnotator() {
 		super();
 		this.setTags(Arrays.asList("IN", "CC"));
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass(), this.getAggregateClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass(), this.getAggregateClass()));	
+		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));	
 	}
 	
 	public PrepositionsAnnotator(Properties properties) {
@@ -44,12 +49,7 @@ public class PrepositionsAnnotator extends AbstractAggregatePosAnnotator impleme
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPrepositionsAnnotation.class;
 	}
-	
-	@Override
-	public Class getAggregateClass() {
-		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPPrepositionsAnnotationAggregate.class;
-	}
-	
+
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
@@ -58,7 +58,7 @@ public class PrepositionsAnnotator extends AbstractAggregatePosAnnotator impleme
 				Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
 				String score = scoreLemma(token);
 				if (score != null) {
-					scoreMap.put(score, new BigDecimal(1));
+					addToScoreMap(scoreMap, score, new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
 			}
