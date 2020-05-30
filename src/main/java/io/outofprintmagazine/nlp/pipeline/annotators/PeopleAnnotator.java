@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.io.IOException;
@@ -10,7 +26,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -35,7 +50,7 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
-public class PeopleAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
+public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PeopleAnnotator.class);
@@ -53,15 +68,6 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements Annotator, 
 		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
 		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 		this.setTags(Arrays.asList("NNP", "NNPS", "NN", "NNS"));
-	}
-	
-	public PeopleAnnotator(Properties properties) {
-		this();
-		this.properties = properties;
-	}
-	
-	@Override
-	public void init(Map<String, Object> properties) {
 	}
 	
 	@Override
@@ -114,7 +120,7 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements Annotator, 
 				if (mention.entityType().equals("PERSON")) {
 					boolean isPronoun = false;
 					try {
-						for (CoreLabel t : CoreNlpUtils.getInstance().getTokensFromCoreEntityMention(document, mention)) {
+						for (CoreLabel t : CoreNlpUtils.getInstance(getParameterStore()).getTokensFromCoreEntityMention(document, mention)) {
 							if (t.tag().equals("PRP") || t.tag().equals("PRP$")) {
 								isPronoun = true;
 								break;
@@ -272,7 +278,7 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements Annotator, 
 			CorefChain corefChain = corefChainEntry.getValue();
 			Map<String, BigDecimal> corefPeople = new HashMap<String,BigDecimal>();
 			for (CorefMention corefMention : corefChain.getMentionsInTextualOrder()) {
-				for (CoreEntityMention entityMention : CoreNlpUtils.getInstance().getCoreEntityMentionFromCorefMention(document, corefMention)) {
+				for (CoreEntityMention entityMention : CoreNlpUtils.getInstance(getParameterStore()).getCoreEntityMentionFromCorefMention(document, corefMention)) {
 					for (CoreLabel token : entityMention.tokens()) {
 						if (token.containsKey(getAnnotationClass())) {
 							Map<String,BigDecimal> personMap = (Map<String, BigDecimal>) token.get(getAnnotationClass());
@@ -300,7 +306,7 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements Annotator, 
 //						}
 //					}
 					//if (corefMention.mentionType.compareTo(Dictionaries.MentionType.PRONOMINAL) == 0) {
-						for (CoreEntityMention entityMention : CoreNlpUtils.getInstance().getCoreEntityMentionFromCorefMention(document, corefMention)) {
+						for (CoreEntityMention entityMention : CoreNlpUtils.getInstance(getParameterStore()).getCoreEntityMentionFromCorefMention(document, corefMention)) {
 							for (CoreLabel token : entityMention.tokens()) {
 								
 								String existingAnnotation = "empty";

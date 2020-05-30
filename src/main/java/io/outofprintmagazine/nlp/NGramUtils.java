@@ -1,9 +1,23 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -13,7 +27,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -37,7 +50,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import edu.stanford.nlp.ling.CoreLabel;
+import io.outofprintmagazine.util.ParameterStore;
 import io.phrasefinder.Corpus;
 import io.phrasefinder.Phrase;
 import io.phrasefinder.Phrase.Token;
@@ -72,23 +85,26 @@ public class NGramUtils {
 	private Deque mruWordList = new LinkedList<String>();
 	private Map<String, List<NGramPhraseScore>> wordCache = new HashMap<String, List<NGramPhraseScore>>();
 	
-	private NGramUtils() throws IOException {
+	private NGramUtils(ParameterStore parameterStore) throws IOException {
 		wildcardOptions.setMaxResults(100);
 		ngramOptions.setMaxResults(10);
-		InputStream input = new FileInputStream("data/phrasefinder_credentials.properties");
-        Properties props = new Properties();
-        props.load(input);
-        this.apiKey = props.getProperty("phrasefinderApiKey");
-        input.close();
+		//InputStream input = new FileInputStream("data/phrasefinder_credentials.properties");
+        //Properties props = new Properties();
+        //props.load(input);
+		//Properties props = ParameterStore.getInstance().getProperties("data", "phrasefinder_credentials.properties");
+        //this.apiKey = props.getProperty("phrasefinderApiKey");
+		this.apiKey = parameterStore.getProperty("phrasefinder_ApiKey");
+
 	}
 	
-	private static NGramUtils single_instance = null; 
-
-    public static NGramUtils getInstance() throws IOException { 
-        if (single_instance == null) 
-            single_instance = new NGramUtils(); 
-  
-        return single_instance; 
+	private static Map<ParameterStore, NGramUtils> instances = new HashMap<ParameterStore, NGramUtils>();
+	
+    public static NGramUtils getInstance(ParameterStore parameterStore) throws IOException { 
+        if (instances.get(parameterStore) == null) {
+        	NGramUtils instance = new NGramUtils(parameterStore);
+            instances.put(parameterStore, instance);
+        }
+        return instances.get(parameterStore); 
     }
     
     public List<NGramPhraseScore> getWordCache(String token) {

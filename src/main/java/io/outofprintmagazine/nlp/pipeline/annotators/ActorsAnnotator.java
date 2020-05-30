@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.io.ByteArrayOutputStream;
@@ -9,17 +25,11 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.stanford.nlp.coref.CorefCoreAnnotations;
 import edu.stanford.nlp.ling.CoreAnnotation;
@@ -31,11 +41,8 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreQuote;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
-import edu.stanford.nlp.trees.GrammaticalRelation;
-import edu.stanford.nlp.trees.TypedDependency;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.BingUtils;
-import io.outofprintmagazine.nlp.CoreNlpUtils;
 import io.outofprintmagazine.nlp.pipeline.ActorAnnotation;
 import io.outofprintmagazine.nlp.pipeline.ContextualAnnotation;
 
@@ -56,15 +63,6 @@ public class ActorsAnnotator extends AbstractContextualAnnotator implements Anno
 	
 	public ActorsAnnotator() {
 		super();
-	}
-	
-	public ActorsAnnotator(Properties properties) {
-		this();
-		this.properties = properties;
-	}
-	
-	@Override
-	public void init(Map<String, Object> properties) {
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -199,7 +197,7 @@ public class ActorsAnnotator extends AbstractContextualAnnotator implements Anno
 					tmpCharacterName = names[0];
 				}
 			}
-			actor.getThumbnails().addAll(BingUtils.getInstance().getImagesByText(tmpCharacterName));
+			actor.getThumbnails().addAll(BingUtils.getInstance(getParameterStore()).getImagesByText(tmpCharacterName));
 		}		
 	}
 	
@@ -214,36 +212,60 @@ public class ActorsAnnotator extends AbstractContextualAnnotator implements Anno
 		if (sentence.coreMap().containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPMyersBriggsAnnotation.class)) {
 			Map<String,BigDecimal> annotationScore = sentence.coreMap().get(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPMyersBriggsAnnotation.class);
 			if (annotationScore.containsKey("extrovert")) {
-				BigDecimal existingScore = characterAnnotation.getExtrovert();
-				characterAnnotation.setExtrovert(existingScore.add(annotationScore.get("extrovert")));
+				BigDecimal existingScore = new BigDecimal(0);
+				if (characterAnnotation.getOOPMyersBriggs().containsKey("extrovert")) {
+					existingScore = characterAnnotation.getOOPMyersBriggs().get("extrovert");
+				}
+				characterAnnotation.getOOPMyersBriggs().put("extrovert", existingScore.add(annotationScore.get("extrovert")));
 			}
 			if (annotationScore.containsKey("introvert")) {
-				BigDecimal existingScore = characterAnnotation.getIntrovert();
-				characterAnnotation.setIntrovert(existingScore.add(annotationScore.get("introvert")));
+				BigDecimal existingScore = new BigDecimal(0);
+				if (characterAnnotation.getOOPMyersBriggs().containsKey("introvert")) {
+					existingScore = characterAnnotation.getOOPMyersBriggs().get("introvert");
+				}
+				characterAnnotation.getOOPMyersBriggs().put("introvert", existingScore.add(annotationScore.get("introvert")));
 			}
 			if (annotationScore.containsKey("sensing")) {
-				BigDecimal existingScore = characterAnnotation.getSensing();
-				characterAnnotation.setSensing(existingScore.add(annotationScore.get("sensing")));
+				BigDecimal existingScore = new BigDecimal(0);
+				if (characterAnnotation.getOOPMyersBriggs().containsKey("sensing")) {
+					existingScore = characterAnnotation.getOOPMyersBriggs().get("sensing");
+				}
+				characterAnnotation.getOOPMyersBriggs().put("sensing", existingScore.add(annotationScore.get("sensing")));
 			}
 			if (annotationScore.containsKey("intuitive")) {
-				BigDecimal existingScore = characterAnnotation.getIntuitive();
-				characterAnnotation.setIntuitive(existingScore.add(annotationScore.get("intuitive")));
+				BigDecimal existingScore = new BigDecimal(0);
+				if (characterAnnotation.getOOPMyersBriggs().containsKey("intuitive")) {
+					existingScore = characterAnnotation.getOOPMyersBriggs().get("intuitive");
+				}
+				characterAnnotation.getOOPMyersBriggs().put("intuitive", existingScore.add(annotationScore.get("intuitive")));
 			}
 			if (annotationScore.containsKey("thinking")) {
-				BigDecimal existingScore = characterAnnotation.getThinking();
-				characterAnnotation.setThinking(existingScore.add(annotationScore.get("thinking")));
+				BigDecimal existingScore = new BigDecimal(0);
+				if (characterAnnotation.getOOPMyersBriggs().containsKey("thinking")) {
+					existingScore = characterAnnotation.getOOPMyersBriggs().get("thinking");
+				}
+				characterAnnotation.getOOPMyersBriggs().put("thinking", existingScore.add(annotationScore.get("thinking")));
 			}
 			if (annotationScore.containsKey("feeling")) {
-				BigDecimal existingScore = characterAnnotation.getFeeling();
-				characterAnnotation.setFeeling(existingScore.add(annotationScore.get("feeling")));
+				BigDecimal existingScore = new BigDecimal(0);
+				if (characterAnnotation.getOOPMyersBriggs().containsKey("feeling")) {
+					existingScore = characterAnnotation.getOOPMyersBriggs().get("feeling");
+				}
+				characterAnnotation.getOOPMyersBriggs().put("feeling", existingScore.add(annotationScore.get("feeling")));
 			}
 			if (annotationScore.containsKey("judging")) {
-				BigDecimal existingScore = characterAnnotation.getJudging();
-				characterAnnotation.setJudging(existingScore.add(annotationScore.get("judging")));
+				BigDecimal existingScore = new BigDecimal(0);
+				if (characterAnnotation.getOOPMyersBriggs().containsKey("judging")) {
+					existingScore = characterAnnotation.getOOPMyersBriggs().get("judging");
+				}
+				characterAnnotation.getOOPMyersBriggs().put("judging", existingScore.add(annotationScore.get("judging")));
 			}
 			if (annotationScore.containsKey("perceiving")) {
-				BigDecimal existingScore = characterAnnotation.getPerceiving();
-				characterAnnotation.setJudging(existingScore.add(annotationScore.get("perceiving")));
+				BigDecimal existingScore = new BigDecimal(0);
+				if (characterAnnotation.getOOPMyersBriggs().containsKey("perceiving")) {
+					existingScore = characterAnnotation.getOOPMyersBriggs().get("perceiving");
+				}
+				characterAnnotation.getOOPMyersBriggs().put("perceiving", existingScore.add(annotationScore.get("perceiving")));
 			}
 		}
 	}

@@ -1,9 +1,24 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -20,6 +35,7 @@ import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
+import io.outofprintmagazine.util.ParameterStore;
 
 public class CoreNlpParagraphAnnotator extends edu.stanford.nlp.paragraphs.ParagraphAnnotator implements Annotator, OOPAnnotator {
 	
@@ -28,6 +44,13 @@ public class CoreNlpParagraphAnnotator extends edu.stanford.nlp.paragraphs.Parag
 	
 	public CoreNlpParagraphAnnotator() {
 		super(CoreNlpParagraphAnnotator.getProperties(), false);
+	}
+	
+	protected ParameterStore properties;
+	
+	@Override
+	public void init(ParameterStore properties) {
+		this.properties = properties;
 	}
 
 	private static Properties getProperties() {
@@ -68,11 +91,6 @@ public class CoreNlpParagraphAnnotator extends edu.stanford.nlp.paragraphs.Parag
 				sentenceNode.put(CoreAnnotations.ParagraphIndexAnnotation.class.getSimpleName(), sentence.coreMap().get(CoreAnnotations.ParagraphIndexAnnotation.class));
 			}
 		}
-	}
-
-	@Override
-	public void init(Map<String, Object> properties) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override

@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp;
 
 import java.io.IOException;
@@ -30,6 +46,8 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.outofprintmagazine.util.ParameterStore;
+
 
 public class WiktionaryUtils {
 	
@@ -43,22 +61,18 @@ public class WiktionaryUtils {
 	private Map<String, String> wordCache = new HashMap<String, String>();
 
 	
-	private WiktionaryUtils() throws IOException {
-		//InputStream input = new FileInputStream("data/credentials.properties");
-        //Properties props = new Properties();
-        //props.load(input);
-        //this.apiKey = props.getProperty("wikionaryApiKey");
-        //input.close();
-		this.apiKey = "OOPCoreNlp/0.9 (rsadasiv@gmail.com) httpclient/4.5.6";
+	private WiktionaryUtils(ParameterStore parameterStore) throws IOException {
+		this.apiKey = parameterStore.getProperty("wikipedia_apikey");
 	}
 	
-	private static WiktionaryUtils single_instance = null; 
-
-    public static WiktionaryUtils getInstance() throws IOException { 
-        if (single_instance == null) 
-            single_instance = new WiktionaryUtils(); 
-  
-        return single_instance; 
+	private static Map<ParameterStore, WiktionaryUtils> instances = new HashMap<ParameterStore, WiktionaryUtils>();
+	
+    public static WiktionaryUtils getInstance(ParameterStore parameterStore) throws IOException { 
+        if (instances.get(parameterStore) == null) {
+        	WiktionaryUtils instance = new WiktionaryUtils(parameterStore);
+            instances.put(parameterStore, instance);
+        }
+        return instances.get(parameterStore); 
     }
     
     public String getWordCache(String token) {

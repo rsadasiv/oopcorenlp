@@ -1,203 +1,153 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Queue;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import edu.stanford.nlp.io.IOUtils;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.JSONOutputter;
-import edu.stanford.nlp.util.StringUtils;
 import io.outofprintmagazine.nlp.CoreNlpUtils;
-import io.outofprintmagazine.nlp.pipeline.scorers.TfidfScorer;
+import io.outofprintmagazine.nlp.pipeline.annotators.OOPAnnotator;
+import io.outofprintmagazine.nlp.pipeline.annotators.RunnableOOPAnnotator;
 import io.outofprintmagazine.nlp.pipeline.serializers.CoreNLPSerializer;
-import io.outofprintmagazine.util.InputMessage;
+import io.outofprintmagazine.util.ParameterStore;
 
 public class Analyzer {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(Analyzer.class);
 	
+	private ArrayList<OOPAnnotator> customAnnotators = new ArrayList<OOPAnnotator>();
+	private ParameterStore parameterStore;
 	
-	public Analyzer() {
+	public Analyzer(ParameterStore parameterStore, List<String> annotatorClassNames) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super();
-	}
-
-	private Queue<InputMessage> inputMessages = new LinkedList<InputMessage>();
-	
-	public Queue<InputMessage> getInputMessages() {
-		return inputMessages;
-	}
-
-	public void setInputMessages(Queue<InputMessage> inputMessages) {
-		this.inputMessages = inputMessages;
-	}
-	
-	public void init() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, ParseException {
-//		getInputMessages().addAll(
-//				TextUtils.getInstance().readEmailDirectory(
-//						"C:\\Users\\rsada\\git\\oop_nlp\\similarity\\resources\\Submissions", 
-//						"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp_web\\WebContent\\Corpora"
-//				)
-//		);
-//		
-//		getInputMessages().addAll(
-//				TextUtils.getInstance().readOutOfPrintIssues(
-//						"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp_web\\WebContent\\Corpora"
-//				)
-//		);
-
-//		Properties metadata = new Properties();
-//		metadata.put(CoreAnnotations.DocIDAnnotation.class.getName(), "d659265c-641f-41b9-a5b2-5db65c308640");
-//		metadata.put(CoreAnnotations.DocTypeAnnotation.class.getName(), "Temp");
-//		metadata.put(CoreAnnotations.AuthorAnnotation.class.getName(), "Sashikanta Mishra");
-//		metadata.put(CoreAnnotations.DocDateAnnotation.class.getName(), "march_2018");
-//		metadata.put(CoreAnnotations.DocTitleAnnotation.class.getName(), "The DNA Test");
-//		metadata.put(CoreAnnotations.DocSourceTypeAnnotation.class.getName(), "ISSUE 30 MARCH 2018");
-//		getInputMessages().add(
-//				new InputMessage(
-//						"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp_web\\WebContent\\Corpora", 
-//						metadata,
-//						IOUtils.slurpFile(
-//								"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp_web\\WebContent\\Corpora"
-//								+ System.getProperty("file.separator", "/") 
-//								+ metadata.getProperty(CoreAnnotations.DocTypeAnnotation.class.getName()) 
-//								+ System.getProperty("file.separator", "/") 
-//								+ "Text" 
-//								+ System.getProperty("file.separator", "/") 
-//								+ metadata.getProperty(CoreAnnotations.DocIDAnnotation.class.getName())
-//								+ ".txt"
-//						)
-//				)
-//		);
-	}
-
-	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, ParseException {
-		Analyzer ta = new Analyzer();
-		ta.init();
-		InputMessage lastMessage = null;
-		while (!ta.getInputMessages().isEmpty()) {
-			lastMessage = ta.getInputMessages().poll();
-			ta.processInputMessage(lastMessage);
+		this.parameterStore = parameterStore;
+		//order is important
+		for (String customAnnotatorClassName : customAnnotatorClassNames) {
+			for (String annotatorClassName : annotatorClassNames) {
+				if (annotatorClassName.equals(customAnnotatorClassName)) {
+					logger.debug("Adding CustomAnnotator: " + annotatorClassName);
+					Object annotator = Class.forName(annotatorClassName).newInstance();
+					if (annotator instanceof OOPAnnotator) {
+						OOPAnnotator oopAnnotator = (OOPAnnotator) annotator;
+						oopAnnotator.init(parameterStore);
+						customAnnotators.add(oopAnnotator);
+					}
+				}
+				continue;
+			}
 		}
-		if (lastMessage != null) {
-			//ta.scoreCorpus(lastMessage.getOutputDirectory());
-		}
-		ta.scoreTfidf(lastMessage.getOutputDirectory());
-		
-	}
-		
-	public void processInputMessage(InputMessage inputMessage) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		String storyText = StringUtils.toAscii(StringUtils.normalize(inputMessage.getInputFile())).trim();
-		Map<String,ObjectNode> json = analyze(inputMessage.getMetadata(), storyText);
-		
-		//write properties
-		inputMessage.getMetadata().store(
-			new FileOutputStream(
-					inputMessage.getOutputDirectory()
-					+ System.getProperty("file.separator", "/") 
-					+ inputMessage.getMetadata().getProperty(CoreAnnotations.DocTypeAnnotation.class.getName()) 
-					+ System.getProperty("file.separator", "/") 
-					+ "Text" 
-					+ System.getProperty("file.separator", "/") 
-					+ inputMessage.getMetadata().getProperty(CoreAnnotations.DocIDAnnotation.class.getName()) 
-					+".properties"
-			), 
-			null
-		);
-		//write txt
-		IOUtils.writeStringToFile(
-				storyText, 
-				inputMessage.getOutputDirectory()
-				+ System.getProperty("file.separator", "/") 
-				+ inputMessage.getMetadata().getProperty(CoreAnnotations.DocTypeAnnotation.class.getName()) 
-				+ System.getProperty("file.separator", "/") 
-				+ "Text" 
-				+ System.getProperty("file.separator", "/") 
-				+ inputMessage.getMetadata().getProperty(CoreAnnotations.DocIDAnnotation.class.getName()) 
-				+".txt", 
-				"US-ASCII"
-		);
-		
-		//write stanford
-		writeFile(
-				inputMessage.getOutputDirectory()
-				+ System.getProperty("file.separator", "/") 
-				+ inputMessage.getMetadata().getProperty(CoreAnnotations.DocTypeAnnotation.class.getName()) 
-				+ System.getProperty("file.separator", "/") 
-				+ "Annotations" 
-				+ System.getProperty("file.separator", "/") 
-				+ "STANFORD" 
-				+ System.getProperty("file.separator", "/") 
-				+ inputMessage.getMetadata().getProperty(CoreAnnotations.DocIDAnnotation.class.getName()) 
-				+".json", 
-			json.get("STANFORD")
-		);
-		
-		//write oop
-		writeFile(
-				inputMessage.getOutputDirectory() 
-				+ System.getProperty("file.separator", "/") 
-				+ inputMessage.getMetadata().getProperty(CoreAnnotations.DocTypeAnnotation.class.getName()) 
-				+ System.getProperty("file.separator", "/") 
-				+ "Annotations" 
-				+ System.getProperty("file.separator", "/") 
-				+ "OOP" 
-				+ System.getProperty("file.separator", "/") 
-				+ inputMessage.getMetadata().getProperty(CoreAnnotations.DocIDAnnotation.class.getName()) 
-				+".json", 
-			json.get("OOP")
-		);
-		
-		//write pipeline
-		writeFile(
-				inputMessage.getOutputDirectory()
-				+ System.getProperty("file.separator", "/") 
-				+ inputMessage.getMetadata().getProperty(CoreAnnotations.DocTypeAnnotation.class.getName()) 
-				+ System.getProperty("file.separator", "/") 
-				+ "Annotations" 
-				+ System.getProperty("file.separator", "/") 
-				+ "PIPELINE" 
-				+ System.getProperty("file.separator", "/") 
-				+ inputMessage.getMetadata().getProperty(CoreAnnotations.DocIDAnnotation.class.getName()) 
-				+".json", 
-			json.get("PIPELINE")
-		);
 	}
 	
-	
-	public void writeFile(String fileName, ObjectNode output) throws JsonGenerationException, JsonMappingException, IOException {
-		ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-		mapper.configure(com.fasterxml.jackson.core.JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN, true);
-		mapper.writeValue(new File(fileName), output);		
-	}
+	/**
+	 * 
+	 */
+	public static List<String> customAnnotatorClassNames = Arrays.asList(
+			"io.outofprintmagazine.nlp.pipeline.annotators.BiberAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.CoreNlpParagraphAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.CoreNlpGenderAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.GenderAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.PronounAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.count.CharCountAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.count.ParagraphCountAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.count.SentenceCountAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.count.SyllableCountAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.count.TokenCountAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.count.WordCountAnnotator"	    		
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.CoreNlpSentimentAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.VaderSentimentAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.VerbTenseAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.PunctuationMarkAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.AdjectivesAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.PointlessAdjectivesAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.AdjectiveCategoriesAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.AdverbsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.PointlessAdverbsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.AdverbCategoriesAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.PossessivesAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.PrepositionCategoriesAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.PrepositionsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.VerbsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.ActionlessVerbsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.NounsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.TopicsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.SVOAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.NonAffirmativeAnnotator"	    		
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.simile.LikeAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.simile.AsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.ColorsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.FlavorsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.VerblessSentencesAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.WordlessWordsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.WordnetGlossAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.PerfecttenseAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.UncommonWordsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.CommonWordsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.FunctionWordsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.AngliciseAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.AmericanizeAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.VerbGroupsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.VerbnetGroupsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.NounGroupsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.TemporalNGramsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhoAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhatAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhenAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhereAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhyAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.interrogative.HowAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.LocationsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.PeopleAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.MyersBriggsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.DatesAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.conditional.IfAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.conditional.BecauseAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.QuotesAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.WordsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.FleschKincaidAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.VerbHypernymsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.NounHypernymsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.WikipediaGlossAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.WikipediaPageviewTopicsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.WikipediaCategoriesAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.BiberDimensionsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.ActorsAnnotator"
+    		, "io.outofprintmagazine.nlp.pipeline.annotators.SettingsAnnotator"
+	);
 		
-	public Map<String, ObjectNode> analyze(Properties metadata, String text) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		long startTime = System.currentTimeMillis();
+	private CoreDocument prepareDocument(Properties metadata, String text) {
 		CoreDocument document = new CoreDocument(text);
 		document.annotation().set(
 				CoreAnnotations.DocIDAnnotation.class, 
@@ -241,54 +191,88 @@ public class Analyzer {
 						"9 January 2014 21:05"
 						)
 				);
+		return document;
+	}
+		
+	private void runCoreNLP(CoreDocument document) throws IOException  {
+		CoreNlpUtils.getInstance(parameterStore).getPipeline().annotate(document);
+	}
+	
+	private void annotate(CoreDocument document) {
+		for (OOPAnnotator annotator : customAnnotators) {
+			annotator.annotate(document.annotation());
+		}
+	}
 
+	
+	private void serialize(CoreDocument document, ObjectNode json)  {
+		for (OOPAnnotator annotator : customAnnotators) {
+			annotator.serialize(document, json);
+		}	
+	}
+	
+	private void serializeAggregates(CoreDocument document, ObjectNode json) {
+		for (OOPAnnotator annotator : customAnnotators) {
+			annotator.serializeAggregateDocument(document, json);
+		}	
+	}
+		
+	private void serializePipeline(ObjectNode json, long startTime) throws IOException {
+		ArrayNode annotatorList = json.putArray("annotations");
+		for (OOPAnnotator annotator : customAnnotators) {
+			annotatorList.addObject().put(annotator.getAnnotationClass().getSimpleName(), annotator.getDescription());
+		}	
+
+		ArrayNode coreNlpProperties = json.putArray("coreNlpProperties");
+		Properties defaultProps = CoreNlpUtils.getInstance(parameterStore).getPipelineProps();
+		for (String propertyName : defaultProps.stringPropertyNames()) {
+			ObjectNode property = coreNlpProperties.addObject();
+			property.put("name", propertyName);
+			property.put("value", defaultProps.getProperty(propertyName));
+		}
+
+		ArrayNode analysisList = json.putArray("analysis");
+		SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+		analysisList.addObject().put("startTime", fmt.format(new java.util.Date(startTime)));
+		long endTime = System.currentTimeMillis();
+		analysisList.addObject().put("endTime", fmt.format(new java.util.Date(endTime)));
+		analysisList.addObject().put("elapsedMS", Long.toString(endTime-startTime));
+		String ipAddr = "localhost.localdomain/127.0.0.1";
+		try {
+			ipAddr = InetAddress.getLocalHost().toString();
+		}
+		catch (UnknownHostException e) {
+		}
+		analysisList.addObject().put("host", ipAddr);
+	}
+		
+	public Map<String, ObjectNode> analyze(Properties metadata, String text) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+
+		ObjectMapper mapper = new ObjectMapper();
+		long startTime = System.currentTimeMillis();
+		CoreDocument document = prepareDocument(metadata, text);
 		Map<String,ObjectNode> retval = new HashMap<String, ObjectNode>();
 		
 		try {
-			CoreNlpUtils.getInstance().getPipeline().annotate(document);
-			//logger.debug(JSONOutputter.jsonPrint(document.annotation()));
-		
+			runCoreNLP(document);
 			retval.put("STANFORD", (ObjectNode) mapper.readTree(JSONOutputter.jsonPrint(document.annotation())));
 			
+			annotate(document);
 			CoreNLPSerializer documentSerializer = new CoreNLPSerializer();
 			
 			ObjectNode json = mapper.createObjectNode();
 			documentSerializer.serialize(document, json);
-			CoreNlpUtils.getInstance().serialize(document, json);
+			serialize(document, json);
 			retval.put("OOP", json);
 			
 			ObjectNode aggregates = mapper.createObjectNode();
 			documentSerializer.serializeAggregate(document, aggregates);
-			CoreNlpUtils.getInstance().serializeAggregates(document, aggregates);
+			serializeAggregates(document, aggregates);
 			retval.put("AGGREGATES", aggregates);
-			
-			//JavaPropsMapper propsMapper = new JavaPropsMapper();
-			//ObjectNode properties = propsMapper.valueToTree(CoreNlpUtils.getDefaultProps());
-			ObjectNode properties = mapper.createObjectNode();
-			ArrayNode coreNlpProperties = properties.putArray("coreNlpProperties");
-			Properties defaultProps = CoreNlpUtils.getDefaultProps();
-			for (String propertyName : defaultProps.stringPropertyNames()) {
-				ObjectNode property = coreNlpProperties.addObject();
-				property.put("name", propertyName);
-				property.put("value", defaultProps.getProperty(propertyName));
-			}
-			
-			CoreNlpUtils.getInstance().describeAnnotations(properties);
-			
-			ArrayNode analysisList = properties.putArray("analysis");
-			SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-			analysisList.addObject().put("startTime", fmt.format(new java.util.Date(startTime)));
-			long endTime = System.currentTimeMillis();
-			analysisList.addObject().put("endTime", fmt.format(new java.util.Date(endTime)));
-			analysisList.addObject().put("elapsedMS", Long.toString(endTime-startTime));
-			String ipAddr = "localhost.localdomain/127.0.0.1";
-			try {
-				ipAddr = InetAddress.getLocalHost().toString();
-			}
-			catch (UnknownHostException e) {
-			}
-			analysisList.addObject().put("host", ipAddr);
-			retval.put("PIPELINE", properties);
+
+			ObjectNode pipeline = mapper.createObjectNode();
+			serializePipeline(pipeline, startTime);
+			retval.put("PIPELINE", pipeline);
 			
 		}
 		catch (Exception e) {
@@ -298,103 +282,6 @@ public class Analyzer {
 		return retval;
 	}
 	
-//	public void scoreCorpus(String corpusDirectory) throws JsonProcessingException, IOException {
-//		CorpusScorer corpusScorer = new CorpusScorer();
-//		ObjectMapper mapper = new ObjectMapper();
-//		File corpusDir = new File(corpusDirectory);
-//		File inputDir = new File(corpusDir.getPath() + System.getProperty("file.separator", "/") + "Annotations"  + System.getProperty("file.separator", "/") + "OOP" + System.getProperty("file.separator", "/"));
-//		if (inputDir.isDirectory()) {
-//			for (final File inputFile : inputDir.listFiles()) {
-//				logger.debug(inputFile.getPath());
-//				try {
-//					ObjectNode documentScore = (ObjectNode) mapper.readTree(inputFile);
-//					corpusScorer.addDocumentJson(documentScore);
-//				}
-//				catch (Exception e) {
-//					logger.error(e);
-//				}
-//			}
-//		}
-//		for (CorpusDocumentAggregateScore annotationScore : corpusScorer.scoreCorpus()) {
-//			writeFile(
-//				corpusDir.getPath()
-//					+ System.getProperty("file.separator", "/") 
-//					+ "Annotations" 
-//					+ System.getProperty("file.separator", "/")
-//					+ "CORPUS" 
-//					+ System.getProperty("file.separator", "/") 
-//					+ annotationScore.getName()
-//					+ ".json",
-//				mapper.valueToTree(annotationScore)
-//			);
-//		}
-////		for (CorpusScalarAggregateScore annotationScore : corpusScorer.scoreScalarCorpus()) {
-////			writeFile(
-////				corpusDir.getPath()
-////					+ System.getProperty("file.separator", "/") 
-////					+ "Annotations" 
-////					+ System.getProperty("file.separator", "/")
-////					+ "CORPUS" 
-////					+ System.getProperty("file.separator", "/") 
-////					+ annotationScore.getName()
-////					+ ".json",
-////				mapper.valueToTree(annotationScore)
-////			);
-////		}
-//	}
-	
-	public void scoreTfidf(String corpusDirectory) throws JsonProcessingException, IOException {
-		TfidfScorer tfidfScorer = new TfidfScorer();
-		List<String> annotationScores = Arrays.asList(
-			"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWordsAnnotationAggregate",
-			"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPNounsAnnotationAggregate",
-			"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPVerbsAnnotationAggregate",
-			"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$OOPWikipediaCategoriesAnnotationAggregate"
-		);
-				
-		File corpusDir = new File(corpusDirectory);
-		ObjectMapper objectMapper = new ObjectMapper();
-		
-		for (String annotationScore : annotationScores) {
-			tfidfScorer.getCorpusAggregates().put(
-					annotationScore, 
-					objectMapper.readTree(
-							corpusDir.getPath()
-							+ System.getProperty("file.separator", "/") 
-							+ "Annotations" 
-							+ System.getProperty("file.separator", "/")
-							+ "CORPUS" 
-							+ System.getProperty("file.separator", "/") 
-							+ annotationScore
-							+ ".json"
-					)
-			);
-		}
 
-		File inputDir = new File(corpusDir.getPath() + System.getProperty("file.separator", "/") + "Annotations"  + System.getProperty("file.separator", "/") + "OOP" + System.getProperty("file.separator", "/"));
-		if (inputDir.isDirectory()) {
-			for (final File inputFile : inputDir.listFiles()) {
-				logger.debug(inputFile.getPath());
-				try {
-					ObjectNode documentScore = (ObjectNode) objectMapper.readTree(inputFile);
-					ObjectNode tfidfScore = tfidfScorer.scoreDocument(documentScore);
-					writeFile(
-							corpusDir.getPath()
-								+ System.getProperty("file.separator", "/") 
-								+ "Annotations" 
-								+ System.getProperty("file.separator", "/")
-								+ "TFIDF" 
-								+ System.getProperty("file.separator", "/") 
-								+ tfidfScore.get(CoreAnnotations.DocIDAnnotation.class.getName()).asText()
-								+ ".json",
-							objectMapper.valueToTree(tfidfScore)
-						);
-				}
-				catch (Exception e) {
-					logger.error(e);
-				}
-			}
-		}
-	}
 
 }

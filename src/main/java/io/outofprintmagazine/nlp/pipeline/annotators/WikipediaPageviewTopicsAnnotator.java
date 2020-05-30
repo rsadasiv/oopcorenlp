@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.io.IOException;
@@ -6,7 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -40,15 +55,6 @@ public class WikipediaPageviewTopicsAnnotator extends AbstractPosAnnotator imple
 		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));			
 	}
 	
-	public WikipediaPageviewTopicsAnnotator(Properties properties) {
-		this();
-		this.properties = properties;
-	}
-	
-	@Override
-	public void init(Map<String, Object> properties) {
-	}
-	
 	@Override
 	public Set<Class<? extends CoreAnnotation>> requires() {
 		return Collections.unmodifiableSet(
@@ -79,7 +85,7 @@ public class WikipediaPageviewTopicsAnnotator extends AbstractPosAnnotator imple
 		Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
 		for (String topic : topics.keySet()) {
 			try {
-				addToScoreMap(scoreMap, topic, WikipediaUtils.getInstance().getWikipediaPageviewsForTopic(topic).multiply(topics.get(topic)));
+				addToScoreMap(scoreMap, topic, WikipediaUtils.getInstance(getParameterStore()).getWikipediaPageviewsForTopic(topic).multiply(topics.get(topic)));
 			} 
 			catch (IOException e) {
 				logger.error(e);

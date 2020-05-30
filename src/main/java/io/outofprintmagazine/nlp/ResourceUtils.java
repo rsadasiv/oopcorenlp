@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp;
 
 import java.io.IOException;
@@ -11,24 +27,27 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.stanford.nlp.io.IOUtils;
+import io.outofprintmagazine.util.ParameterStore;
 
 public class ResourceUtils {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(ResourceUtils.class);
 	
-	private static ResourceUtils single_instance = null; 
-
-    public static ResourceUtils getInstance() throws IOException { 
-        if (single_instance == null) 
-            single_instance = new ResourceUtils(); 
-  
-        return single_instance; 
+	private static Map<ParameterStore, ResourceUtils> instances = new HashMap<ParameterStore, ResourceUtils>();
+	
+    public static ResourceUtils getInstance(ParameterStore parameterStore) throws IOException { 
+        if (instances.get(parameterStore) == null) {
+        	ResourceUtils instance = new ResourceUtils(parameterStore);
+            instances.put(parameterStore, instance);
+        }
+        return instances.get(parameterStore); 
     }
+    
 	private HashMap<String, HashMap<String, String>> dictionaries = new HashMap<String, HashMap<String, String>>();
 	private HashMap<String, List<String>> lists = new HashMap<String, List<String>>();
 	
-	private ResourceUtils() {
+	private ResourceUtils(ParameterStore parameterStore) {
 		super();
 	}
 	

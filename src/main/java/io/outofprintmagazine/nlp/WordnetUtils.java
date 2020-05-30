@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp;
 
 import java.io.IOException;
@@ -31,7 +47,7 @@ import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 import edu.mit.jwi.item.Pointer;
 import edu.stanford.nlp.ling.CoreLabel;
-import io.outofprintmagazine.util.GlobalProperties;
+import io.outofprintmagazine.util.ParameterStore;
 
 
 public class WordnetUtils {
@@ -39,16 +55,18 @@ public class WordnetUtils {
 	private static final Logger logger = LogManager.getLogger(WordnetUtils.class);
 	
 	private IDictionary wordnet = null;
-	private HashMap<String, ArrayList<String>> verbnet = new HashMap<String, ArrayList<String>>();	
+	private HashMap<String, ArrayList<String>> verbnet = new HashMap<String, ArrayList<String>>();
+	private ParameterStore parameterStore = null;
+
 	
-	private WordnetUtils() throws IOException {
+	
+	private WordnetUtils(ParameterStore parameterStore) throws IOException {
 		wordnet = new Dictionary(
 				new URL(
 						"file", 
 						null, 
-						GlobalProperties.getInstance().getProperty(
-								"wordNet_location", 
-								"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\data\\wn3.1.dict\\dict"
+						parameterStore.getProperty(
+								"wordNet_location"
 						)
 //						"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\data\\wn3.1.dict\\dict"
 				)
@@ -56,10 +74,9 @@ public class WordnetUtils {
 		wordnet.open();
 	
 		try {
-			ResourceUtils.getInstance().getDictionary(
-					GlobalProperties.getInstance().getProperty(
-							"dictionaryCommonWords_location", 
-							"io/outofprintmagazine/nlp/models/COCA/en_100.txt"
+			ResourceUtils.getInstance(parameterStore).getDictionary(
+					parameterStore.getProperty(
+							"dictionaryCommonWords_location"
 					)
 //					"io/outofprintmagazine/nlp/models/COCA/en_100.txt"
 			);
@@ -67,16 +84,18 @@ public class WordnetUtils {
 		catch (Exception e) {
 			logger.error("dictionary problem", e);
 		}
+		this.parameterStore = parameterStore;
 	}
 	
-	private static WordnetUtils single_instance = null; 
-
-    public static WordnetUtils getInstance() throws IOException { 
-        if (single_instance == null) 
-            single_instance = new WordnetUtils(); 
-  
-        return single_instance; 
-    } 
+	private static Map<ParameterStore, WordnetUtils> instances = new HashMap<ParameterStore, WordnetUtils>();
+	
+    public static WordnetUtils getInstance(ParameterStore parameterStore) throws IOException { 
+        if (instances.get(parameterStore) == null) {
+        	WordnetUtils instance = new WordnetUtils(parameterStore);
+            instances.put(parameterStore, instance);
+        }
+        return instances.get(parameterStore); 
+    }
     
 	public IDictionary getWordnet() {
 		return wordnet;
@@ -107,9 +126,8 @@ public class WordnetUtils {
 				new URL(
 						"file", 
 						null, 
-						GlobalProperties.getInstance().getProperty(
-								"verbNet_location", 
-								"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\data\\new_vn\\"
+						parameterStore.getProperty(
+								"verbNet_location"
 						)
 //						"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\data\\new_vn\\"
 				)
@@ -161,17 +179,18 @@ public class WordnetUtils {
 			return score;
 		}
 				
-		try {
-			IIndexWord idxWord = getWordnet().getIndexWord(token.lemma(), tagToPOS(token));
-			if (idxWord != null && idxWord.getWordIDs().size() > 0) {
-				IWordID wordID = idxWord.getWordIDs().get(0);
-				IWord word = getWordnet().getWord(wordID);
-				score = word.getSynset().getLexicalFile().getName();
+			try {
+				IIndexWord idxWord = getWordnet().getIndexWord(token.lemma(), tagToPOS(token));
+				if (idxWord != null && idxWord.getWordIDs().size() > 0) {
+					IWordID wordID = idxWord.getWordIDs().get(0);
+					IWord word = getWordnet().getWord(wordID);
+					score = word.getSynset().getLexicalFile().getName();
+				}
 			}
-		}
-		catch (Exception e) {
-			logger.error(token.toString(), e);
-		}
+			catch (Exception e) {
+				logger.error(token.toString(), e);
+			}
+
 
 		return score;
 	}
@@ -182,50 +201,54 @@ public class WordnetUtils {
 		if (pos == null) {
 			return score;
 		}
-		
-		try {
-			IIndexWord idxWord = getWordnet().getIndexWord(token.lemma(), tagToPOS(token));
-			if (idxWord != null && idxWord.getWordIDs().size() > 0) {
-				ISenseKey senseKey = getTargetWordSenseKey(token, contextWords);
-				for (IWordID wordID : idxWord.getWordIDs()) {
-					IWord word = getWordnet().getWord(wordID);
-					if (word.getSenseKey().equals(senseKey)) {
-						score = word.getSynset().getLexicalFile().getName();
-						break;
+	
+			try {
+				IIndexWord idxWord = getWordnet().getIndexWord(token.lemma(), tagToPOS(token));
+				if (idxWord != null && idxWord.getWordIDs().size() > 0) {
+					ISenseKey senseKey = getTargetWordSenseKey(token, contextWords);
+					for (IWordID wordID : idxWord.getWordIDs()) {
+						IWord word = getWordnet().getWord(wordID);
+						if (word.getSenseKey().equals(senseKey)) {
+							score = word.getSynset().getLexicalFile().getName();
+							break;
+						}
 					}
 				}
 			}
-		}
-		catch (Exception e) {
-			logger.error(token.toString(), e);
-		}
+			catch (Exception e) {
+				logger.error(token.toString(), e);
+			}
+
+		
 		return score;
 	}
 	
 	public IIndexWord getIndexWord(CoreLabel token) {
 		IIndexWord retval = null;
-		if (tagToPOS(token) != null) {
-			retval = getWordnet().getIndexWord(token.lemma(), tagToPOS(token));
-		}
-		if ((token.tag().equals("JJR") || token.tag().equals("RBR")) && token.lemma().endsWith("er") && token.lemma().length() > 2) {
-			retval = getWordnet().getIndexWord(token.lemma().substring(0, token.lemma().length()-2 ), tagToPOS(token));
-		}
-		if ((token.tag().equals("JJS") || token.tag().equals("RBS")) && token.lemma().endsWith("est") && token.lemma().length() > 3) {
-			retval = getWordnet().getIndexWord(token.lemma().substring(0, token.lemma().length()-3 ), tagToPOS(token));
-		}
-		if (retval == null) {
-			retval = getWordnet().getIndexWord(token.lemma(), POS.NOUN);
-		}
-		if (retval == null) {
-			retval = getWordnet().getIndexWord(token.lemma(), POS.VERB);
-		}
-		if (retval == null) {
-			retval = getWordnet().getIndexWord(token.lemma(), POS.ADJECTIVE);
-			
-		}
-		if (retval == null) {
-			retval = getWordnet().getIndexWord(token.lemma(), POS.ADVERB);
-		}
+
+			if (tagToPOS(token) != null) {
+				retval = getWordnet().getIndexWord(token.lemma(), tagToPOS(token));
+			}
+			if ((token.tag().equals("JJR") || token.tag().equals("RBR")) && token.lemma().endsWith("er") && token.lemma().length() > 2) {
+				retval = getWordnet().getIndexWord(token.lemma().substring(0, token.lemma().length()-2 ), tagToPOS(token));
+			}
+			if ((token.tag().equals("JJS") || token.tag().equals("RBS")) && token.lemma().endsWith("est") && token.lemma().length() > 3) {
+				retval = getWordnet().getIndexWord(token.lemma().substring(0, token.lemma().length()-3 ), tagToPOS(token));
+			}
+			if (retval == null) {
+				retval = getWordnet().getIndexWord(token.lemma(), POS.NOUN);
+			}
+			if (retval == null) {
+				retval = getWordnet().getIndexWord(token.lemma(), POS.VERB);
+			}
+			if (retval == null) {
+				retval = getWordnet().getIndexWord(token.lemma(), POS.ADJECTIVE);
+				
+			}
+			if (retval == null) {
+				retval = getWordnet().getIndexWord(token.lemma(), POS.ADVERB);
+			}
+
 		return retval;
 	}
 	
@@ -295,23 +318,23 @@ public class WordnetUtils {
 		if (pos == null) {
 			return retval;
 		}
-				
-		try {
-			IIndexWord idxWord = getIndexWord(token);
-			if (idxWord != null && idxWord.getWordIDs().size() > 0) {
-				ISenseKey senseKey = getTargetWordSenseKey(token, contextWords);
-				for (IWordID wordID : idxWord.getWordIDs()) {
-					IWord word = getWordnet().getWord(wordID);
-					if (word.getSenseKey().equals(senseKey)) {
-						retval = word.getSynset().getGloss();
-						break;
+					
+			try {
+				IIndexWord idxWord = getIndexWord(token);
+				if (idxWord != null && idxWord.getWordIDs().size() > 0) {
+					ISenseKey senseKey = getTargetWordSenseKey(token, contextWords);
+					for (IWordID wordID : idxWord.getWordIDs()) {
+						IWord word = getWordnet().getWord(wordID);
+						if (word.getSenseKey().equals(senseKey)) {
+							retval = word.getSynset().getGloss();
+							break;
+						}
 					}
 				}
 			}
-		}
-		catch (Exception e) {
-			logger.error(token.toString(), e);
-		}
+			catch (Exception e) {
+				logger.error(token.toString(), e);
+			}
 
 		return retval;
 	}
@@ -330,29 +353,31 @@ public class WordnetUtils {
 	}
 
 	public ISenseKey getTargetWordSenseKeyPOS(POS pos, CoreLabel targetWord, List<CoreLabel> contextWords) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
-		//look up the target word
-		IIndexWord idxWord = getWordnet().getIndexWord(targetWord.lemma(), pos);	
-		if (idxWord != null) {
-			IWord word0 = getWordnet().getWord(idxWord.getWordIDs().get(0));
-			//if the target word only has one sense, return it
-			if (idxWord.getWordIDs().size() == 1) {
-				//logger.debug("returning only sense: " + targetWord);
-				return word0.getSenseKey();
+	
+			//look up the target word
+			IIndexWord idxWord = getWordnet().getIndexWord(targetWord.lemma(), pos);	
+			if (idxWord != null) {
+				IWord word0 = getWordnet().getWord(idxWord.getWordIDs().get(0));
+				//if the target word only has one sense, return it
+				if (idxWord.getWordIDs().size() == 1) {
+					//logger.debug("returning only sense: " + targetWord);
+					return word0.getSenseKey();
+				}
+				//if the top ranked sense is more than 2 times as likely as the second ranked sense, return the top ranked sense
+				IWord word1 = getWordnet().getWord(idxWord.getWordIDs().get(1));
+				if (getWordnet().getSenseEntry(word1.getSenseKey()).getTagCount() < (getWordnet().getSenseEntry(word0.getSenseKey()).getTagCount()/2)) {
+					//logger.debug("returning dominant sense: " + targetWord);
+					return word0.getSenseKey();
+				}
+				else {
+					ISenseKey k = simplifiedLesk(targetWord, contextWords);
+					//logger.debug("ran simplifiedLesk: " + targetWord + "sense " + k);
+					return k;
+					//logger.debug("simplifiedLesk doesn't add value - throwing it away");
+				}
 			}
-			//if the top ranked sense is more than 2 times as likely as the second ranked sense, return the top ranked sense
-			IWord word1 = getWordnet().getWord(idxWord.getWordIDs().get(1));
-			if (getWordnet().getSenseEntry(word1.getSenseKey()).getTagCount() < (getWordnet().getSenseEntry(word0.getSenseKey()).getTagCount()/2)) {
-				//logger.debug("returning dominant sense: " + targetWord);
-				return word0.getSenseKey();
-			}
-			else {
-				ISenseKey k = simplifiedLesk(targetWord, contextWords);
-				//logger.debug("ran simplifiedLesk: " + targetWord + "sense " + k);
-				return k;
-				//logger.debug("simplifiedLesk doesn't add value - throwing it away");
-			}
-		}
-		//logger.debug("no sense key: " + targetWord);
+			//logger.debug("no sense key: " + targetWord);
+
 		return null;
 	}
 	
@@ -371,27 +396,29 @@ public class WordnetUtils {
 	
 	public List<String> getSynsetWords(IWord word) {
 		ArrayList<String> retval = new ArrayList<String>();
-		ISynset synset = word.getSynset();
-        for (IWord w : synset.getWords()) {
-            retval.add(w.getLemma());
-        }
-        for (ISynsetID relatedSynsetId : synset.getRelatedSynsets()) {
-        	ISynset relatedSynset = getWordnet().getSynset(relatedSynsetId);
-        	for (IWord relatedSynsetWord : relatedSynset.getWords()) {
-        		retval.add(relatedSynsetWord.getLemma());
-        	}
-        }
-        for (IWordID relatedWordId : word.getRelatedWords()) {
-        	IWord relatedWord = getWordnet().getWord(relatedWordId);
-        	retval.add(relatedWord.getLemma());
-        	
-        }
+		
+			ISynset synset = word.getSynset();
+	        for (IWord w : synset.getWords()) {
+	            retval.add(w.getLemma());
+	        }
+	        for (ISynsetID relatedSynsetId : synset.getRelatedSynsets()) {
+	        	ISynset relatedSynset = getWordnet().getSynset(relatedSynsetId);
+	        	for (IWord relatedSynsetWord : relatedSynset.getWords()) {
+	        		retval.add(relatedSynsetWord.getLemma());
+	        	}
+	        }
+	        for (IWordID relatedWordId : word.getRelatedWords()) {
+	        	IWord relatedWord = getWordnet().getWord(relatedWordId);
+	        	retval.add(relatedWord.getLemma());
+	        	
+	        }
+
         return retval;
 	}
 	
 	public List<String> removeCommonWords(List<String> list) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 
-		Map<String,String> dict = ResourceUtils.getInstance().getDictionary(
+		Map<String,String> dict = ResourceUtils.getInstance(parameterStore).getDictionary(
 //						GlobalProperties.getInstance().getProperty(
 //								"dictionaryCommonWords_location", 
 //								"io/outofprintmagazine/nlp/models/COCA/en_100.txt"

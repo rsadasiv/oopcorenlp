@@ -1,4 +1,4 @@
-Western Union	ORGANIZATION	LOCATION
+Western Union	ORGANIZATION
 Shukran Jaffer	PERSON
 Hindi	LANGUAGE
 Urdu	LANGUAGE
@@ -10,8 +10,12 @@ Tamil Nadu	LOCATION
 Santacruz	LOCATION
 Vashi	LOCATION
 Kavya	PERSON
-Pramila	PERSON	LOCATION
-Shahani	PERSON	LOCATION
-Sibanarayan	PERSON	LOCATION
-Kshetramohan	PERSON	LOCATION
+Pramila	PERSON
+Shahani	PERSON
+Sibanarayan	PERSON
+Kshetramohan	PERSON
 Ratnakar	PERSON
+Dwarka	LOCATION
+Mount Govardhan	LOCATION
+Arabic	LANGUAGE
+Yeshwantpur	LOCATION

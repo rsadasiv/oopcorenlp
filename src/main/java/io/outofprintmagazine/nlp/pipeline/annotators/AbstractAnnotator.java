@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.math.BigDecimal;
@@ -5,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +39,7 @@ import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
 import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.util.ParameterStore;
 
 public abstract class AbstractAnnotator implements Annotator, OOPAnnotator {
 	
@@ -36,7 +52,7 @@ public abstract class AbstractAnnotator implements Annotator, OOPAnnotator {
 	
 	protected Scorer scorer;
 	protected Serializer serializer;
-	protected Properties properties;
+	protected ParameterStore parameterStore;
 	protected List<String> punctuationMarks = Arrays.asList("``", "''","?", "??", "!", ":", ";", ",", "--", "-", ".", "\"", "`", "'", "‘", "’", "“", "”", ".", "*", "[", "]", "{", "}");
 	//protected List<String> nonDictionaryPOS = Arrays.asList("NNP", "NNPS", "CD", "LS", "SYM", "POS", "FW");
 	protected List<String> dictionaryPOS = Arrays.asList(
@@ -75,11 +91,6 @@ public abstract class AbstractAnnotator implements Annotator, OOPAnnotator {
 		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
 		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 	}
-
-	public AbstractAnnotator(Properties properties) {
-		this();
-		this.properties = properties;
-	}
 	
 	protected Serializer getSerializer() {
 		return serializer;
@@ -102,7 +113,13 @@ public abstract class AbstractAnnotator implements Annotator, OOPAnnotator {
 	
 	
 	@Override
-	public abstract void init(Map<String,Object> properties);
+	public void init(ParameterStore parameterStore) {
+		this.parameterStore = parameterStore;
+	}
+	
+	protected ParameterStore getParameterStore() {
+		return parameterStore;
+	}
 		
 	@Override
 	public Set<Class<? extends CoreAnnotation>> requirementsSatisfied() {

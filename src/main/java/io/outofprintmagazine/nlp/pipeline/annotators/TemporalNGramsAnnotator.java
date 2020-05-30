@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.math.BigDecimal;
@@ -7,7 +23,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -43,11 +58,6 @@ public class TemporalNGramsAnnotator extends AbstractPosAnnotator implements Ann
 		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
 		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/COCA/Dolch.txt");
-	}
-	
-	public TemporalNGramsAnnotator(String name, Properties props) {
-		this();
-		properties = props;
 	}
 	
     public Map<String,BigDecimal> nGramScoreToTemporalAnnotation(NGramScore nGramScore) {
@@ -103,13 +113,13 @@ public class TemporalNGramsAnnotator extends AbstractPosAnnotator implements Ann
 			}
 		}
 		try {
-			NGramUtils.getInstance().addToWordCache(queries);
+			NGramUtils.getInstance(getParameterStore()).addToWordCache(queries);
 			for (int i=0;i<document.tokens().size();i++) {
 				CoreLabel token = document.tokens().get(i);
 				try {
 					if (isDictionaryWord(token)) {
 						if (!getTags().contains(token.lemma())) {
-							List<NGramPhraseScore> wordCache = NGramUtils.getInstance().getWordCache(token.originalText().toLowerCase());
+							List<NGramPhraseScore> wordCache = NGramUtils.getInstance(getParameterStore()).getWordCache(token.originalText().toLowerCase());
 							if (wordCache != null && wordCache.size() > 0) {
 								String key = nGramPhraseScoreToTemporalString(wordCache.get(0));
 								Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
@@ -123,7 +133,7 @@ public class TemporalNGramsAnnotator extends AbstractPosAnnotator implements Ann
 					logger.error("wtf?", t);
 				}
 			}
-			NGramUtils.getInstance().pruneWordCache();
+			NGramUtils.getInstance(getParameterStore()).pruneWordCache();
 		}
 		catch (Exception e) {
 			logger.error(e);
@@ -147,11 +157,6 @@ public class TemporalNGramsAnnotator extends AbstractPosAnnotator implements Ann
 				)
 			)
 		);
-	}
-	
-	@Override
-	public void init(Map<String, Object> properties) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override

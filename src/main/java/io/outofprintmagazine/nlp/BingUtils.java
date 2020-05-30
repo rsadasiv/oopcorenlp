@@ -1,13 +1,29 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.http.HttpEntity;
@@ -29,27 +45,28 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.outofprintmagazine.util.ParameterStore;
+
 public class BingUtils {
 	
 	private static final Logger logger = LogManager.getLogger(BingUtils.class);
 	
-	private Properties props = null;
-	private ObjectMapper mapper = null;
+	private Properties props = new Properties();
+	private ObjectMapper mapper = new ObjectMapper();
+	private static Map<ParameterStore, BingUtils> instances = new HashMap<ParameterStore, BingUtils>();
 	
-	private BingUtils() throws IOException {
-		InputStream input = new FileInputStream("data/azure_api_key.txt");
-        props = new Properties();
-        props.load(input);
-		mapper = new ObjectMapper();
+	private BingUtils(ParameterStore parameterStore) throws IOException {
+		super();
+		props = new Properties();
+		props.setProperty("apiKey", parameterStore.getProperty("azure_apiKey"));
 	}
-	
-	private static BingUtils single_instance = null; 
-
-    public static BingUtils getInstance() throws IOException { 
-        if (single_instance == null) 
-            single_instance = new BingUtils(); 
-  
-        return single_instance; 
+	    
+    public static BingUtils getInstance(ParameterStore parameterStore) throws IOException { 
+        if (instances.get(parameterStore) == null) {
+            BingUtils instance = new BingUtils(parameterStore);
+            instances.put(parameterStore, instance);
+        }
+        return instances.get(parameterStore); 
     }
     
     public List<String> getImagesByText(String text) throws IOException, URISyntaxException {
@@ -117,7 +134,7 @@ public class BingUtils {
             	return retval;
         	}
         	else {
-        		return null;
+        		return new ArrayList<String>();
         	}
 
         } finally {
@@ -182,7 +199,7 @@ public class BingUtils {
             	return retval;
         	}
         	else {
-        		return null;
+        		return new ArrayList<String>();
         	}
 
         } finally {
@@ -190,15 +207,4 @@ public class BingUtils {
         }
 
     }
-    
-    
-
-    public static void main(String[] argv) throws IOException, URISyntaxException {
-    	List<String> values = BingUtils.getInstance().getImagesByText("Kumar");
-    	for (String val : values) {
-    		logger.debug(val);
-    	}
-    	
-    }
-    
 }

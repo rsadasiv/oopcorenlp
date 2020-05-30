@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.math.BigDecimal;
@@ -7,7 +23,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -46,20 +61,11 @@ public class BiberAnnotator extends AbstractPosAnnotator implements Annotator, O
 		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));		
 	}
 
-	public BiberAnnotator(Properties properties) {
-		this();
-		this.properties = properties;
-	}
-
 	@Override
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPBiberAnnotation.class;
 	}
 
-	@Override
-	public void init(Map<String, Object> properties) {
-		// TODO Auto-generated method stub
-	}
 	
 	@Override
 	public String getDescription() {
@@ -232,7 +238,7 @@ or negations.
 	public void annotate_PLACE(Annotation annotation) {
 		try {
 			List<String> posTags = Arrays.asList("NNP");
-			List<String> tags = ResourceUtils.getInstance().getList("io/outofprintmagazine/nlp/models/Biber/PLACE.txt");
+			List<String> tags = ResourceUtils.getInstance(getParameterStore()).getList("io/outofprintmagazine/nlp/models/Biber/PLACE.txt");
 			CoreDocument document = new CoreDocument(annotation);
 			for (CoreSentence sentence : document.sentences()) {
 				for (CoreLabel token : sentence.tokens()) {
@@ -254,7 +260,7 @@ or negations.
 	
 	public void annotate_TIME(Annotation annotation) {
 		try {
-			List<String> tags = ResourceUtils.getInstance().getList("io/outofprintmagazine/nlp/models/Biber/TIME.txt");
+			List<String> tags = ResourceUtils.getInstance(getParameterStore()).getList("io/outofprintmagazine/nlp/models/Biber/TIME.txt");
 			CoreDocument document = new CoreDocument(annotation);
 			for (CoreSentence sentence : document.sentences()) {
 				boolean soonAs = false;
@@ -894,7 +900,7 @@ HAVE, BE or DO).
 	public void annotate_PIRE(Annotation annotation) {
 		try {
 			List<String> posTags = Arrays.asList("who", "whom", "whose", "which");
-			List<String> tags = ResourceUtils.getInstance().getList("io/outofprintmagazine/nlp/models/Biber/PIN.txt");
+			List<String> tags = ResourceUtils.getInstance(getParameterStore()).getList("io/outofprintmagazine/nlp/models/Biber/PIN.txt");
 			CoreDocument document = new CoreDocument(annotation);
 			for (CoreSentence sentence : document.sentences()) {
 				boolean wasPIN = false;
@@ -1013,7 +1019,7 @@ as, only the first word is tagged as OSUB and the other words are tagged with th
 	
 	public void annotate_PIN(Annotation annotation) {
 		try {
-			List<String> tags = ResourceUtils.getInstance().getList("io/outofprintmagazine/nlp/models/Biber/PIN.txt");
+			List<String> tags = ResourceUtils.getInstance(getParameterStore()).getList("io/outofprintmagazine/nlp/models/Biber/PIN.txt");
 			CoreDocument document = new CoreDocument(annotation);
 			for (CoreSentence sentence : document.sentences()) {
 				for (CoreLabel token : sentence.tokens()) {
@@ -1163,7 +1169,7 @@ when it appeared after a punctuation mark. The same applies for altogether. In c
 words are tagged with the tag NULL. 
  */
 		try {
-			List<String> tags = ResourceUtils.getInstance().getList("io/outofprintmagazine/nlp/models/Biber/CONJ.txt");;
+			List<String> tags = ResourceUtils.getInstance(getParameterStore()).getList("io/outofprintmagazine/nlp/models/Biber/CONJ.txt");;
 			CoreDocument document = new CoreDocument(annotation);
 			for (CoreSentence sentence : document.sentences()) {
 				for (CoreLabel token : sentence.tokens()) {
@@ -1377,7 +1383,7 @@ tagged with the tag NULL.
 	public void annotate_PUBV(Annotation annotation) {
 		try {
 			List<String> posTags = Arrays.asList("VB", "VBD", "VBG", "VBN", "VBP", "VBZ");
-			List<String> tags = ResourceUtils.getInstance().getList("io/outofprintmagazine/nlp/models/Biber/PUBV.txt");
+			List<String> tags = ResourceUtils.getInstance(getParameterStore()).getList("io/outofprintmagazine/nlp/models/Biber/PUBV.txt");
 			CoreDocument document = new CoreDocument(annotation);
 			for (CoreSentence sentence : document.sentences()) {
 				for (CoreLabel token : sentence.tokens()) {
@@ -1397,7 +1403,7 @@ tagged with the tag NULL.
 	public void annotate_PRIV(Annotation annotation) {
 		try {
 			List<String> posTags = Arrays.asList("VB", "VBD", "VBG", "VBN", "VBP", "VBZ");
-			List<String> tags = ResourceUtils.getInstance().getList("io/outofprintmagazine/nlp/models/Biber/PRIV.txt");
+			List<String> tags = ResourceUtils.getInstance(getParameterStore()).getList("io/outofprintmagazine/nlp/models/Biber/PRIV.txt");
 			CoreDocument document = new CoreDocument(annotation);
 			for (CoreSentence sentence : document.sentences()) {
 				for (CoreLabel token : sentence.tokens()) {
@@ -1417,7 +1423,7 @@ tagged with the tag NULL.
 	public void annotate_SUAV(Annotation annotation) {
 		try {
 			List<String> posTags = Arrays.asList("VB", "VBD", "VBG", "VBN", "VBP", "VBZ");
-			List<String> tags = ResourceUtils.getInstance().getList("io/outofprintmagazine/nlp/models/Biber/SUAV.txt");
+			List<String> tags = ResourceUtils.getInstance(getParameterStore()).getList("io/outofprintmagazine/nlp/models/Biber/SUAV.txt");
 			CoreDocument document = new CoreDocument(annotation);
 			for (CoreSentence sentence : document.sentences()) {
 				for (CoreLabel token : sentence.tokens()) {

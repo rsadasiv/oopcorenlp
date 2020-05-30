@@ -1,11 +1,31 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp.pipeline;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class ActorAnnotation extends ContextualAnnotation{
 
@@ -18,19 +38,21 @@ public class ActorAnnotation extends ContextualAnnotation{
 	
 	public ActorAnnotation() {
 		super();
+		OOPMyersBriggs.put("extrovert", new BigDecimal(0));
+		OOPMyersBriggs.put("introvert", new BigDecimal(0));
+		OOPMyersBriggs.put("sensing", new BigDecimal(0));
+		OOPMyersBriggs.put("intuitive", new BigDecimal(0));
+		OOPMyersBriggs.put("thinking", new BigDecimal(0));
+		OOPMyersBriggs.put("feeling", new BigDecimal(0));
+		OOPMyersBriggs.put("judging", new BigDecimal(0));
+		OOPMyersBriggs.put("perceiving", new BigDecimal(0));
 	}
 	
 	protected String CoreNlpGender = "";
 	protected String OOPGender = "";
 	protected List<String> Quotes = new ArrayList<String>();
-	protected BigDecimal Extrovert = new BigDecimal(0);
-	protected BigDecimal Introvert = new BigDecimal(0);
-	protected BigDecimal Sensing = new BigDecimal(0);
-	protected BigDecimal Intuitive = new BigDecimal(0);
-	protected BigDecimal Thinking = new BigDecimal(0);
-	protected BigDecimal Feeling = new BigDecimal(0);
-	protected BigDecimal Judging = new BigDecimal(0);
-	protected BigDecimal Perceiving = new BigDecimal(0);
+	protected Map<String, BigDecimal> OOPMyersBriggs = new HashMap<String, BigDecimal>();
+	
 
 	public String getCoreNlpGender() {
 		return CoreNlpGender;
@@ -57,67 +79,12 @@ public class ActorAnnotation extends ContextualAnnotation{
 		Quotes = quotes;
 	}
 	
-	public BigDecimal getExtrovert() {
-		return Extrovert;
+	public Map<String,BigDecimal> getOOPMyersBriggs() {
+		return OOPMyersBriggs;
+	}
+	
+	public void setOOPMyersBriggs(Map<String,BigDecimal> mb) {
+		OOPMyersBriggs = mb;
 	}
 
-	public void setExtrovert(BigDecimal extrovert) {
-		Extrovert = extrovert;
-	}
-
-	public BigDecimal getIntrovert() {
-		return Introvert;
-	}
-
-	public void setIntrovert(BigDecimal introvert) {
-		Introvert = introvert;
-	}
-
-	public BigDecimal getSensing() {
-		return Sensing;
-	}
-
-	public void setSensing(BigDecimal sensing) {
-		Sensing = sensing;
-	}
-
-	public BigDecimal getIntuitive() {
-		return Intuitive;
-	}
-
-	public void setIntuitive(BigDecimal intuitive) {
-		Intuitive = intuitive;
-	}
-
-	public BigDecimal getThinking() {
-		return Thinking;
-	}
-
-	public void setThinking(BigDecimal thinking) {
-		Thinking = thinking;
-	}
-
-	public BigDecimal getFeeling() {
-		return Feeling;
-	}
-
-	public void setFeeling(BigDecimal feeling) {
-		Feeling = feeling;
-	}
-
-	public BigDecimal getJudging() {
-		return Judging;
-	}
-
-	public void setJudging(BigDecimal judging) {
-		Judging = judging;
-	}
-
-	public BigDecimal getPerceiving() {
-		return Perceiving;
-	}
-
-	public void setPerceiving(BigDecimal perceiving) {
-		Perceiving = perceiving;
-	}
 }

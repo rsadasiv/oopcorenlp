@@ -1,11 +1,27 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.http.HttpEntity;
@@ -30,27 +46,30 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.outofprintmagazine.util.ParameterStore;
+
 public class FacePlusPlusUtils {
 	
 	private static final Logger logger = LogManager.getLogger(FacePlusPlusUtils.class);
 	
 	private Properties props = null;
-	private ObjectMapper mapper = null;
+	private ObjectMapper mapper = new ObjectMapper();
+
 	
-	private FacePlusPlusUtils() throws IOException {
-		InputStream input = new FileInputStream("data/faceplusplus_api_key.txt");
-        props = new Properties();
-        props.load(input);
-		mapper = new ObjectMapper();
+	private FacePlusPlusUtils(ParameterStore parameterStore) throws IOException {
+		props = new Properties();
+		props.setProperty("apiKey", parameterStore.getProperty("faceplusplus_apiKey"));
+		props.setProperty("secret", parameterStore.getProperty("faceplusplus_secret"));
 	}
 	
-	private static FacePlusPlusUtils single_instance = null; 
-
-    public static FacePlusPlusUtils getInstance() throws IOException { 
-        if (single_instance == null) 
-            single_instance = new FacePlusPlusUtils(); 
-  
-        return single_instance; 
+	private static Map<ParameterStore, FacePlusPlusUtils> instances = new HashMap<ParameterStore, FacePlusPlusUtils>();
+	
+    public static FacePlusPlusUtils getInstance(ParameterStore parameterStore) throws IOException { 
+        if (instances.get(parameterStore) == null) {
+        	FacePlusPlusUtils instance = new FacePlusPlusUtils(parameterStore);
+            instances.put(parameterStore, instance);
+        }
+        return instances.get(parameterStore); 
     }
     
     public JsonNode imageHasOneFace(String imageUrl) throws IOException, URISyntaxException {
@@ -113,12 +132,5 @@ public class FacePlusPlusUtils {
             httpclient.close();
         }
 
-    }
-
-    public static void main(String[] argv) throws IOException, URISyntaxException {
-    	System.out.println(FacePlusPlusUtils.getInstance().imageHasOneFace("https://farm6.static.flickr.com/5211/5516604741_b88c12e6d8_o.jpg"));
-    	System.out.println(FacePlusPlusUtils.getInstance().imageHasOneFace("https://farm2.static.flickr.com/1145/1079478724_49ebe7867d_o.jpg"));
-    	
-    }
-    
+    }    
 }

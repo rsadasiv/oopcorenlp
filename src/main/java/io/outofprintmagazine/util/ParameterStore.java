@@ -14,26 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.nlp.pipeline.annotators;
+package io.outofprintmagazine.util;
+
+import java.io.IOException;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import edu.stanford.nlp.pipeline.Annotator;
-import edu.stanford.nlp.pipeline.CoreDocument;
-import io.outofprintmagazine.util.ParameterStore;
-
-public interface OOPAnnotator extends Annotator {
-	
-	public Class getAnnotationClass();
-	
-	public String getDescription();
-	
-	public void score(CoreDocument document);
-	
-	public void serialize(CoreDocument document, ObjectNode json);
-	
-	public void serializeAggregateDocument(CoreDocument document, ObjectNode json);
-	
-	public void init(ParameterStore properties);
-
+public interface ParameterStore {
+    
+    public String getProperty(String name) throws IOException;
+    
+    public void init(ObjectNode properties) throws IOException;
+    
 }

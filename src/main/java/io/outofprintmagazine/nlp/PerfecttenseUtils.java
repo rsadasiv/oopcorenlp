@@ -1,12 +1,26 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.UnsupportedCharsetException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -26,13 +40,11 @@ import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import edu.stanford.nlp.io.IOUtils;
+import io.outofprintmagazine.util.ParameterStore;
 
 
 public class PerfecttenseUtils {
@@ -44,23 +56,19 @@ public class PerfecttenseUtils {
 	private String appKey = null;
 
 	
-	private PerfecttenseUtils() throws IOException {
-		InputStream input = new FileInputStream("data/perfecttense.properties");
-        Properties props = new Properties();
-        props.load(input);
-        this.apiKey = props.getProperty("apikey");
-        this.appKey = props.getProperty("appkey");
-        input.close();
-
+	private PerfecttenseUtils(ParameterStore parameterStore) throws IOException {
+		this.apiKey = parameterStore.getProperty("perfecttense_apikey");
+		this.appKey = parameterStore.getProperty("perfecttense_appkey");
 	}
 	
-	private static PerfecttenseUtils single_instance = null; 
-
-    public static PerfecttenseUtils getInstance() throws IOException { 
-        if (single_instance == null) 
-            single_instance = new PerfecttenseUtils(); 
-  
-        return single_instance; 
+	private static Map<ParameterStore, PerfecttenseUtils> instances = new HashMap<ParameterStore, PerfecttenseUtils>();
+	
+    public static PerfecttenseUtils getInstance(ParameterStore parameterStore) throws IOException { 
+        if (instances.get(parameterStore) == null) {
+        	PerfecttenseUtils instance = new PerfecttenseUtils(parameterStore);
+            instances.put(parameterStore, instance);
+        }
+        return instances.get(parameterStore); 
     }
     
     public String correct(String text, List<String> nnp) throws UnsupportedCharsetException, ClientProtocolException, IOException {
@@ -126,19 +134,5 @@ public class PerfecttenseUtils {
             httpclient.close();
         }
         return responseBody;
-    }
-
-    public static void main(String[] argv) throws IOException {
-    	String text = IOUtils.slurpFile(
-				"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp_web\\WebContent\\Corpora\\Published\\Text\\0c06370b-8401-4aac-98be-ed61c184a264.txt");
-    	List<String> nnp = new ArrayList<String>();
-    	String response = PerfecttenseUtils.getInstance().correct(text, nnp);
-		ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-		mapper.configure(com.fasterxml.jackson.core.JsonGenerator.Feature.WRITE_BIGDECIMAL_AS_PLAIN, true);
-
-        JsonNode document = mapper.readTree(response);
-		System.out.println(mapper.writeValueAsString(document));
-        
-    }
-    
+    }    
 }

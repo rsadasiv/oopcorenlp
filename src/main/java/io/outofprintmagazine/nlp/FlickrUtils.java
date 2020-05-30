@@ -1,15 +1,31 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -23,26 +39,31 @@ import com.flickr4java.flickr.photos.Photo;
 import com.flickr4java.flickr.photos.PhotoList;
 import com.flickr4java.flickr.photos.SearchParameters;
 
+import io.outofprintmagazine.util.ParameterStore;
+
 public class FlickrUtils {
 	
 	private static final Logger logger = LogManager.getLogger(FlickrUtils.class);
-	private Properties props = null;
 	private Flickr flickr = null;
+	private ParameterStore parameterStore = null;
 	
-	private FlickrUtils() throws IOException {
-		InputStream input = new FileInputStream("data/flickr_api_key.txt");
-		props = new Properties();
-        props.load(input);
-		flickr = new Flickr(props.getProperty("apiKey"), props.getProperty("secret"), new REST());
+	private FlickrUtils(ParameterStore parameterStore) throws IOException {
+		this.parameterStore = parameterStore;
+		flickr = new Flickr(
+				parameterStore.getProperty("flickr_apiKey"),
+				parameterStore.getProperty("flickr_secret"),
+				new REST()
+		);
 	}
 	
-	private static FlickrUtils single_instance = null; 
-
-    public static FlickrUtils getInstance() throws IOException { 
-        if (single_instance == null) 
-            single_instance = new FlickrUtils(); 
-  
-        return single_instance; 
+	private static Map<ParameterStore, FlickrUtils> instances = new HashMap<ParameterStore, FlickrUtils>();
+	
+    public static FlickrUtils getInstance(ParameterStore parameterStore) throws IOException { 
+        if (instances.get(parameterStore) == null) {
+        	FlickrUtils instance = new FlickrUtils(parameterStore);
+            instances.put(parameterStore, instance);
+        }
+        return instances.get(parameterStore); 
     }
     
     public List<String> getImagesByText(String text) throws FlickrException {
@@ -83,13 +104,13 @@ public class FlickrUtils {
 	        Photo nfo = flickr.getPhotosInterface().getInfo(p.getId(), null);
 	        try {
 		        if (nfo.getOriginalSecret().isEmpty()) {
-		        	if (FacePlusPlusUtils.getInstance().imageHasOneFace(p.getSmallUrl()) != null) {
+		        	if (FacePlusPlusUtils.getInstance(parameterStore).imageHasOneFace(p.getSmallUrl()) != null) {
 		        		retval.add(p.getSmallUrl());
 		        	}
 		        } 
 		        else {
 	                p.setOriginalSecret(nfo.getOriginalSecret());
-		        	if (FacePlusPlusUtils.getInstance().imageHasOneFace(p.getSmallUrl()) != null) {
+		        	if (FacePlusPlusUtils.getInstance(parameterStore).imageHasOneFace(p.getSmallUrl()) != null) {
 		        		retval.add(p.getSmallUrl());
 		        	}
 		        }

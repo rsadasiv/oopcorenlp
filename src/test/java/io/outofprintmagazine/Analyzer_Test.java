@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine;
 
 import java.io.File;
@@ -44,7 +60,7 @@ public class Analyzer_Test {
 	
 	public Analyzer getAnalyzer() {
 		if (ta == null) {
-			ta = new Analyzer();
+			//ta = new Analyzer();
 		}
 		return ta;
 	}
@@ -273,7 +289,7 @@ public class Analyzer_Test {
 		metadata.put(CoreAnnotations.DocTitleAnnotation.class.getName(), "Man faces federal charges for allegedly throwing molotov cocktail at D.C. police car");
 		metadata.put(CoreAnnotations.DocSourceTypeAnnotation.class.getName(), "Wapo");
 		
-		Map<String, ObjectNode> analysis = me.getAnalyzer().analyze(metadata, me.getText());
+		Map<String, ObjectNode> analysis = null; //me.getAnalyzer().analyze(CoreNlpUtils.getDefaultProps(), metadata, me.getText());
 		doc = analysis.get("OOP");
 		File f = new File(me.getDefaultPath() + "\\" + "OOP_" + "Wapo" + ".json");
         mapper.writeValue(f, doc);
@@ -290,11 +306,11 @@ public class Analyzer_Test {
 		List<String> mapAnnotators = new ArrayList<String>();
 		List<String> scalarAnnotators = new ArrayList<String>();
 		List<String> listAnnotators = new ArrayList<String>();
-		Iterator<Object> keyIter = CoreNlpUtils.getDefaultProps().keySet().iterator();
+		Iterator<Object> keyIter = null; //CoreNlpUtils.getDefaultProps().keySet().iterator();
 		while (keyIter.hasNext()) {
 			String key = (String) keyIter.next();
 			if (key.startsWith("customAnnotatorClass")) {
-				String annotatorClassName = CoreNlpUtils.getDefaultProps().getProperty(key);
+				String annotatorClassName = null; //CoreNlpUtils.getDefaultProps().getProperty(key);
 				OOPAnnotator annotator = (OOPAnnotator) Class.forName(annotatorClassName).newInstance();
 				annotator.init(null);
 				CoreAnnotation annotation = (CoreAnnotation) annotator.getAnnotationClass().newInstance();

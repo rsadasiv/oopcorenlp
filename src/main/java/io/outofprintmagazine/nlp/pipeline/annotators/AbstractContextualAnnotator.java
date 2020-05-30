@@ -1,3 +1,19 @@
+/*******************************************************************************
+ * Copyright (C) 2020 Ram Sadasiv
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ ******************************************************************************/
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.io.ByteArrayOutputStream;
@@ -11,7 +27,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +43,6 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
-import edu.stanford.nlp.pipeline.CoreQuote;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
 import edu.stanford.nlp.trees.GrammaticalRelation;
@@ -36,9 +50,7 @@ import edu.stanford.nlp.trees.TypedDependency;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.BingUtils;
 import io.outofprintmagazine.nlp.CoreNlpUtils;
-import io.outofprintmagazine.nlp.pipeline.ActorAnnotation;
 import io.outofprintmagazine.nlp.pipeline.ContextualAnnotation;
-import io.outofprintmagazine.nlp.pipeline.SettingAnnotation;
 
 public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
@@ -51,17 +63,6 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 	
 	public AbstractContextualAnnotator() {
 		super();
-	}
-	
-	public AbstractContextualAnnotator(Properties properties) {
-		this();
-		this.properties = properties;
-	}
-	
-
-	
-	@Override
-	public void init(Map<String, Object> properties) {
 	}
 		
 	public abstract Class getEntityAnnotationClass();
@@ -92,6 +93,7 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 					io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPVerbGroupsAnnotation.class,
 					io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPVerbsAnnotation.class,
 					io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPNounsAnnotation.class,
+					io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPNounGroupsAnnotation.class,
 					io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPAdjectivesAnnotation.class,
 					io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPAdverbsAnnotation.class
 					
@@ -165,14 +167,14 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 	
 	
 	protected void scoreThumbnails(ContextualAnnotation annotation) throws IOException, URISyntaxException {
-		annotation.getThumbnails().addAll(BingUtils.getInstance().getImagesByText(annotation.getCanonicalName()));		
+		annotation.getThumbnails().addAll(BingUtils.getInstance(getParameterStore()).getImagesByText(annotation.getCanonicalName()));		
 	}
 	
 	
 	protected void scoreSentence(CoreDocument document, CoreSentence sentence, ContextualAnnotation annotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		annotation.addImportance(1);
 		
-		BigDecimal sentenceId = new BigDecimal(CoreNlpUtils.getInstance().getSentenceIdFromSentence(document, sentence));
+		BigDecimal sentenceId = new BigDecimal(CoreNlpUtils.getInstance(getParameterStore()).getSentenceIdFromSentence(document, sentence));
 		if (annotation.getFirstAppearance() < 0 ) {
 			annotation.setFirstAppearance(sentenceId.intValue());
 		}
@@ -238,8 +240,16 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 		return existingScoreMap;
 	}
 	
+	protected Map<String, BigDecimal> scoreNounGroups(CoreLabel token, Map<String, BigDecimal> existingScoreMap) {
+		if (token.containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPNounsAnnotation.class)) {
+			Map<String,BigDecimal> annotationScore = token.get(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPNounGroupsAnnotation.class);
+			scoreSubAnnotation(annotationScore, existingScoreMap);
+		}
+		return existingScoreMap;
+	}
+	
 	protected void scoreToken(CoreDocument document, CoreLabel token, ContextualAnnotation annotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
-		List<TypedDependency> deps = CoreNlpUtils.getInstance().getTypedDependencyDepFromToken(document, token);
+		List<TypedDependency> deps = CoreNlpUtils.getInstance(getParameterStore()).getTypedDependencyDepFromToken(document, token);
 		for (TypedDependency dependency : deps) {
 			GrammaticalRelation rn = dependency.reln();
 			if (rn.getShortName().equals("nsubj")) {
@@ -265,7 +275,7 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 					};
 
 					
-					List<TypedDependency> transitiveDeps = CoreNlpUtils.getInstance().getTypedDependencyDepFromToken(document, CoreNlpUtils.getInstance().getTokenFromIndexedWord(document, dependency.gov()));
+					List<TypedDependency> transitiveDeps = CoreNlpUtils.getInstance(getParameterStore()).getTypedDependencyDepFromToken(document, CoreNlpUtils.getInstance(getParameterStore()).getTokenFromIndexedWord(document, dependency.gov()));
     				for (TypedDependency transitiveDependency : transitiveDeps) {
     					GrammaticalRelation transitiveRelation = transitiveDependency.reln();
     					if (transitiveRelation.getShortName().equals("advmod")) {
@@ -292,6 +302,13 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 									annotation.getAttribute("OOPNounsAnnotation")
 							)
 						);
+						annotation.getAttributes().put(
+								"OOPNounGroupsAnnotation",
+								scoreNounGroups(
+										dependency.gov().backingLabel(),
+										annotation.getAttribute("OOPNounGroupsAnnotation")
+								)
+							);
 					};
 				}
 			}
@@ -305,8 +322,15 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 								annotation.getAttribute("OOPNounsAnnotation")
 						)
 					);
+					annotation.getAttributes().put(
+							"OOPNounGroupsAnnotation",
+							scoreNounGroups(
+									dependency.gov().backingLabel(),
+									annotation.getAttribute("OOPNounGroupsAnnotation")
+							)
+						);
 				};
-				List<TypedDependency> transitiveDeps = CoreNlpUtils.getInstance().getTypedDependencyDepFromToken(document, CoreNlpUtils.getInstance().getTokenFromIndexedWord(document, dependency.gov()));
+				List<TypedDependency> transitiveDeps = CoreNlpUtils.getInstance(getParameterStore()).getTypedDependencyDepFromToken(document, CoreNlpUtils.getInstance(getParameterStore()).getTokenFromIndexedWord(document, dependency.gov()));
 				for (TypedDependency transitiveDependency : transitiveDeps) {
 					GrammaticalRelation transitiveRelation = transitiveDependency.reln();
 					if (transitiveRelation.getShortName().equals("amod")) {
