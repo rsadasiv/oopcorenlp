@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -51,12 +50,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.outofprintmagazine.util.ParameterStore;
-import io.phrasefinder.Corpus;
-import io.phrasefinder.Phrase;
-import io.phrasefinder.Phrase.Token;
-import io.phrasefinder.PhraseFinder;
-import io.phrasefinder.SearchOptions;
-import io.phrasefinder.SearchResult;
+
 
 public class NGramUtils {
 	
@@ -79,15 +73,13 @@ public class NGramUtils {
 		public int lastYear = 0;
 	}
 	
-	private SearchOptions wildcardOptions = new SearchOptions();
-	private SearchOptions ngramOptions = new SearchOptions();
 	private String apiKey = null;
 	private Deque mruWordList = new LinkedList<String>();
 	private Map<String, List<NGramPhraseScore>> wordCache = new HashMap<String, List<NGramPhraseScore>>();
 	
 	private NGramUtils(ParameterStore parameterStore) throws IOException {
-		wildcardOptions.setMaxResults(100);
-		ngramOptions.setMaxResults(10);
+		//wildcardOptions.setMaxResults(100);
+		//ngramOptions.setMaxResults(10);
 		//InputStream input = new FileInputStream("data/phrasefinder_credentials.properties");
         //Properties props = new Properties();
         //props.load(input);
@@ -166,98 +158,6 @@ public class NGramUtils {
 		}
 		logger.debug("wordCache length: " + wordCache.size());
     }
-    
-    
-    private String getPhrasefinderWildcardQuery(List<String> tokens, int tokenIndex, int ngramSize) {
-	    StringBuffer query = new StringBuffer();
-	    for (int i=tokenIndex;i<tokenIndex+ngramSize&&i<tokens.size();i++) {
-	    	query.append(tokens.get(i));
-	    	query.append(" ");
-	    }
-	    if (query.toString().trim().length()==0) {
-	    	return null;
-	    }
-	    return query.toString().trim()  + " ?";
-    }
-    
-    private String getPhrasefinderMatchQuery(List<String> tokens, int tokenIndex, int ngramSize) {
-	    StringBuffer query = new StringBuffer();
-	    for (int i=tokenIndex;i<tokenIndex+ngramSize&&i<tokens.size();i++) {
-	    	query.append(tokens.get(i));
-	    	query.append(" ");
-	    }
-	    if (query.toString().trim().length()==0) {
-	    	return null;
-	    }
-	    return query.toString().trim();
-    }
-    
-    private NGramPhraseScore getTotalsFromSearchResult(SearchResult wildcardResult) {
-    	NGramPhraseScore totals = new NGramPhraseScore();
-		for (Phrase phrase : wildcardResult.getPhrases()) {
-			totals.matchCount+=phrase.getMatchCount();
-			totals.volumeCount+=phrase.getVolumeCount();
-			if (totals.firstYear>phrase.getFirstYear()) {
-				totals.firstYear = phrase.getFirstYear();
-			}
-			if (totals.lastYear<phrase.getLastYear()) {
-				totals.lastYear = phrase.getLastYear();
-			}
-		}
-		return totals;
-    }
-    
-    private NGramPhraseScore getMatchFromSearchResult(SearchResult wildcardResult, List<String> tokens, int tokenIndex, int ngramSize) {
-    	NGramPhraseScore score = null;
-		for (Phrase phrase : wildcardResult.getPhrases()) {
-			Token[] phraseTokens = phrase.getTokens();
-			if (ngramSize < phraseTokens.length) {
-				if (tokens.get(tokenIndex+ngramSize).equalsIgnoreCase(phraseTokens[ngramSize].getText())) {
-					score = new NGramPhraseScore();
-					score.phraseScore = phrase.getScore();
-	    			score.matchCount = phrase.getMatchCount();
-	    			score.volumeCount = phrase.getVolumeCount();
-	    			score.firstYear = phrase.getFirstYear();
-	    			score.lastYear = phrase.getLastYear();
-	    			break;
-				}
-			}
-		}
-		return score;
-    }
-    
-    public NGramScore nGramSearch(List<String> tokens, int tokenIndex, int ngramSize) throws IOException {
-    	SearchResult wildcardResult = PhraseFinder.search(Corpus.AMERICAN_ENGLISH, getPhrasefinderWildcardQuery(tokens,tokenIndex,ngramSize-1), wildcardOptions);
-    	NGramScore score = new NGramScore();
-    	score.totals = getTotalsFromSearchResult(wildcardResult);
-    	score.match = getMatchFromSearchResult(wildcardResult, tokens, tokenIndex, ngramSize);
-    	if (score.match == null) {
-    		SearchResult result = PhraseFinder.search(Corpus.AMERICAN_ENGLISH, getPhrasefinderMatchQuery(tokens,tokenIndex,ngramSize), ngramOptions);
-    		score.match = getMatchFromSearchResult(result, tokens, tokenIndex, ngramSize);
-    	}
-    	return score;
-    }
-    
-    public NGramScore nGramSearch(String phrase, int tokenIndex, int ngramSize) throws IOException {
-    	List<String> tokens = Arrays.asList(phrase.split(" "));
-    	/*
-    	 * https://phrasefinder.io/documentation
-    	 * It is important to note that the tokenization of a query must match the tokenization applied to the original text data in order to find matching phrases. 
-    	 * Punctuation characters, for example, are always expected to be separate whitespace-delimited tokens, as in hello ., hello !, or hello \?.
-    	 */
-    	
-    	
-    	SearchResult wildcardResult = PhraseFinder.search(Corpus.AMERICAN_ENGLISH, getPhrasefinderWildcardQuery(tokens,tokenIndex,ngramSize-1), wildcardOptions);
-    	NGramScore score = new NGramScore();
-    	score.totals = getTotalsFromSearchResult(wildcardResult);
-    	score.match = getMatchFromSearchResult(wildcardResult, tokens, tokenIndex, ngramSize);
-    	if (score.match == null) {
-    		SearchResult result = PhraseFinder.search(Corpus.AMERICAN_ENGLISH, getPhrasefinderMatchQuery(tokens,tokenIndex,ngramSize), ngramOptions);
-    		score.match = getMatchFromSearchResult(result, tokens, tokenIndex, ngramSize);
-    	}
-    	return score;
-    }
-
     
     public List<List<NGramPhraseScore>> getSearchResultsBatch(List<String> queries) throws IOException, URISyntaxException {
     	return processSearchResultsBatch(runSearchResultsBatch(queries));
