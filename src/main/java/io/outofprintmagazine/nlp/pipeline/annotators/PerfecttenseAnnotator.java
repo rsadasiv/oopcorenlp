@@ -35,11 +35,11 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
-import io.outofprintmagazine.nlp.PerfecttenseUtils;
 import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
 import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.utils.PerfecttenseUtils;
 
 public class PerfecttenseAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	

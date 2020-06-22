@@ -27,6 +27,7 @@ mauve
 ocher
 periwinkle
 pink
+pistachio
 puce
 purple
 red

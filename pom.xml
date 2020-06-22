@@ -3,181 +3,214 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.outofprintmagazine</groupId>
 	<artifactId>oopcorenlp</artifactId>
-	<version>0.9.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>oopcorenlp</name>
-	<dependencies>
+	<url>https://beta.outofprintmagazine.io</url>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
+		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-1.2-api -->
+		<log4j.version>2.12.0</log4j.version>
+		<!-- https://mvnrepository.com/artifact/junit/junit -->
+		<junit.version>4.12</junit.version>
+		<!-- https://mvnrepository.com/artifact/edu.stanford.nlp/stanford-corenlp -->
+		<stanford-corenlp.version>4.0.0</stanford-corenlp.version>
+		<!-- https://mvnrepository.com/artifact/edu.mit/jwi -->
+		<jwi.version>2.2.3</jwi.version>
+		<!-- https://mvnrepository.com/artifact/edu.mit/jverbnet -->
+		<!-- PR https://github.com/rsadasiv/jverbnet.git -->
+		<jverbnet.version>1.2.0.2</jverbnet.version>
+		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common -->
+		<lucene.version>8.1.1</lucene.version>
+		<!-- https://mvnrepository.com/artifact/com.github.apanimesh061/vader-sentiment-analyzer -->
+		<vader-sentiment-analyzer.version>1.0</vader-sentiment-analyzer.version>
+		<!-- https://mvnrepository.com/artifact/eu.crydee/syllable-counter -->
+		<syllable-counter.version>4.1.0</syllable-counter.version>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<httpclient.version>4.5.12</httpclient.version>
+		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
+		<jsoup.version>1.13.1</jsoup.version>
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-properties -->
+		<jackson.version>2.11.0</jackson.version>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
+		<commons-math3.version>3.6.1</commons-math3.version>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<commons-lang3.version>3.10</commons-lang3.version>
+		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+		<commons-io.version>2.7</commons-io.version>
+		<!-- https://mvnrepository.com/artifact/com.flickr4java/flickr4java -->
+		<!-- MERGED https://github.com/rsadasiv/Flickr4Java.git -->
+		<flickr4java.version>3.0.4</flickr4java.version>
+		<!-- https://mvnrepository.com/artifact/io.burt/jmespath-jackson -->
+		<jmespath-jackson.version>0.5.0</jmespath-jackson.version>
+		<!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
+		<commons-cli.version>1.4</commons-cli.version>
+	</properties>
+	
+	<dependencies>
+		
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.12.0</version>
+			<version>${log4j.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
-			<version>2.12.0</version>
+			<version>${log4j.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-1.2-api -->
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-1.2-api</artifactId>
-			<version>2.12.0</version>
+			<version>${log4j.version}</version>
 		</dependency>
 
-
-		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-corenlp</artifactId>
-			<version>4.0.0</version>
+			<version>${stanford-corenlp.version}</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-corenlp</artifactId>
-			<version>4.0.0</version>
+			<version>${stanford-corenlp.version}</version>
 			<classifier>models</classifier>
 		</dependency>
 
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-corenlp</artifactId>
-			<version>4.0.0</version>
+			<version>${stanford-corenlp.version}</version>
 			<classifier>models-english</classifier>
 		</dependency>
 
 		<dependency>
 			<groupId>edu.stanford.nlp</groupId>
 			<artifactId>stanford-corenlp</artifactId>
-			<version>4.0.0</version>
+			<version>${stanford-corenlp.version}</version>
 			<classifier>models-english-kbp</classifier>
 		</dependency>
 
 
-		<!-- https://mvnrepository.com/artifact/edu.mit/jwi -->
 		<dependency>
 			<groupId>edu.mit</groupId>
 			<artifactId>jwi</artifactId>
-			<version>2.2.3</version>
+			<version>${jwi.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/edu.mit/jverbnet -->
 		<dependency>
 			<groupId>edu.mit</groupId>
 			<artifactId>jverbnet</artifactId>
-			<version>1.2.0.1</version>
+			<version>${jverbnet.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
+		
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-core</artifactId>
-			<version>8.1.1</version>
+			<version>${lucene.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common -->
 		<dependency>
 			<groupId>org.apache.lucene</groupId>
 			<artifactId>lucene-analyzers-common</artifactId>
-			<version>8.1.1</version>
+			<version>${lucene.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.github.apanimesh061/vader-sentiment-analyzer -->
 		<dependency>
 			<groupId>com.github.apanimesh061</groupId>
 			<artifactId>vader-sentiment-analyzer</artifactId>
-			<version>1.0</version>
+			<version>${vader-sentiment-analyzer.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/eu.crydee/syllable-counter -->
 		<dependency>
 			<groupId>eu.crydee</groupId>
 			<artifactId>syllable-counter</artifactId>
-			<version>4.0.3</version>
+			<version>${syllable-counter.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.5.11</version>
+			<version>${httpclient.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.12.1</version>
+			<version>${jsoup.version}</version>
 		</dependency>
 
-
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.10.1</version>
+			<version>${jackson.version}</version>
 		</dependency>
 
-
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.10.3</version>
+			<version>${jackson.version}</version>
 		</dependency>
 
-
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-properties -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-properties</artifactId>
-			<version>2.10.3</version>
+			<version>${jackson.version}</version>
 		</dependency>
 
-
-
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-math3</artifactId>
-			<version>3.6.1</version>
+			<version>${commons-math3.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.9</version>
+			<version>${commons-lang3.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.6</version>
+			<version>${commons-io.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/io.burt/jmespath-jackson -->
+		<dependency>
+		    <groupId>com.flickr4java</groupId>
+		    <artifactId>flickr4java</artifactId>
+		    <version>${flickr4java.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>io.burt</groupId>
 			<artifactId>jmespath-jackson</artifactId>
-			<version>0.5.0</version>
+			<version>${jmespath-jackson.version}</version>
 		</dependency>
-
+		
 		<dependency>
-			<groupId>com.flickr4java</groupId>
-			<artifactId>flickr4java</artifactId>
-			<version>3.0.4-SNAPSHOT</version>
+		    <groupId>commons-cli</groupId>
+		    <artifactId>commons-cli</artifactId>
+		    <version>${commons-cli.version}</version>
 		</dependency>
-
+		
 	</dependencies>
 
 	<build>
@@ -234,13 +267,16 @@
 										<exclude>META-INF/*.SF</exclude>
 										<exclude>META-INF/*.DSA</exclude>
 										<exclude>META-INF/*.RSA</exclude>
+										<exclude>log4j2.xml</exclude>
+										<exclude>logback.xml</exclude>
+										<exclude>simplelogger.properties</exclude>
 									</excludes>
 								</filter>
 							</filters>
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>io.outofprintmagazine.Analyzer</mainClass>
+									<mainClass>io.outofprintmagazine.nlp.App</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>

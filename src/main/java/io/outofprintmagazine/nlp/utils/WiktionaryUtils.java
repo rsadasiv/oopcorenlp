@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.nlp;
+package io.outofprintmagazine.nlp.utils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -46,15 +46,14 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.stanford.nlp.util.StringUtils;
 import io.outofprintmagazine.util.ParameterStore;
 
 
-public class WikipediaUtils2 {
+public class WiktionaryUtils {
 	
 	@SuppressWarnings("unused")
-	private static final Logger logger = LogManager.getLogger(WikipediaUtils2.class);
-	private static final int BATCH_SIZE = 20;
+	private static final Logger logger = LogManager.getLogger(WiktionaryUtils.class);
+	private static final int BATCH_SIZE = 50;
 	private static final int CACHE_SIZE = 10000;
 	
 	private String apiKey = null;
@@ -62,16 +61,15 @@ public class WikipediaUtils2 {
 	private Map<String, String> wordCache = new HashMap<String, String>();
 
 	
-	private WikipediaUtils2(ParameterStore parameterStore) throws IOException {
+	private WiktionaryUtils(ParameterStore parameterStore) throws IOException {
 		this.apiKey = parameterStore.getProperty("wikipedia_apikey");
 	}
 	
+	private static Map<ParameterStore, WiktionaryUtils> instances = new HashMap<ParameterStore, WiktionaryUtils>();
 	
-	private static Map<ParameterStore, WikipediaUtils2> instances = new HashMap<ParameterStore, WikipediaUtils2>();
-	
-    public static WikipediaUtils2 getInstance(ParameterStore parameterStore) throws IOException { 
+    public static WiktionaryUtils getInstance(ParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
-        	WikipediaUtils2 instance = new WikipediaUtils2(parameterStore);
+        	WiktionaryUtils instance = new WiktionaryUtils(parameterStore);
             instances.put(parameterStore, instance);
         }
         return instances.get(parameterStore); 
@@ -93,7 +91,7 @@ public class WikipediaUtils2 {
     }
     
     public void pruneWordCache() {
-    	for (int i=WikipediaUtils2.CACHE_SIZE;i<mruWordList.size();i++) {
+    	for (int i=WiktionaryUtils.CACHE_SIZE;i<mruWordList.size();i++) {
     		String token = (String)mruWordList.pollLast();
     		if (token != null) {
     			wordCache.remove(token);
@@ -108,7 +106,7 @@ public class WikipediaUtils2 {
 			if (!checkWordCache(token) && !queries.contains(token)) {
 				queries.add(token);
 			}
-			if (queries.size() == WikipediaUtils2.BATCH_SIZE) {
+			if (queries.size() == WiktionaryUtils.BATCH_SIZE) {
 				try {
 					Map<String, String> scores = getSearchResultsBatch(queries);
 					for (String key : scores.keySet()) {
@@ -117,7 +115,7 @@ public class WikipediaUtils2 {
 					}
 				}
 				catch (Exception e) {
-					logger.error("wikipedia error", e);
+					logger.error("wiktionary error", e);
 				}
 				queries.clear();
 			}
@@ -131,7 +129,7 @@ public class WikipediaUtils2 {
 				}
 			}
 			catch (Exception e) {
-				logger.error("wikipedia error", e);
+				logger.error("wiktionary error", e);
 			}
 		}
 		logger.debug("wordCache length: " + wordCache.size());
@@ -163,16 +161,9 @@ public class WikipediaUtils2 {
                         .setCookieSpec(CookieSpecs.STANDARD).build())
                 .build();
         try {
-//          Earth|Jupiter|Mars|Saturn|Neptune
-            String url = String.join("|", queries);
-            HttpGet http = new HttpGet(
-            		"http://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=1&explaintext&exlimit=20&exintro&format=json&titles="
-            		+ URLEncoder.encode(url, "UTF-8")
-            );
 
-//https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=1&explaintext&exlimit=20&exintro&format=json&titles=dawn|bank|river|shawl|rosary|hand|distance|curtain|sky|clothing|side|Sri|Ram|water|Sun|God|eye|chill|Chenab|today
+            HttpGet http = new HttpGet("https://en.wiktionary.org/w/api.php?format=json&maxlag=1&action=query&titles="+URLEncoder.encode(String.join("|", queries), "UTF-8"));
             http.addHeader("User-Agent", apiKey);
-
             ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 
                 @Override
@@ -189,8 +180,7 @@ public class WikipediaUtils2 {
             };
             responseBody = httpclient.execute(http, responseHandler);
 
-        }
-        finally {
+        } finally {
             httpclient.close();
         }
         return responseBody;
@@ -201,22 +191,17 @@ public class WikipediaUtils2 {
     	try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode doc = mapper.readTree(responseBody);
-			JsonNode pages = doc.get("query").get("pages");
-			Iterator<String> resultIter = pages.fieldNames();
-			while (resultIter.hasNext()) {
-				String resultName = resultIter.next();
-				JsonNode result = pages.get(resultName);
-				if (
-						result.has("pageid") 
-						&& result.has("extract") 
-						&& !(
-								result.get("extract").asText().endsWith("may refer to:") 
-								|| result.get("extract").asText().endsWith("commonly refers to:")
-						)
-				) {
-					retval.put(result.get("title").asText(),StringUtils.toAscii(StringUtils.normalize(result.get("extract").asText())).trim());
-				}
-	    	}
+			if (doc.get("query") != null && doc.get("query").get("pages") != null) {
+				JsonNode pages = doc.get("query").get("pages");
+				Iterator<String> resultIter = pages.fieldNames();
+				while (resultIter.hasNext()) {
+					String resultName = resultIter.next();
+					JsonNode result = pages.get(resultName);
+					if (result.has("pageid")) {
+						retval.put(result.get("title").asText(),result.get("pageid").asText() );
+					}
+		    	}
+			}
     	}
     	catch (IOException e) {
     		logger.error(e);

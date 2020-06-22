@@ -14,65 +14,67 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.nlp;
+package io.outofprintmagazine.nlp.utils;
 
 import java.io.IOException;
-import java.nio.charset.UnsupportedCharsetException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.ServiceUnavailableRetryStrategy;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.outofprintmagazine.util.ParameterStore;
 
-
-public class PerfecttenseUtils {
+public class FacePlusPlusUtils {
 	
-	@SuppressWarnings("unused")
-	private static final Logger logger = LogManager.getLogger(PerfecttenseUtils.class);
+	private static final Logger logger = LogManager.getLogger(FacePlusPlusUtils.class);
 	
-	private String apiKey = null;
-	private String appKey = null;
+	private Properties props = null;
+	private ObjectMapper mapper = new ObjectMapper();
 
 	
-	private PerfecttenseUtils(ParameterStore parameterStore) throws IOException {
-		this.apiKey = parameterStore.getProperty("perfecttense_apikey");
-		this.appKey = parameterStore.getProperty("perfecttense_appkey");
+	private FacePlusPlusUtils(ParameterStore parameterStore) throws IOException {
+		props = new Properties();
+		props.setProperty("apiKey", parameterStore.getProperty("faceplusplus_apiKey"));
+		props.setProperty("secret", parameterStore.getProperty("faceplusplus_secret"));
 	}
 	
-	private static Map<ParameterStore, PerfecttenseUtils> instances = new HashMap<ParameterStore, PerfecttenseUtils>();
+	private static Map<ParameterStore, FacePlusPlusUtils> instances = new HashMap<ParameterStore, FacePlusPlusUtils>();
 	
-    public static PerfecttenseUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static FacePlusPlusUtils getInstance(ParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
-        	PerfecttenseUtils instance = new PerfecttenseUtils(parameterStore);
+        	FacePlusPlusUtils instance = new FacePlusPlusUtils(parameterStore);
             instances.put(parameterStore, instance);
         }
         return instances.get(parameterStore); 
     }
     
-    public String correct(String text, List<String> nnp) throws UnsupportedCharsetException, ClientProtocolException, IOException {
+    public JsonNode imageHasOneFace(String imageUrl) throws IOException, URISyntaxException {
     	String responseBody = null;
+    	
         CloseableHttpClient httpclient = HttpClients.custom()
                 .setServiceUnavailableRetryStrategy(
                 		new ServiceUnavailableRetryStrategy() {
@@ -93,46 +95,42 @@ public class PerfecttenseUtils {
                         .setCookieSpec(CookieSpecs.STANDARD).build())
                 .build();
         try {
+            HttpPost http = new HttpPost("https://api-us.faceplusplus.com/facepp/v3/detect");
+            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+            nvps.add(new BasicNameValuePair("api_key", props.getProperty("apiKey")));
+            nvps.add(new BasicNameValuePair("api_secret", props.getProperty("secret")));
+            nvps.add(new BasicNameValuePair("image_url", imageUrl));
+            http.setEntity(new UrlEncodedFormEntity(nvps));
 
-            HttpPost http = new HttpPost("https://api.perfecttense.com/correct");
-            http.addHeader("Authorization", apiKey);
-            http.addHeader("AppAuthorization", appKey);
-            http.addHeader("Content-Type", "application/json");
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode params = mapper.createObjectNode();
-            ObjectNode options = params.putObject("options");
-            options.put("dialect", "british");
-            ArrayNode dictionary = options.putArray("dictionary");
-            for (String word : nnp) {
-            	dictionary.add(word);
-            }
-            ArrayNode responseType = params.putArray("responseType");
-            responseType.add("offset");
- //           responseType.add("grammarScore");
- //           responseType.add("summary");
-            params.put("text", text);
-            StringEntity requestEntity = new StringEntity(mapper.writeValueAsString(params), ContentType.APPLICATION_JSON);
-            http.setEntity(requestEntity);
-            //'{"text": "This articl have some errors", "responseType": ["corrected", "grammarScore", "rulesApplied", "offset", "summary"]}'
             ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 
                 @Override
-                public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
+                public String handleResponse(
+                        final HttpResponse response) throws ClientProtocolException, IOException {
                     int status = response.getStatusLine().getStatusCode();
                     if (status >= 200 && status < 300) {
                         HttpEntity entity = response.getEntity();
                         return entity != null ? EntityUtils.toString(entity) : null;
                     } 
                     else {
+                    	logger.error("imageUrl: " + imageUrl);
                         throw new ClientProtocolException("Unexpected response status: " + status);
                     }
                 }
             };
             responseBody = httpclient.execute(http, responseHandler);
+            //logger.debug(responseBody);
+        	JsonNode doc = mapper.readTree(responseBody);
+        	if (doc.get("face_num").asInt() == 1) {
+        		return doc.get("faces").get(0).get("face_rectangle");
+        	}
+        	else {
+        		return null;
+        	}
 
         } finally {
             httpclient.close();
         }
-        return responseBody;
+
     }    
 }

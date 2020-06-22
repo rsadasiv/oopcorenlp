@@ -41,7 +41,17 @@ public class OOPAnnotations {
 			return ErasureUtils.uncheckedCast(Map.class);
 		}
 	}
-
+	
+	
+	// per document
+	// metadata
+	public static class OOPThumbnailAnnotation implements CoreAnnotation<String> {
+		@Override
+		public Class<String> getType() {
+			return ErasureUtils.uncheckedCast(String.class);
+		}
+	}
+	
 	// per token
 	// Informative
 	public static class OOPWordnetGlossAnnotation implements CoreAnnotation<String> {

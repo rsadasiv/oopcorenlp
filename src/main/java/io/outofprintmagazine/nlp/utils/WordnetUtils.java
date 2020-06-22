@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.nlp;
+package io.outofprintmagazine.nlp.utils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -72,18 +72,6 @@ public class WordnetUtils {
 				)
 		);
 		wordnet.open();
-	
-		try {
-			ResourceUtils.getInstance(parameterStore).getDictionary(
-					parameterStore.getProperty(
-							"dictionaryCommonWords_location"
-					)
-//					"io/outofprintmagazine/nlp/models/COCA/en_100.txt"
-			);
-		} 
-		catch (Exception e) {
-			logger.error("dictionary problem", e);
-		}
 		this.parameterStore = parameterStore;
 	}
 	
@@ -419,12 +407,8 @@ public class WordnetUtils {
 	public List<String> removeCommonWords(List<String> list) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 
 		Map<String,String> dict = ResourceUtils.getInstance(parameterStore).getDictionary(
-//						GlobalProperties.getInstance().getProperty(
-//								"dictionaryCommonWords_location", 
-//								"io/outofprintmagazine/nlp/models/COCA/en_100.txt"
-//								)
-						"io/outofprintmagazine/nlp/models/COCA/en_100.txt"
-				);
+				"io/outofprintmagazine/nlp/models/COCA/en_100.txt"
+		);
 		Iterator<String> listIter = list.iterator();
 		while (listIter.hasNext()) {
 			if (dict.get(listIter.next()) != null) {

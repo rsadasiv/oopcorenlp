@@ -39,11 +39,11 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
 import edu.stanford.nlp.util.CoreMap;
-import io.outofprintmagazine.nlp.ResourceUtils;
 import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
 import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.utils.ResourceUtils;
 
 public class BiberAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
@@ -187,7 +187,7 @@ public class BiberAnnotator extends AbstractPosAnnotator implements Annotator, O
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_PEAS(Annotation annotation) {
 /*
 This is calculated by counting how many times a form of HAVE is followed by: a VBD or
@@ -366,7 +366,7 @@ been already tagged as a TOBJ, TSUB, THAC or THVC.
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_PROD(Annotation annotation) {
 /*
 Any form of DO that is used as main verb and, therefore, excluding DO when used as
@@ -391,7 +391,7 @@ list of WH pronouns is in Biber (1988)).
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_WHQU(Annotation annotation) {
 /*
 Any punctuation followed by a WH word (what, where, when, how, whether, why, whoever,
@@ -434,7 +434,7 @@ improved by excluding WH words such as however or whatever that do not introduce
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_GER(Annotation annotation) {
 		//List<String> tags = Arrays.asList("ing", "ings");
 		List<String> posTags = Arrays.asList("VBG");
@@ -469,7 +469,7 @@ improved by excluding WH words such as however or whatever that do not introduce
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_PASS(Annotation annotation) {
 /*
 This tag is assigned when one of the two following patterns is found: (a) any form of BE
@@ -522,7 +522,7 @@ which a negation precedes the nominal form of pattern (b).
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_BEMA(Annotation annotation) {
 /*
 BE is tagged as being a main verb in the following pattern: BE followed by a determiner
@@ -563,7 +563,7 @@ not appear before the pattern; (b) the cardinal numbers (CD) tag and the persona
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_THVC(Annotation annotation) {
 /*
 This tag is assigned when the word that is: (1) preceded by and, nor, but, or, also or any
@@ -618,7 +618,7 @@ four words that are not nouns (N).
 		}
 	}
 
-	//BETTER
+
 	public void annotate_WHCL(Annotation annotation) {
 /*
 (e.g. I believed what he told me)
@@ -648,7 +648,7 @@ verbs, or a form of DO, or a form of HAVE, or a form of BE).
 	}
 
 
-	//BETTER
+
 	public void annotate_TO(Annotation annotation) {
 /*
 The tag for infinitives is the Stanford Tagger Treebank tag TO. The Stanford Tagger does not
@@ -681,7 +681,7 @@ therefore identifying occurrences of infinitive clauses.
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_PRESP(Annotation annotation) {
 /*
 (e.g. Stuffing his mouth with cookies, Joe ran out the door)
@@ -702,8 +702,8 @@ QUAN, CD), a WH pronoun, a WH possessive pronoun (WP$), any WH word, any pronoun
 			}
 		}
 	}
+
 	
-	//FUCKIT
 	public void annotate_PASTP(Annotation annotation) {
 /*
 (e.g. Built in a single week, the house would stand for fifty years)
@@ -723,7 +723,7 @@ past participial form of a verb (VBN) followed by a preposition (PIN) or an adve
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_WZPAST(Annotation annotation) {
 /*
 (e.g. The solution produced by this process)
@@ -778,7 +778,7 @@ This tag is assigned a present participial form of a verb (VBG) is preceded by a
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_TSUB(Annotation annotation) {
 /*
 (e.g. the dog that bit me)
@@ -806,7 +806,7 @@ verb (V), with the possibility of an intervening adverb (RB) or negation (XX0).
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_TOBJ(Annotation annotation) {
 /*
 (e.g. the dog that I saw)
@@ -837,7 +837,7 @@ distinguish between simple complements to nouns and true relative clauses.
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_WHSUB(Annotation annotation) {
 /*
 (e.g. the man who likes popcorn)
@@ -867,7 +867,7 @@ between the WH pronoun and the verb.
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_WHOBJ(Annotation annotation) {
 /*
 (e.g. the man who Sally likes)
@@ -987,7 +987,7 @@ HAVE, BE or DO).
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_OSUB(Annotation annotation) {
 /*
 This tag identifies any occurrence of the words: since, while, whilst, whereupon, whereas,
@@ -1050,7 +1050,7 @@ as, only the first word is tagged as OSUB and the other words are tagged with th
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_PRED(Annotation annotation) {
 /*
 (e.g. the horse is big)
@@ -1153,7 +1153,7 @@ coordinator (see below). This pattern accounts for cases such as: the horse is b
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_CONJ(Annotation annotation) {
 /*
 This tag finds any of the items in this list: punctuation+else, punctuation+altogether,
@@ -1200,7 +1200,7 @@ words are tagged with the tag NULL.
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_HDG(Annotation annotation) {
 /*
 This tag finds any of the items in this list: maybe, at about, something like, more or less, sort
@@ -1260,7 +1260,7 @@ word is tagged as HDG and the other words are tagged with the tag NULL.
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_EMPH(Annotation annotation) {
 /*
 This tag finds any of the items in this list: just, really, most, more, real+adjective,
@@ -1461,7 +1461,7 @@ tagged with the tag NULL.
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_CONT(Annotation annotation) {
 /*
 The contractions were tagged by identifying any instance of apostrophe followed by a tagged
@@ -1514,7 +1514,7 @@ an intervening adjective (JJ or PRED) between the noun and its preceding word.
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_SPIN(Annotation annotation) {
 /*
 (e.g. he wants to convincingly prove that…)
@@ -1542,7 +1542,7 @@ adverbs and a verb base form.
 		}
 	}
 	
-	//FUCKIT
+
 	public void annotate_SPAU(Annotation annotation) {
 /*
 (e.g. they are objectively shown that…)

@@ -49,7 +49,7 @@ public class AdverbsAnnotator extends AbstractPosAnnotator implements Annotator,
 	
 	public AdverbsAnnotator() {
 		super();
-		//this.appendTagsFromFile("io/outofprintmagazine/nlp/models/Adverbs.txt");
+		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/Adverbs.txt");
 		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
 		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));		
 	}
@@ -66,9 +66,9 @@ public class AdverbsAnnotator extends AbstractPosAnnotator implements Annotator,
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
-					//if (!getTags().contains(token.lemma().toLowerCase())) {
+					if (!getTags().contains(token.lemma().toLowerCase())) {
 						addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
-					//}
+					}
 					if (scoreMap.size() > 0) {
 						token.set(getAnnotationClass(), scoreMap);
 					}

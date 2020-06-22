@@ -19,3 +19,7 @@ Dwarka	LOCATION
 Mount Govardhan	LOCATION
 Arabic	LANGUAGE
 Yeshwantpur	LOCATION
+Aaliya	PERSON
+Akshey	PERSON
+Senthil	PERSON
+Swamiji	PERSON

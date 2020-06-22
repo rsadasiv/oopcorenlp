@@ -93,7 +93,7 @@ public class WordCountAnnotator extends AbstractAnnotator implements Annotator, 
 
 	@Override
 	public String getDescription() {
-		return "tokenCount";
+		return "wordCount";
 	}
 
 }

@@ -39,8 +39,9 @@ import edu.stanford.nlp.ling.CoreAnnotations;
 import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
-import io.outofprintmagazine.nlp.CoreNlpUtils;
+import io.outofprintmagazine.nlp.Analyzer;
 import io.outofprintmagazine.nlp.pipeline.annotators.OOPAnnotator;
+import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
 
 public class Analyzer_Test {
 

@@ -72,7 +72,6 @@ avocado
 barberry
 basil
 bay
-blue
 boldo
 borage
 bushfood
@@ -99,7 +98,6 @@ curry
 fennel
 fenugreek
 fingerroot
-food
 galangal
 garlic
 ginger
@@ -156,8 +154,6 @@ shiso
 sorrel
 spice
 spikenard
-sri
-star
 sumac
 tarragon
 thai

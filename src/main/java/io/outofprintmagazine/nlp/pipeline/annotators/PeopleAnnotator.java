@@ -44,11 +44,11 @@ import edu.stanford.nlp.pipeline.CoreEntityMention;
 import edu.stanford.nlp.pipeline.CoreQuote;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
-import io.outofprintmagazine.nlp.CoreNlpUtils;
 import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
 import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
 
 public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotator {
 	

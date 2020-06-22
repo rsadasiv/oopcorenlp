@@ -113,7 +113,7 @@ public abstract class AbstractTreeAnnotator extends AbstractPosAnnotator impleme
 	protected void scoreTree(Tree pTree, List<PhraseAnnotation> scoreMap) throws IOException {
 		String phrase = getOwnText(pTree, getTags());
 		if (phrase.length() > 0) {
-			addToScoreList(scoreMap, new PhraseAnnotation(phrase, new BigDecimal(1)));
+			addToScoreList(scoreMap, new PhraseAnnotation(phrase.toLowerCase(), new BigDecimal(1)));
 		}
 	}
 	
@@ -133,7 +133,12 @@ public abstract class AbstractTreeAnnotator extends AbstractPosAnnotator impleme
 						buf.deleteCharAt(buf.length()-1);
 					}
 				}
-				buf.append(label.value());
+				if (buf.length() == 0) {
+					buf.append(label.value().toLowerCase());
+				}
+				else {
+					buf.append(label.value());
+				}
 				buf.append(" ");
 			}
 		}
@@ -154,7 +159,12 @@ public abstract class AbstractTreeAnnotator extends AbstractPosAnnotator impleme
 							buf.deleteCharAt(buf.length()-1);
 						}
 					}
-					buf.append(label.value());
+					if (buf.length() == 0) {
+						buf.append(label.value().toLowerCase());
+					}
+					else {
+						buf.append(label.value());
+					}
 					buf.append(" ");
 				}
 			}

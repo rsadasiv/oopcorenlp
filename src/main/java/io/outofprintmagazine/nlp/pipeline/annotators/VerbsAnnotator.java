@@ -51,7 +51,7 @@ public class VerbsAnnotator extends AbstractPosAnnotator implements Annotator, O
 		super();
 		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
 		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
-		//this.appendTagsFromFile("io/outofprintmagazine/nlp/models/StativeVerbs.txt");
+		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/StativeVerbs.txt");
 	}
 	
 	@Override
@@ -66,13 +66,13 @@ public class VerbsAnnotator extends AbstractPosAnnotator implements Annotator, O
 			for (int i=0;i<sentence.tokens().size();i++) {
 				CoreLabel token = sentence.tokens().get(i);
 				if (posTags.contains(token.tag())) {
-					//if (!getTags().contains(token.lemma().toLowerCase())) {
+					if (!getTags().contains(token.lemma().toLowerCase())) {
 						if (!token.lemma().startsWith("'")) {
 							Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
 							addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
 							token.set(getAnnotationClass(), scoreMap);
 						}
-					//}
+					}
 				}
 			}
 		}

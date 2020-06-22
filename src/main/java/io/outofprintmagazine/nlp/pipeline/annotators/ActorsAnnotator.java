@@ -42,9 +42,9 @@ import edu.stanford.nlp.pipeline.CoreQuote;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
 import edu.stanford.nlp.util.ArraySet;
-import io.outofprintmagazine.nlp.BingUtils;
 import io.outofprintmagazine.nlp.pipeline.ActorAnnotation;
 import io.outofprintmagazine.nlp.pipeline.ContextualAnnotation;
+import io.outofprintmagazine.nlp.utils.BingUtils;
 
 public class ActorsAnnotator extends AbstractContextualAnnotator implements Annotator, OOPAnnotator {
 	

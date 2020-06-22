@@ -49,7 +49,7 @@ public class AdjectivesAnnotator extends AbstractPosAnnotator implements Annotat
 	
 	public AdjectivesAnnotator() {
 		super();
-		//this.appendTagsFromFile("io/outofprintmagazine/nlp/models/Adjectives.txt");
+		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/Adjectives.txt");
 		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
 		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
 	}
@@ -67,9 +67,9 @@ public class AdjectivesAnnotator extends AbstractPosAnnotator implements Annotat
 				Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
 				if (posTags.contains(token.tag())) {
 					//"most" may be ok, "most of" is meaningless
-					//if (!getTags().contains(token.lemma().toLowerCase())) {
+					if (!getTags().contains(token.lemma().toLowerCase())) {
 						addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
-					//}
+					}
 				}
 				if (scoreMap.size() > 0) {
 					token.set(getAnnotationClass(), scoreMap);

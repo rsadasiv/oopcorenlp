@@ -31,6 +31,7 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreQuote;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.pipeline.QuoteAttributionAnnotator;
+import io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPThumbnailAnnotation;
 
 public class CoreNLPSerializer implements Serializer {
 
@@ -69,6 +70,10 @@ public class CoreNLPSerializer implements Serializer {
 		if (document.annotation().containsKey(CoreAnnotations.DocDateAnnotation.class)) {
 			metadata.put(CoreAnnotations.DocDateAnnotation.class.getSimpleName(),
 					document.annotation().get(CoreAnnotations.DocDateAnnotation.class));
+		}
+		if (document.annotation().containsKey(OOPThumbnailAnnotation.class)) {
+			metadata.put(OOPThumbnailAnnotation.class.getSimpleName(),
+					document.annotation().get(OOPThumbnailAnnotation.class));
 		}
 	}
 	

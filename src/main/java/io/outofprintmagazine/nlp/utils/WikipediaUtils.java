@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.nlp;
+package io.outofprintmagazine.nlp.utils;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -285,6 +285,8 @@ public class WikipediaUtils {
 									&& !categoryName.startsWith("Types")
 									&& !categoryName.startsWith("Concepts")
 									&& !categoryName.startsWith("Names")
+									&& !categoryName.startsWith("Harv and Sfn")
+									&& !categoryName.startsWith("Engvar")
 									&& !categoryName.contains(" ISO ")) {
 								//System.out.println(categoryName);
 								BigDecimal existingScore = scoreMap.get(categoryName);

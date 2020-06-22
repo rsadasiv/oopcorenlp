@@ -48,9 +48,9 @@ import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
 import edu.stanford.nlp.trees.GrammaticalRelation;
 import edu.stanford.nlp.trees.TypedDependency;
 import edu.stanford.nlp.util.ArraySet;
-import io.outofprintmagazine.nlp.BingUtils;
-import io.outofprintmagazine.nlp.CoreNlpUtils;
 import io.outofprintmagazine.nlp.pipeline.ContextualAnnotation;
+import io.outofprintmagazine.nlp.utils.BingUtils;
+import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
 
 public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine;
+package io.outofprintmagazine.nlp;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -37,10 +37,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.JSONOutputter;
-import io.outofprintmagazine.nlp.CoreNlpUtils;
+import io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPThumbnailAnnotation;
 import io.outofprintmagazine.nlp.pipeline.annotators.OOPAnnotator;
-import io.outofprintmagazine.nlp.pipeline.annotators.RunnableOOPAnnotator;
 import io.outofprintmagazine.nlp.pipeline.serializers.CoreNLPSerializer;
+import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
 import io.outofprintmagazine.util.ParameterStore;
 
 public class Analyzer {
@@ -152,43 +152,50 @@ public class Analyzer {
 		document.annotation().set(
 				CoreAnnotations.DocIDAnnotation.class, 
 				metadata.getProperty(
-						CoreAnnotations.DocIDAnnotation.class.getName(), 
+						CoreAnnotations.DocIDAnnotation.class.getSimpleName(), 
 						"LittleNaomi"
 						)
 				);
 		document.annotation().set(
 				CoreAnnotations.DocTitleAnnotation.class, 
 				metadata.getProperty(
-						CoreAnnotations.DocTitleAnnotation.class.getName(), 
+						CoreAnnotations.DocTitleAnnotation.class.getSimpleName(), 
 						"story title"
 						)
 				);
 		document.annotation().set(
 				CoreAnnotations.DocTypeAnnotation.class, 
 				metadata.getProperty(
-						CoreAnnotations.DocTypeAnnotation.class.getName(), 
+						CoreAnnotations.DocTypeAnnotation.class.getSimpleName(), 
 						"Submissions"
 						)
 				);
 		document.annotation().set(
 				CoreAnnotations.DocSourceTypeAnnotation.class, 
 				metadata.getProperty(
-						CoreAnnotations.DocSourceTypeAnnotation.class.getName(), 
+						CoreAnnotations.DocSourceTypeAnnotation.class.getSimpleName(), 
 						"outofprintmagazine@gmail.com"
 						)
 				);		
 		document.annotation().set(
 				CoreAnnotations.AuthorAnnotation.class, 
 				metadata.getProperty(
-						CoreAnnotations.AuthorAnnotation.class.getName(), 
+						CoreAnnotations.AuthorAnnotation.class.getSimpleName(), 
 						"Author"
 						)
 				);
 		document.annotation().set(
 				CoreAnnotations.DocDateAnnotation.class, 
 				metadata.getProperty(
-						CoreAnnotations.DocDateAnnotation.class.getName(), 
+						CoreAnnotations.DocDateAnnotation.class.getSimpleName(), 
 						"9 January 2014 21:05"
+						)
+				);
+		document.annotation().set(
+				OOPThumbnailAnnotation.class, 
+				metadata.getProperty(
+						OOPThumbnailAnnotation.class.getSimpleName(), 
+						"blank.png"
 						)
 				);
 		return document;
@@ -254,6 +261,8 @@ public class Analyzer {
 		Map<String,ObjectNode> retval = new HashMap<String, ObjectNode>();
 		
 		try {
+			logger.debug("analyzing " + metadata.getProperty(CoreAnnotations.DocIDAnnotation.class.getName()));
+			
 			runCoreNLP(document);
 			retval.put("STANFORD", (ObjectNode) mapper.readTree(JSONOutputter.jsonPrint(document.annotation())));
 			

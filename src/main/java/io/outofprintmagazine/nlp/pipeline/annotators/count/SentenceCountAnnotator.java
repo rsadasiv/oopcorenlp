@@ -87,7 +87,7 @@ public class SentenceCountAnnotator extends AbstractAnnotator implements Annotat
 
 	@Override
 	public String getDescription() {
-		return "tokenCount";
+		return "sentenceCount";
 	}
 
 }
