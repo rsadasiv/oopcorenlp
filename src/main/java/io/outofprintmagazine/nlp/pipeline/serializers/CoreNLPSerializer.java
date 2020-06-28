@@ -33,7 +33,53 @@ import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.pipeline.QuoteAttributionAnnotator;
 import io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPThumbnailAnnotation;
 
-public class CoreNLPSerializer implements Serializer {
+/**
+ * <p>Creates the base json syntax tree from coreDocument.</p>
+ * <ul>
+ * 	<li>root (document)
+ * 		<ul>
+ * 			<li>metadata
+ * 				<ul>
+ * 					    <li>DocIDAnnotation</li>
+ * 					    <li>DocTitleAnnotation</li>
+ * 					    <li>DocSourceTypeAnnotation</li>
+ * 					    <li>DocTypeAnnotation</li>
+ * 					    <li>AuthorAnnotation</li>
+ * 					    <li>DocDateAnnotation</li>
+ * 						<li>OOPThumbnailAnnotation</li>
+ *				</ul>
+ *			</li>
+ * 			<li>corefs</li>
+ * 			<li>quotes</li>
+ * 			<li>sentences
+ * 				<ul>
+ * 					<li>tokens
+ * 						<ul>
+ * 							<li>tokenIndex</li>
+ * 							<li>TokensAnnotation
+ * 								<ul>
+ * 									<li>word</li>
+ * 									<li>originalText</li>
+ * 									<li>lemma</li>
+ * 									<li>characterOffsetBegin</li>
+ * 									<li>characterOffsetEnd</li>
+ * 									<li>pos</li>
+ * 									<li>ner</li>
+ * 									<li>before</li>
+ * 									<li>after</li>
+ * 								</ul>
+ * 							</li>
+ * 						</ul>
+ * 					</li>
+ * 				</ul>
+ * 			</li>
+ * 		</ul>
+ * 	</li>
+ * </ul>
+ * @author Ram Sadasiv
+ *
+ */
+public class CoreNlpSerializer implements Serializer {
 
 	ObjectMapper mapper = new ObjectMapper();
 	
@@ -41,7 +87,7 @@ public class CoreNLPSerializer implements Serializer {
 		return mapper;
 	}
 	
-	public CoreNLPSerializer() {
+	public CoreNlpSerializer() {
 		super();
 	}
 

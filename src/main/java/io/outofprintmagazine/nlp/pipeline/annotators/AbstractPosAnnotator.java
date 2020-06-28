@@ -32,6 +32,12 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.util.ArraySet;
 
+/**
+ * <p>Base class for custom annotators that work with part of speech tags (Core Nlp pos).</p>
+ * <p>tags is conventionally a list of the part of speech tags that the annotator is interested in handling (or ignoring).</p>
+ * @author Ram Sadasiv
+ *
+ */
 public abstract class AbstractPosAnnotator extends AbstractAnnotator implements Annotator, OOPAnnotator  {
 	
 	@SuppressWarnings("unused")

@@ -54,6 +54,9 @@ public class ActionlessVerbsAnnotator extends AbstractPosAnnotator implements An
 		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));			
 	}	
 
+	/**
+	 * @see io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPActionlessVerbsAnnotation 
+	 */
 	@Override
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPActionlessVerbsAnnotation.class;
@@ -79,6 +82,9 @@ public class ActionlessVerbsAnnotator extends AbstractPosAnnotator implements An
 		score(document);
 	}
 
+	/**
+	 * @return Intransitive Verbs. VB,VBD,VBG,VBN,VBP,VBZ in io/outofprintmagazine/nlp/models/StativeVerbs.txt
+	 */
 	@Override
 	public String getDescription() {
 		return "Intransitive Verbs. VB,VBD,VBG,VBN,VBP,VBZ in io/outofprintmagazine/nlp/models/StativeVerbs.txt";

@@ -39,10 +39,20 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.JSONOutputter;
 import io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPThumbnailAnnotation;
 import io.outofprintmagazine.nlp.pipeline.annotators.OOPAnnotator;
-import io.outofprintmagazine.nlp.pipeline.serializers.CoreNLPSerializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.CoreNlpSerializer;
 import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
 import io.outofprintmagazine.util.ParameterStore;
 
+
+/**
+ * <p>The main library execution entry point for oopcorenlp.</p>
+ * <p>analyze runs the coreNLP annotators, runs the custom annotators, serializes the annotation tree, and returns four JsonDocuments: STANFORD, OOP, AGGREGATES, PIPELINE</p>
+ * @see CoreNlpUtils
+ * @see OOPAnnotator
+ * @see CoreNlpSerializer
+ * @see io.outofprintmagazine.nlp.pipeline.serializers.Serializer
+ * @author Ram Sadasiv
+ */
 public class Analyzer {
 
 	@SuppressWarnings("unused")
@@ -252,7 +262,7 @@ public class Analyzer {
 		}
 		analysisList.addObject().put("host", ipAddr);
 	}
-		
+	
 	public Map<String, ObjectNode> analyze(Properties metadata, String text) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -267,7 +277,7 @@ public class Analyzer {
 			retval.put("STANFORD", (ObjectNode) mapper.readTree(JSONOutputter.jsonPrint(document.annotation())));
 			
 			annotate(document);
-			CoreNLPSerializer documentSerializer = new CoreNLPSerializer();
+			CoreNlpSerializer documentSerializer = new CoreNlpSerializer();
 			
 			ObjectNode json = mapper.createObjectNode();
 			documentSerializer.serialize(document, json);

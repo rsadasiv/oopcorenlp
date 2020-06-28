@@ -20,6 +20,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.stanford.nlp.pipeline.CoreDocument;
 
+/**
+ * <p>Interface for custom annotators json serialization.</p>
+ * <p>serialize() should decorate the syntax tree from CoreNlpSerializer with Annotations from OOPAnnotator.</p>
+ * <p>serializeAggregate() should decorate the root node of an empty json document with Annotations from Scorer</p>
+ * 
+ * @author Ram Sadasiv
+ *
+ */
 public interface Serializer {
 
 	public void serialize(CoreDocument document, ObjectNode json);

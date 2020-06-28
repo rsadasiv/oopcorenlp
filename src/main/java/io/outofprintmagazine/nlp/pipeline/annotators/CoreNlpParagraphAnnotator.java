@@ -95,7 +95,7 @@ public class CoreNlpParagraphAnnotator extends edu.stanford.nlp.paragraphs.Parag
 
 	@Override
 	public String getDescription() {
-		return "CoreAnnotations.ParagraphIndexAnnotation.class. Recorded per sentence, index starts at 1.";
+		return "CoreAnnotations.ParagraphIndexAnnotation.class. Recorded per sentence, index starts at 0.";
 	}
 	
 	@Override

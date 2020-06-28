@@ -18,6 +18,11 @@ package io.outofprintmagazine.nlp.pipeline;
 
 import java.math.BigDecimal;
 
+/**
+ * Name:Value pair for use where the name would break json syntax if used as a tag. Most other cases use Map&lt;String, BigDecimal&gt;.
+ * @author Ram Sadasiv
+ *
+ */
 public class PhraseAnnotation {
 
 	private String Name = "";

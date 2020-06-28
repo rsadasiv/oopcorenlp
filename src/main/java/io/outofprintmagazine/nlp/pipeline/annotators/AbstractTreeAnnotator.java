@@ -34,6 +34,12 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.PhraseSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
+/**
+ * <p>Base class for custom annotators that work with constituency trees (Core Nlp parse).</p>
+ * <p>Subclasses are encouraged to override the scoreTree method and invoke the superclass traverseTree method.</p>
+ * @author Ram Sadasiv
+ *
+ */
 public abstract class AbstractTreeAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")

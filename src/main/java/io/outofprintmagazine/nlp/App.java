@@ -31,11 +31,36 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.util.StringUtils;
-import io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPThumbnailAnnotation;
-import io.outofprintmagazine.nlp.utils.ResourceUtils;
 import io.outofprintmagazine.util.ParameterStore;
 import io.outofprintmagazine.util.ParameterStorePropertiesFile;
 
+/**
+ * <p>The main cli entry point for oopcorenlp.</p> 
+ * 
+ * <p>To get the sample output run:</p>
+ * <p>java -jar oopcorenlp-1.0.jar -a generate</p>
+ * <p>java -Xms8096m -Xmx10120m -jar oopcorenlp-1.0.jar -a analyze</p>
+ * <p>&nbsp;</p>
+ * <p>To get custom output, generate, tweak, analyze.</p>
+ * <p>Annotator order is important. Try commenting out existing lines rather than editing.</p>
+ * <p>Copy output files to oopcorenlp_web WebContent/Corpora/corpus/ directory and build/deploy to view results.</p>
+ * <p>&nbsp;</p>
+ * <pre>
+ * usage: oopcorenlp
+ * -a,--action                 REQUIRED. analyze or generate. analyze requires all parameters. generate requires outputPath.
+ * -h,--help                   print usage
+ * -i,--inputPath              Location for input files (.).
+ * -m,--metadata               Name of metadata file in Properties format (metadata.properties).
+ * -n,--annotators             Name of annotator list file in text format (annotators.txt).
+ * -o,--outputPath             Location for output files (.).
+ * -p,--parameterStore         Name of parameterStore file in Properties format (parameterStore.properties).
+ * -s,--story                  Name of story file in text format (story.txt). Ascii character set, vertical double quote for quotations, vertical single quote for apostrophe, block paragraphs.
+ * </pre>
+ * <p>NB: Needs a lot of memory to run. -Xms8096m -Xmx10120m at a minimum.</p>
+ * @see Analyzer
+ * @author Ram Sadasiv
+ *
+ */
 public class App {
 
 	private static final Logger logger = LogManager.getLogger(App.class);

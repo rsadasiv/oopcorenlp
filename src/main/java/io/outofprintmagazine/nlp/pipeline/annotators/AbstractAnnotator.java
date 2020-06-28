@@ -41,6 +41,16 @@ import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 import io.outofprintmagazine.util.ParameterStore;
 
+/**
+ * <p>Base class for all custom annotators.</p>
+ * <p>conventionally, after completing annotate(), annotators invoke score() and delegate that to an instance of Scorer.</p>
+ * <p>serialize() delegated to instance of Serializer</p>
+ * <p>serializeAggregateDocument() delegated to instance of Serializer</p>
+
+ * @see Scorer
+ * @author Ram Sadasiv
+ *
+ */
 public abstract class AbstractAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")

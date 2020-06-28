@@ -23,6 +23,13 @@ import java.util.Map;
 import edu.stanford.nlp.ling.CoreAnnotation;
 import edu.stanford.nlp.util.ErasureUtils;
 
+/**
+ * <p>Defines OOP custom annotations.</p>
+ * <p>Conventionally, custom annotators return ONLY ONE annotation type.</p>
+ * <p>OOP annotations adopt the annotation conventions from Core Nlp: <code>getType()</code></p>
+ * @author Ram Sadasiv
+ *
+ */
 public class OOPAnnotations {
 
 	private OOPAnnotations() {} // only static members

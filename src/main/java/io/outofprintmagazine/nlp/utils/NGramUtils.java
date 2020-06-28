@@ -159,12 +159,12 @@ public class NGramUtils {
 		logger.debug("wordCache length: " + wordCache.size());
     }
     
-    public List<List<NGramPhraseScore>> getSearchResultsBatch(List<String> queries) throws IOException, URISyntaxException {
+    private List<List<NGramPhraseScore>> getSearchResultsBatch(List<String> queries) throws IOException, URISyntaxException {
     	return processSearchResultsBatch(runSearchResultsBatch(queries));
     }
     
     
-    public String runSearchResultsBatch(List<String> queries) throws IOException, URISyntaxException {
+    private String runSearchResultsBatch(List<String> queries) throws IOException, URISyntaxException {
     	String responseBody = null;
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode json = mapper.createObjectNode();
@@ -226,7 +226,7 @@ public class NGramUtils {
         return responseBody;
     }
  
-    public List<List<NGramPhraseScore>> processSearchResultsBatch(String responseBody) {
+    private List<List<NGramPhraseScore>> processSearchResultsBatch(String responseBody) {
     	BufferedReader reader = new BufferedReader(new StringReader(responseBody));
     	List<List<NGramPhraseScore>> retval = new ArrayList<List<NGramPhraseScore>>();
     	try {
@@ -248,7 +248,7 @@ public class NGramUtils {
     }
     
     
-    public List<List<NGramPhraseScore>> processSearchResultsBatch(BufferedReader reader) throws NumberFormatException, IOException {
+    private List<List<NGramPhraseScore>> processSearchResultsBatch(BufferedReader reader) throws NumberFormatException, IOException {
         String line = null;
         List<List<NGramPhraseScore>> allResults = new ArrayList<List<NGramPhraseScore>>();
         while ((line = reader.readLine()) != null) {
@@ -279,7 +279,7 @@ public class NGramUtils {
         return allResults;
     }
     
-	public NGramPhraseScore processOneResult(BufferedReader reader) throws NumberFormatException, IOException {
+	private NGramPhraseScore processOneResult(BufferedReader reader) throws NumberFormatException, IOException {
 		String line = null;
 		NGramPhraseScore phrase = null;
 		if ((line = reader.readLine()) != null) {

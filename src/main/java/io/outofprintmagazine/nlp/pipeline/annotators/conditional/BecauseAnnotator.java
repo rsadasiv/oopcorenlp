@@ -77,7 +77,7 @@ public class BecauseAnnotator extends  AbstractTreeAnnotator implements Annotato
 
 	@Override
 	protected void scoreTree(Tree tree, List<String> tags, List<PhraseAnnotation> scoreMap) throws IOException {
-		if (tree.label().toString().equals("PP")) {
+		if (tree.label().toString().equals("SBAR")) {
 			super.scoreTree(tree, tags, scoreMap);
 		}
 	}	

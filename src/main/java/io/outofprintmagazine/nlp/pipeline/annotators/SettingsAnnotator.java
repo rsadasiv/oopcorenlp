@@ -93,4 +93,9 @@ public class SettingsAnnotator extends AbstractContextualAnnotator implements An
 	public Class getEntityAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPLocationsAnnotation.class;
 	}
+	
+	@Override
+	public String getDescription() {
+		return "OOPLocationAnnotation with sentiment, quotes, coref, and universal dependencies nsubj, nmod:poss, advmod, amod (http://universaldependencies.org/docsv1/en/dep/index.html)." ;
+	}
 }

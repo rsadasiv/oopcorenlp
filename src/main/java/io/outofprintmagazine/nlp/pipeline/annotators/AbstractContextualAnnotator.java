@@ -52,6 +52,11 @@ import io.outofprintmagazine.nlp.pipeline.ContextualAnnotation;
 import io.outofprintmagazine.nlp.utils.BingUtils;
 import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
 
+/**
+ * <p>Base class for custom annotators that work with dependency trees (Core Nlp depparse).</p>
+ * @author Ram Sadasiv
+ *
+ */
 public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
 	private static final Logger logger = LogManager.getLogger(AbstractContextualAnnotator.class);
@@ -350,8 +355,4 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 		}
 	}
 
-	@Override
-	public String getDescription() {
-		return "OOPPeopleAnnotation with sentiment, quotes, coref, and universal dependencies nsubj, nmod:poss, advmod, amod (http://universaldependencies.org/docsv1/en/dep/index.html)." ;
-	}
 }

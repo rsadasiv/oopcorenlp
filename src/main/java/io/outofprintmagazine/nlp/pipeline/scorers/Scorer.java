@@ -18,6 +18,11 @@ package io.outofprintmagazine.nlp.pipeline.scorers;
 
 import edu.stanford.nlp.pipeline.CoreDocument;
 
+/**
+ * Interface to apply annotation scores to all nodes of the syntax tree.
+ * @author Ram Sadasiv
+ *
+ */
 public interface Scorer {
 	
 	public void score(CoreDocument document);

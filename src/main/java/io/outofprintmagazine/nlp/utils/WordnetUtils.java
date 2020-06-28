@@ -139,7 +139,7 @@ public class WordnetUtils {
 		}	
 	}
 	
-	public POS tagToPOS(CoreLabel token) {
+	private POS tagToPOS(CoreLabel token) {
 		POS wnPos = null;
 		if (token.tag().startsWith("N")) {
 			wnPos = POS.NOUN;
@@ -160,7 +160,7 @@ public class WordnetUtils {
 	}
 	
 
-	public String getLexicalFileName(CoreLabel token) {
+	private String getLexicalFileName(CoreLabel token) {
 		String score = null;
 		POS pos = tagToPOS(token);
 		if (pos == null) {
@@ -369,7 +369,7 @@ public class WordnetUtils {
 		return null;
 	}
 	
-	public List<String> getGlossWords(IWord word) {
+	private List<String> getGlossWords(IWord word) {
 		String gloss = word.getSynset().getGloss();
 		gloss = gloss.toLowerCase();
 		gloss = gloss.replace(";", "");
@@ -382,7 +382,7 @@ public class WordnetUtils {
 		return Arrays.asList(gloss.split("\\s+"));
 	}
 	
-	public List<String> getSynsetWords(IWord word) {
+	private List<String> getSynsetWords(IWord word) {
 		ArrayList<String> retval = new ArrayList<String>();
 		
 			ISynset synset = word.getSynset();
@@ -404,7 +404,7 @@ public class WordnetUtils {
         return retval;
 	}
 	
-	public List<String> removeCommonWords(List<String> list) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+	private List<String> removeCommonWords(List<String> list) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 
 		Map<String,String> dict = ResourceUtils.getInstance(parameterStore).getDictionary(
 				"io/outofprintmagazine/nlp/models/COCA/en_100.txt"
@@ -419,7 +419,7 @@ public class WordnetUtils {
 	}
 	
 	//the word itself, all words in the glosses or synset, remove common words
-	public List<String> getSenseContextWords(IWord word) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+	private List<String> getSenseContextWords(IWord word) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		ArrayList<String> retval = new ArrayList<String>();
 		retval.add(word.getLemma());
 		retval.addAll(getGlossWords(word));
@@ -427,7 +427,7 @@ public class WordnetUtils {
 		return retval;
 	}
 	
-	public List<String> getLemmasAndTokens(List<CoreLabel> words) {
+	private List<String> getLemmasAndTokens(List<CoreLabel> words) {
 		List<String> retval = new ArrayList<String>();
 		for (CoreLabel word : words ) {
 			retval.add(word.lemma());
@@ -436,7 +436,7 @@ public class WordnetUtils {
 		return retval;
 	}
 	
-	 public <T> List<T> removeDuplicates(List<T> list) 
+	 private <T> List<T> removeDuplicates(List<T> list) 
 	    { 
 	  
 	        // Create a new LinkedHashSet 
@@ -456,7 +456,7 @@ public class WordnetUtils {
 	        return list; 
 	    } 
 	
-	public int computeWordOverlap(List<String> list, List<String> otherList) {
+	private int computeWordOverlap(List<String> list, List<String> otherList) {
 		//logger.debug("--------Context---------------");
 		//for (String x : list) {
 			//logger.debug(x);
@@ -494,7 +494,7 @@ public class WordnetUtils {
 	best-sense <- sense
 	end return (best-sense)		
 	 */
-	public ISenseKey simplifiedLesk(CoreLabel targetWord, List<CoreLabel> contextWords) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	private ISenseKey simplifiedLesk(CoreLabel targetWord, List<CoreLabel> contextWords) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		ISenseKey retval = null;
 		POS pos = tagToPOS(targetWord);
 		if (pos == null) {

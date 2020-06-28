@@ -4,8 +4,34 @@
 	<groupId>io.outofprintmagazine</groupId>
 	<artifactId>oopcorenlp</artifactId>
 	<version>1.0</version>
-	<name>oopcorenlp</name>
+	<name>OOP Core NLP</name>
+	<description>Generate NLP features for statistical analysis and machine learning</description>
 	<url>https://beta.outofprintmagazine.io</url>
+
+	<licenses>
+		<license>
+			<name>GPL-3.0-or-later</name>
+			<url>https://www.gnu.org/licenses/gpl-3.0-standalone.html</url>
+		</license>
+	</licenses>
+	<organization>
+	    <name>Out Of Print Magazine</name>
+	    <url>http://beta.outofprintmagazine.io</url>
+	</organization>
+	<developers>
+		<developer>
+      		<id>rsadasiv</id>
+      		<name>Ram Sadasiv</name>
+      		<email>io.outofprintmagazine@gmail.com</email>
+		</developer>
+	</developers>
+	<scm>
+		<url>https://github.com/rsadasiv/oopcorenlp.git</url>
+	</scm>
+	<issueManagement>
+		<system>Github</system>
+		<url>https://github.com/rsadasiv/oopcorenlp.git/</url>
+	</issueManagement>
 	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -13,43 +39,63 @@
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-1.2-api -->
 		<log4j.version>2.12.0</log4j.version>
-		<!-- https://mvnrepository.com/artifact/junit/junit -->
-		<junit.version>4.12</junit.version>
+		
+		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
+		<junit.jupiter.version>5.6.2</junit.jupiter.version>
+
+		<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+		<jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
+		
 		<!-- https://mvnrepository.com/artifact/edu.stanford.nlp/stanford-corenlp -->
 		<stanford-corenlp.version>4.0.0</stanford-corenlp.version>
+		
 		<!-- https://mvnrepository.com/artifact/edu.mit/jwi -->
 		<jwi.version>2.2.3</jwi.version>
 		<!-- https://mvnrepository.com/artifact/edu.mit/jverbnet -->
 		<!-- PR https://github.com/rsadasiv/jverbnet.git -->
 		<jverbnet.version>1.2.0.2</jverbnet.version>
+		
 		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
 		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common -->
 		<lucene.version>8.1.1</lucene.version>
+		
 		<!-- https://mvnrepository.com/artifact/com.github.apanimesh061/vader-sentiment-analyzer -->
 		<vader-sentiment-analyzer.version>1.0</vader-sentiment-analyzer.version>
+		
 		<!-- https://mvnrepository.com/artifact/eu.crydee/syllable-counter -->
 		<syllable-counter.version>4.1.0</syllable-counter.version>
+		
 		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 		<httpclient.version>4.5.12</httpclient.version>
+		
 		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
 		<jsoup.version>1.13.1</jsoup.version>
+		
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-properties -->
 		<jackson.version>2.11.0</jackson.version>
+		
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
 		<commons-math3.version>3.6.1</commons-math3.version>
+		
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<commons-lang3.version>3.10</commons-lang3.version>
+		
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<commons-io.version>2.7</commons-io.version>
+		
 		<!-- https://mvnrepository.com/artifact/com.flickr4java/flickr4java -->
 		<!-- MERGED https://github.com/rsadasiv/Flickr4Java.git -->
 		<flickr4java.version>3.0.4</flickr4java.version>
+		
 		<!-- https://mvnrepository.com/artifact/io.burt/jmespath-jackson -->
 		<jmespath-jackson.version>0.5.0</jmespath-jackson.version>
+		
 		<!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
 		<commons-cli.version>1.4</commons-cli.version>
+		
+		
 	</properties>
 	
 	<dependencies>
@@ -73,10 +119,17 @@
 		</dependency>
 
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${junit.jupiter.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+		    <groupId>org.jacoco</groupId>
+		    <artifactId>jacoco-maven-plugin</artifactId>
+		    <version>${jacoco-maven-plugin.version}</version>
+		    <scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -211,6 +264,12 @@
 		    <version>${commons-cli.version}</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.apache.maven.doxia</groupId>
+			<artifactId>doxia-site-renderer</artifactId>
+			<version>1.9.2</version>
+		</dependency>		
+		
 	</dependencies>
 
 	<build>
@@ -226,6 +285,21 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M4</version>
+				<configuration>
+            		<argLine>@{argLine} -Xms8096m -Xmx10120m</argLine>
+        		</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>3.0.0-M4</version>
 				<executions>
@@ -237,7 +311,50 @@
 					</execution>
 				</executions>
 			</plugin>
-
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.2</version>
+				<configuration>
+				    <excludes>
+				        <exclude>**/*io/outofprintmagazine/nlp/pipeline/*.class</exclude>
+				    </excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<!-- attached to Maven test phase -->
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.7.1</version>
+				<dependencies>
+					<dependency>
+            			<groupId>org.apache.maven.skins</groupId>
+            			<artifactId>maven-fluido-skin</artifactId>
+            			<version>1.9</version>
+          			</dependency>
+					<!-- https://mvnrepository.com/artifact/org.apache.maven.doxia/doxia-site-renderer -->
+					<dependency>
+					    <groupId>org.apache.maven.doxia</groupId>
+					    <artifactId>doxia-site-renderer</artifactId>
+					    <version>1.9.2</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+	      	
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -292,19 +409,46 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>3.0.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>3.2.0</version>
+		        <reportSets>
+		          <reportSet><!-- by default, id = "default" -->
+		            <reports><!-- select non-aggregate reports -->
+		              <report>javadoc</report>
+		              <report>test-javadoc</report>
+		            </reports>
+		          </reportSet>
+		         </reportSets>				
+	      	</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
 				<version>3.0.0-M4</version>
-				<reportSets>
-					<reportSet>
-						<id>integration-tests</id>
-						<reports>
-							<report>failsafe-report-only</report>
-						</reports>
-					</reportSet>
-				</reportSets>
+			    <reportSets>
+			        <reportSet>
+			            <reports>
+			                <report>report-only</report>
+			            </reports>
+			        </reportSet>
+			    </reportSets>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.2</version>
+			    <reportSets>
+			        <reportSet>
+			            <reports>
+			                <report>report</report>
+			            </reports>
+			        </reportSet>
+			    </reportSets>
+			</plugin>			
 		</plugins>
 	</reporting>
-
-
 </project>

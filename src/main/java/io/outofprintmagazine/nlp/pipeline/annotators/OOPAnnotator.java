@@ -22,6 +22,24 @@ import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import io.outofprintmagazine.util.ParameterStore;
 
+/**
+ * <p>Interface for all custom annotators.</p>
+ * <p>Extends the corenlp annotator interface.</p>
+ * <p>Implementations must be re-entrant.</p>
+ * <p>Instances will be used by Analyzer as follows:</p>
+ * <code>
+ * OOPAnnotator oopAnnotator = new Annotator();
+ * oopAnnotator.init(parameterStore);
+ * oopAnnotator.annotate(coreDocument);
+ * oopAnnotator.serialize(coreDocument, json);
+ * oopAnnotator.serializeAggregateDocument(coreDocument, json);
+ * oopAnnotator.getAnnotationClass();
+ * oopAnnotator.getDescription();
+ * </code>
+ * @see AbstractAnnotator
+ * @author Ram Sadasiv
+ *
+ */
 public interface OOPAnnotator extends Annotator {
 	
 	public Class getAnnotationClass();

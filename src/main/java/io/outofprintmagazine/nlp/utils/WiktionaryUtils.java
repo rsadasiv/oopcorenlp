@@ -135,11 +135,11 @@ public class WiktionaryUtils {
 		logger.debug("wordCache length: " + wordCache.size());
     }
         
-    public Map<String, String> getSearchResultsBatch(List<String> queries) throws IOException, URISyntaxException {
+    private Map<String, String> getSearchResultsBatch(List<String> queries) throws IOException, URISyntaxException {
     	return processSearchResultsBatch(runSearchResultsBatch(queries));
     }
     
-    public String runSearchResultsBatch(List<String> queries) throws IOException, URISyntaxException {
+    private String runSearchResultsBatch(List<String> queries) throws IOException, URISyntaxException {
     	String responseBody = null;
         CloseableHttpClient httpclient = HttpClients.custom()
                 .setServiceUnavailableRetryStrategy(
@@ -186,7 +186,7 @@ public class WiktionaryUtils {
         return responseBody;
     }
  
-    public Map<String, String> processSearchResultsBatch(String responseBody) {
+    private Map<String, String> processSearchResultsBatch(String responseBody) {
     	Map<String, String> retval = new HashMap<String, String>();
     	try {
 			ObjectMapper mapper = new ObjectMapper();
