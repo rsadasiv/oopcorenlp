@@ -81,6 +81,9 @@ public class WikipediaPageviewTopicsAnnotator extends AbstractPosAnnotator imple
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
+		if (!annotation.containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPTopicsAnnotation.class)) {
+			logger.error("requires() not satisfied");
+		}
 		Map<String,BigDecimal> topics = (Map<String, BigDecimal>) document.annotation().get(getTopicsAnnotationClass());
 		Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
 		for (String topic : topics.keySet()) {
@@ -92,7 +95,6 @@ public class WikipediaPageviewTopicsAnnotator extends AbstractPosAnnotator imple
 			}
 		} 
 		document.annotation().set(getAnnotationClass(), scoreMap);
-		score(document);
 	}
 
 	@Override

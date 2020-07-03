@@ -100,7 +100,6 @@ public class TopicsAnnotator extends AbstractPosAnnotator implements Annotator, 
 				}
 			}
 		}
-		score(document);
 	}
 	
 	@Override

@@ -153,10 +153,13 @@ public class BiberAnnotator extends AbstractPosAnnotator implements Annotator, O
 		annotate_ANDC(annotation);
 		annotate_SYNE(annotation);
 		annotate_XX0(annotation);
-		CoreDocument document = new CoreDocument(annotation);
-		score(document);
-		annotate_AWL(annotation);
-		annotate_TTR(annotation);
+	}
+	
+	@Override
+	public void score(CoreDocument document) {
+		super.score(document);
+		annotate_AWL(document.annotation());
+		annotate_TTR(document.annotation());
 	}
 	
 	private Map<String,BigDecimal> getBiberAnnotation(CoreMap coreMap) {
@@ -289,7 +292,7 @@ or negations.
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
 			for (CoreLabel token : sentence.tokens()) {
-				if (tags.contains(token.lemma())) {
+				if (tags.contains(token.lemma().toLowerCase())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
 					addToScoreMap(scoreMap, "FPP1", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
@@ -406,11 +409,19 @@ improved by excluding WH words such as however or whatever that do not introduce
 		List<String> posTags = Arrays.asList("WP", "WP$", "WDT");
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
+			CoreLabel whToken = null;
+			
 			for (CoreLabel token : sentence.tokens()) {
 				if (posTags.contains(token.tag())) {
+					whToken = token;
+				}
+				else if (whToken != null && (token.tag().equals("MD") || token.lemma().equals("do") || token.lemma().equals("have"))) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
 					addToScoreMap(scoreMap, "WHQU", new BigDecimal(1));
-					token.set(getAnnotationClass(), scoreMap);
+					whToken.set(getAnnotationClass(), scoreMap);
+				}
+				else {
+					whToken = null;
 				}
 			}
 		}
@@ -489,6 +500,7 @@ which a negation precedes the nominal form of pattern (b).
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
 					addToScoreMap(scoreMap, "PASS", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
+					break;
 				}
 				if (token.lemma().equals("be")) {
 					wasBe = true;
@@ -539,7 +551,7 @@ not appear before the pattern; (b) the cardinal numbers (CD) tag and the persona
 		for (CoreSentence sentence : document.sentences()) {
 			for (int i=0;i<sentence.tokens().size();i++) {
 				if (i<sentence.tokens().size()-1) {
-					if (sentence.tokens().get(i).lemma().equals("be") && !posTags.contains(sentence.tokens().get(i+1).tag())) {
+					if (sentence.tokens().get(i).lemma().equals("be") && posTags.contains(sentence.tokens().get(i+1).tag())) {
 						Map<String, BigDecimal> scoreMap = getBiberAnnotation(sentence.tokens().get(i));
 						addToScoreMap(scoreMap, "BEMA", new BigDecimal(1));
 						sentence.tokens().get(i).set(getAnnotationClass(), scoreMap);
@@ -574,7 +586,7 @@ or a form of seem or appear and followed by any word that is NOT a verb (V), aux
 by a public, private or suasive verb or a form of seem or appear and a preposition and up to
 four words that are not nouns (N). 
  */
-		TokenSequencePattern pattern= TokenSequencePattern.compile("[and | nor | but | or | also] [that] ");
+		TokenSequencePattern pattern= TokenSequencePattern.compile("[{lemma:and} | {lemma:nor} | {lemma:but} | {lemma:or} | {lemma:also}] [lemma:that]");
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
 			List<CoreLabel> tokens = sentence.tokens();
@@ -601,18 +613,18 @@ four words that are not nouns (N).
 		List<String> tags = Arrays.asList("that");
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
-			boolean wasJJPRED = false;
+			boolean wasJJ = false;
 			for (CoreLabel token : sentence.tokens()) {
-				if (tags.contains(token.lemma()) && wasJJPRED) {
+				if (tags.contains(token.lemma()) && wasJJ) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
 					addToScoreMap(scoreMap, "THAC", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
-				if (token.tag().equals("JJ") || token.tag().equals("PRED")) {
-					wasJJPRED = true;
+				else if (token.tag().equals("JJ")) {
+					wasJJ = true;
 				}
 				else {
-					wasJJPRED = false;
+					wasJJ = false;
 				}
 			}
 		}
@@ -731,7 +743,7 @@ This tag is assigned when the following pattern is found: a noun (N) or quantifi
 (QUPR) followed by a past participial form of a verb (VBN) followed by a preposition (PIN)
 or an adverb (RB) or a form of BE. 
  */
-		TokenSequencePattern pattern= TokenSequencePattern.compile("[{pos:NN} | {pos:NNS}] [{pos:VBN}]");
+		TokenSequencePattern pattern= TokenSequencePattern.compile("[{pos:NN} | {pos:NNS}] [{pos:VBN}] [{pos:IN} | {pos:RB} | {lemma:be}]");
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
 			List<CoreLabel> tokens = sentence.tokens();
@@ -739,14 +751,10 @@ or an adverb (RB) or a form of BE.
 			TokenSequenceMatcher matcher = pattern.getMatcher(tokens);
 			while (matcher.find()) {
 				List<CoreMap> matchedTokens = matcher.groupNodes();
-				CoreMap token = null;
-				for (CoreMap t : matchedTokens) {
-					token = t;
-				}
-				if (token != null) {
-					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
+				if (matchedTokens.size() == 3) {
+					Map<String, BigDecimal> scoreMap = getBiberAnnotation(matchedTokens.get(1));
 					addToScoreMap(scoreMap, "WZPAST", new BigDecimal(1));
-					token.set(getAnnotationClass(), scoreMap);
+					matchedTokens.get(1).set(getAnnotationClass(), scoreMap);
 				}
 			}
 		}
@@ -794,13 +802,15 @@ verb (V), with the possibility of an intervening adverb (RB) or negation (XX0).
 			while (matcher.find()) {
 				List<CoreMap> matchedTokens = matcher.groupNodes();
 				CoreMap token = null;
+				CoreMap thatToken = null;
 				for (CoreMap t : matchedTokens) {
+					thatToken = token;
 					token = t;
 				}
 				if (token != null) {
-					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
+					Map<String, BigDecimal> scoreMap = getBiberAnnotation(thatToken);
 					addToScoreMap(scoreMap, "TSUB", new BigDecimal(1));
-					token.set(getAnnotationClass(), scoreMap);
+					thatToken.set(getAnnotationClass(), scoreMap);
 				}
 			}
 		}
@@ -825,13 +835,15 @@ distinguish between simple complements to nouns and true relative clauses.
 			while (matcher.find()) {
 				List<CoreMap> matchedTokens = matcher.groupNodes();
 				CoreMap token = null;
+				CoreMap thatToken = null;
 				for (CoreMap t : matchedTokens) {
+					thatToken = token;
 					token = t;
 				}
 				if (token != null) {
-					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
+					Map<String, BigDecimal> scoreMap = getBiberAnnotation(thatToken);
 					addToScoreMap(scoreMap, "TOBJ", new BigDecimal(1));
-					token.set(getAnnotationClass(), scoreMap);
+					thatToken.set(getAnnotationClass(), scoreMap);
 				}
 			}
 		}
@@ -846,7 +858,7 @@ words ASK or TELL followed by a noun (N), then a WH pronoun, then by any verb or
 auxiliary verb (V), with the possibility of an intervening adverb (RB) or negation (XX0)
 between the WH pronoun and the verb. 
  */
-		TokenSequencePattern pattern= TokenSequencePattern.compile("[{pos:WP}] [{pos:VB } | {pos:VBD} | {pos:VBG} | {pos:VBN} | {pos:VBP} | {pos:VBZ} ]");
+		TokenSequencePattern pattern= TokenSequencePattern.compile("[{pos:NN } | {pos:NNS} | {pos:NNP} | {pos:NNPS}] [{pos:WP}] [{pos:VB } | {pos:VBD} | {pos:VBG} | {pos:VBN} | {pos:VBP} | {pos:VBZ} ]");
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
 			List<CoreLabel> tokens = sentence.tokens();
@@ -854,14 +866,10 @@ between the WH pronoun and the verb.
 			TokenSequenceMatcher matcher = pattern.getMatcher(tokens);
 			while (matcher.find()) {
 				List<CoreMap> matchedTokens = matcher.groupNodes();
-				CoreMap token = null;
-				for (CoreMap t : matchedTokens) {
-					token = t;
-				}
-				if (token != null) {
-					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
+				if (matchedTokens.size() == 3) {
+					Map<String, BigDecimal> scoreMap = getBiberAnnotation(matchedTokens.get(1));
 					addToScoreMap(scoreMap, "WHSUB", new BigDecimal(1));
-					token.set(getAnnotationClass(), scoreMap);
+					matchedTokens.get(1).set(getAnnotationClass(), scoreMap);
 				}
 			}
 		}
@@ -934,6 +942,7 @@ HAVE, BE or DO).
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
 					addToScoreMap(scoreMap, "SERE", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
+					break;
 				}
 				if (isPunctuationMark(token)) {
 					wasPunct = true;
@@ -1498,13 +1507,18 @@ an intervening adjective (JJ or PRED) between the noun and its preceding word.
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
 			boolean wasPIN = false;
+			CoreLabel pinToken = null;
 			for (CoreLabel token : sentence.tokens()) {
 				if (wasPIN && isPunctuationMark(token)) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
 					addToScoreMap(scoreMap, "STPR", new BigDecimal(1));
-					token.set(getAnnotationClass(), scoreMap);
+					if (pinToken != null) {
+						pinToken.set(getAnnotationClass(), scoreMap);
+					}
+					break;
 				}
 				if (posTags.contains(token.tag())) {
+					pinToken = token;
 					wasPIN = true;
 				}
 				else {
@@ -1521,7 +1535,7 @@ an intervening adjective (JJ or PRED) between the noun and its preceding word.
 Split infinitives are identified every time an infinitive marker to is followed by one or two
 adverbs and a verb base form. 
  */
-		TokenSequencePattern pattern= TokenSequencePattern.compile("[{pos:TO}] [{pos:RB}] [{pos:VB}]");
+		TokenSequencePattern pattern= TokenSequencePattern.compile("[{pos:TO}] [{pos:RB}] [{pos:VB } | {pos:VBD} | {pos:VBG} | {pos:VBN} | {pos:VBP} | {pos:VBZ} ]");
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
 			List<CoreLabel> tokens = sentence.tokens();
@@ -1551,7 +1565,7 @@ DO, or any form of BE, or any form of HAVE) is followed by one or two adverbs an
 base form. 
  */
 		
-		TokenSequencePattern pattern= TokenSequencePattern.compile("[{pos:MD}] [{pos:RB}] [{pos:VB}]");
+		TokenSequencePattern pattern= TokenSequencePattern.compile("[{pos:MD} | {lemma:do} | {lemma:have} | {lemma:be}] [{pos:RB}] [{pos:VB } | {pos:VBD} | {pos:VBG} | {pos:VBN} | {pos:VBP} | {pos:VBZ} ]");
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
 			List<CoreLabel> tokens = sentence.tokens();
@@ -1589,7 +1603,7 @@ base form.
 		}
 	}
 	
-	//TODO
+
 	public void annotate_ANDC(Annotation annotation) {
 /*
 This tag is assigned to the word and when it is found in one of the following patterns: (1)
@@ -1601,21 +1615,26 @@ punctuation; (3) followed by a WH pronoun or any WH word, an adverbial subordina
 	}
 	
 	public void annotate_SYNE(Annotation annotation) {
-		List<String> posTags = Arrays.asList("JJ", "PRED", "NN", "NNS", "NNP", "NNPS");
+		List<String> posTags = Arrays.asList("NN", "NNS", "NNP", "NNPS");
 		CoreDocument document = new CoreDocument(annotation);
 		for (CoreSentence sentence : document.sentences()) {
 			boolean wasNot = false;
+			boolean wasJJ = false;
 			for (CoreLabel token : sentence.tokens()) {
-				if (wasNot && posTags.contains(token.tag())) {
+				if (wasNot && wasJJ && posTags.contains(token.tag())) {
 					Map<String, BigDecimal> scoreMap = getBiberAnnotation(token);
 					addToScoreMap(scoreMap, "SYNE", new BigDecimal(1));
 					token.set(getAnnotationClass(), scoreMap);
 				}
-				if (token.lemma().equals("no") || token.lemma().equals("not") || token.lemma().equals("neither")) {
+				else if (wasNot && token.tag().equals("JJ")) {
+					wasJJ = true;
+				}
+				else if (token.lemma().equals("no") || token.lemma().equals("not") || token.lemma().equals("neither")) {
 					wasNot = true;
 				}
 				else {
 					wasNot = false;
+					wasJJ = false;
 				}
 			}
 		}

@@ -95,7 +95,6 @@ public class SyllableCountAnnotator extends AbstractAnnotator implements Annotat
 				token.set(getAnnotationClass(), new BigDecimal(syllables));
 			}
 		}
-		score(document);
 	}
 
 	@Override

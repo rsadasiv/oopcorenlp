@@ -69,7 +69,6 @@ public class NounsAnnotator extends AbstractPosAnnotator implements Annotator, O
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

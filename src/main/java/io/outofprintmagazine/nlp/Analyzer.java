@@ -81,6 +81,10 @@ public class Analyzer {
 		}
 	}
 	
+	public ArrayList<OOPAnnotator> getCustomAnnotators() {
+		return customAnnotators;
+	}
+	
 	/**
 	 * 
 	 */
@@ -218,9 +222,9 @@ public class Analyzer {
 	private void annotate(CoreDocument document) {
 		for (OOPAnnotator annotator : customAnnotators) {
 			annotator.annotate(document.annotation());
+			annotator.score(document);
 		}
 	}
-
 	
 	private void serialize(CoreDocument document, ObjectNode json)  {
 		for (OOPAnnotator annotator : customAnnotators) {
@@ -271,12 +275,13 @@ public class Analyzer {
 		Map<String,ObjectNode> retval = new HashMap<String, ObjectNode>();
 		
 		try {
-			logger.debug("analyzing " + metadata.getProperty(CoreAnnotations.DocIDAnnotation.class.getName()));
+			logger.debug("analyzing " + metadata.getProperty(CoreAnnotations.DocIDAnnotation.class.getSimpleName()));
 			
 			runCoreNLP(document);
 			retval.put("STANFORD", (ObjectNode) mapper.readTree(JSONOutputter.jsonPrint(document.annotation())));
 			
 			annotate(document);
+
 			CoreNlpSerializer documentSerializer = new CoreNlpSerializer();
 			
 			ObjectNode json = mapper.createObjectNode();

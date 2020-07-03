@@ -105,7 +105,6 @@ public class HowAnnotator extends AbstractTreeAnnotator implements Annotator, OO
 				logger.error(e);
 			}
 		}
-		score(document);
 	}
 	
 	@Override

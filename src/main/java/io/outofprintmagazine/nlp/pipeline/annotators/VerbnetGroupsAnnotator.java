@@ -94,7 +94,6 @@ public class VerbnetGroupsAnnotator extends AbstractPosAnnotator implements Anno
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

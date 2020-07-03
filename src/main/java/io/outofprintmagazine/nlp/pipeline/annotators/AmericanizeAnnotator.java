@@ -77,7 +77,6 @@ public class AmericanizeAnnotator extends AbstractPosAnnotator implements Annota
 					}
 				}
 			}
-			score(document);
 		}
 		catch (IOException e) {
 			getLogger().error(e);

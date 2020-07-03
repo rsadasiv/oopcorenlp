@@ -77,7 +77,6 @@ public class PrepositionCategoriesAnnotator extends AbstractPosAnnotator impleme
 				}
 			}
 		}
-		score(document);
 	}
 	
 	@Override

@@ -74,6 +74,5 @@ public class CommonWordsAnnotator extends AbstractPosAnnotator implements Annota
 				}
 			}
 		}
-		score(document);
 	}
 }

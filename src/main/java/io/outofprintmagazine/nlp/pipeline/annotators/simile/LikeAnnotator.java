@@ -78,7 +78,6 @@ public class LikeAnnotator extends AbstractTreeAnnotator implements Annotator, O
 				logger.error(e);
 			}
 		}
-		score(document);
 	}
 	
 

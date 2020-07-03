@@ -109,7 +109,6 @@ public class VerbHypernymsAnnotator extends AbstractPosAnnotator implements Anno
 				}
 			}
 		}
-		score(document);
 	}
 	
 	@Override

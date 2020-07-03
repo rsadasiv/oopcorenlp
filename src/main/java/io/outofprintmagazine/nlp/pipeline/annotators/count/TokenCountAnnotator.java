@@ -83,7 +83,6 @@ public class TokenCountAnnotator extends AbstractAnnotator implements Annotator,
 				token.set(getAnnotationClass(), new BigDecimal(1));
 			}
 		}
-		score(document);
 	}
 
 	@Override

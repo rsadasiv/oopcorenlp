@@ -218,13 +218,10 @@ public class SVOAnnotator extends AbstractPosAnnotator implements Annotator, OOP
 					if (subject == null && rn.getShortName().equals("nsubj") && dependency.gov().backingLabel().equals(verb)) {
 						subject = dependency.dep().backingLabel();
 					}
-				}
-				for (TypedDependency dependency : vdeps) {
-					GrammaticalRelation rn = dependency.reln();
-					if (directObject == null && rn.getShortName().equals("dobj") && dependency.gov().backingLabel().equals(verb)) {
+					if (directObject == null && rn.getShortName().equals("obj") && dependency.gov().backingLabel().equals(verb)) {
 						directObject = dependency.dep().backingLabel();
 					}
-					else if (indirectObject == null && rn.getShortName().equals("iobj") && dependency.gov().backingLabel().equals(verb)) {
+					if (indirectObject == null && rn.getShortName().equals("obl") && dependency.gov().backingLabel().equals(verb)) {
 						indirectObject = dependency.dep().backingLabel();
 					}
 				}
@@ -248,16 +245,18 @@ public class SVOAnnotator extends AbstractPosAnnotator implements Annotator, OOP
 						}
 					}
 				}
-				if (verb != null && subject != null && directObject != null) {
+				if (verb != null && subject != null) {
 					Map<String,BigDecimal> verbScore = new HashMap<String,BigDecimal>();
 					verbScore.put("verb", new BigDecimal(1));
 					verb.set(getAnnotationClass(), verbScore);
 					Map<String,BigDecimal> subjectScore = new HashMap<String,BigDecimal>();
 					subjectScore.put("subject", new BigDecimal(1));
 					subject.set(getAnnotationClass(), subjectScore);
-					Map<String,BigDecimal> directObjectScore = new HashMap<String,BigDecimal>();
-					directObjectScore.put("object", new BigDecimal(1));
-					directObject.set(getAnnotationClass(), directObjectScore);
+					if (directObject != null) {
+						Map<String,BigDecimal> directObjectScore = new HashMap<String,BigDecimal>();
+						directObjectScore.put("object", new BigDecimal(1));
+						directObject.set(getAnnotationClass(), directObjectScore);
+					}
 					if (indirectObject != null) {
 						Map<String,BigDecimal> indirectObjectScore = new HashMap<String,BigDecimal>();
 						indirectObjectScore.put("indirectObject", new BigDecimal(1));
@@ -290,7 +289,6 @@ public class SVOAnnotator extends AbstractPosAnnotator implements Annotator, OOP
 				logger.error(e);
 			}
 		}
-		score(document);
 	}
 
 

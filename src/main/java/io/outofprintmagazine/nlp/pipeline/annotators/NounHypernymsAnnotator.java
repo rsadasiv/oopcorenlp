@@ -108,7 +108,6 @@ public class NounHypernymsAnnotator extends AbstractPosAnnotator implements Anno
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

@@ -17,6 +17,7 @@
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,9 +36,12 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreEntityMention;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
+import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
+import io.outofprintmagazine.nlp.pipeline.scorers.PhraseScorer;
 import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.PhraseSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
 public class LocationsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
@@ -52,8 +56,8 @@ public class LocationsAnnotator extends AbstractPosAnnotator implements Annotato
 
 	public LocationsAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));			
+		this.setScorer((Scorer) new PhraseScorer(this.getAnnotationClass()));
+		this.setSerializer((Serializer) new PhraseSerializer(this.getAnnotationClass()));			
 	}
 	
 	@Override
@@ -84,18 +88,17 @@ public class LocationsAnnotator extends AbstractPosAnnotator implements Annotato
 			List<CoreEntityMention> entityMentions = sentence.entityMentions();
 			for (CoreEntityMention mention : entityMentions) {
 				if (mention.entityType().equals("LOCATION")) {
-					Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
+					List<PhraseAnnotation> scoreList = new ArrayList<PhraseAnnotation>();
 					if (mention.canonicalEntityMention().isPresent()) {
-						addToScoreMap(scoreMap, mention.canonicalEntityMention().get().toString(), new BigDecimal(1));
+						addToScoreList(scoreList, new PhraseAnnotation(mention.canonicalEntityMention().get().toString(), new BigDecimal(1)));
 					}
 					else {
-						addToScoreMap(scoreMap, mention.tokens().get(0).originalText(), new BigDecimal(1));
+						addToScoreList(scoreList, new PhraseAnnotation(mention.tokens().get(0).originalText(), new BigDecimal(1)));
 					}
-					mention.tokens().get(0).set(getAnnotationClass(), scoreMap);
+					mention.tokens().get(0).set(getAnnotationClass(), scoreList);
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

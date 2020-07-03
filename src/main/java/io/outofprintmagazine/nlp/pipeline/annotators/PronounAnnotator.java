@@ -77,7 +77,6 @@ public class PronounAnnotator extends AbstractPosAnnotator implements Annotator,
 				}
 			}
 		}
-		score(document);
 	}
 	
 	@Override

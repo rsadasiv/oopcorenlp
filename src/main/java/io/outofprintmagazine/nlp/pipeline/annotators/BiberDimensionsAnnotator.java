@@ -262,7 +262,6 @@ public class BiberDimensionsAnnotator extends AbstractPosAnnotator implements An
 				}
 			}
 		}
-		score(document);
 	}
 	
 }

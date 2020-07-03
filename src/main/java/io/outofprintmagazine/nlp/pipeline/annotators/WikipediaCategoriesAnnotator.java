@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -34,9 +35,12 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.util.ArraySet;
+import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
+import io.outofprintmagazine.nlp.pipeline.scorers.PhraseScorer;
 import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.PhraseSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 import io.outofprintmagazine.nlp.utils.WikipediaUtils;
 
@@ -50,12 +54,10 @@ public class WikipediaCategoriesAnnotator extends AbstractPosAnnotator implement
 		return logger;
 	}
 	
-	private MapSum scoreAggregator = new MapSum();
-	
 	public WikipediaCategoriesAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));	
+		this.setScorer((Scorer) new PhraseScorer(this.getAnnotationClass()));
+		this.setSerializer((Serializer) new PhraseSerializer(this.getAnnotationClass()));	
 	}
 	
 	@Override
@@ -90,7 +92,7 @@ public class WikipediaCategoriesAnnotator extends AbstractPosAnnotator implement
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
-		List<Map<String,BigDecimal>> scoreMap = new ArrayList<Map<String,BigDecimal>>();
+		List<PhraseAnnotation> scoreList = new ArrayList<PhraseAnnotation>();
 
 		/*
 		Map<String,BigDecimal> nouns = (Map<String, BigDecimal>) document.annotation().get(getNounsAnnotationClass());
@@ -103,19 +105,23 @@ public class WikipediaCategoriesAnnotator extends AbstractPosAnnotator implement
 			}
 		}
 		*/
-		
+		if (!annotation.containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPTopicsAnnotation.class)) {
+			logger.error("requires() not satisfied");
+		}
 		Map<String,BigDecimal> topics = (Map<String, BigDecimal>) document.annotation().get(getTopicsAnnotationClass());
 		for (String topic : topics.keySet()) {
 			try {
-				scoreMap.add(WikipediaUtils.getInstance(getParameterStore()).getWikipediaCategoriesForTopic(topic));
+				Map<String, BigDecimal> categories = WikipediaUtils.getInstance(getParameterStore()).getWikipediaCategoriesForTopic(topic);
+				for (Entry<String,BigDecimal> categoryScore : categories.entrySet()) {
+					addToScoreList(scoreList, new PhraseAnnotation(categoryScore.getKey(), categoryScore.getValue()));
+				}
 			} 
 			catch (IOException e) {
 				logger.debug(e);
 			}
 		}
 		
-		document.annotation().set(getAnnotationClass(), scoreAggregator.aggregateScores(scoreMap));
-		score(document);
+		document.annotation().set(getAnnotationClass(), scoreList);
 	}
 
 	@Override

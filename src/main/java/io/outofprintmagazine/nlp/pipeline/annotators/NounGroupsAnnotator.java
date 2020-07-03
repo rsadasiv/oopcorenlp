@@ -82,7 +82,6 @@ public class NounGroupsAnnotator extends AbstractPosAnnotator implements Annotat
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

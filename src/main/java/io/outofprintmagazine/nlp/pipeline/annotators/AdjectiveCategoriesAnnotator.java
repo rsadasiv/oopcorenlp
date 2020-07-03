@@ -81,7 +81,6 @@ public class AdjectiveCategoriesAnnotator extends AbstractPosAnnotator implement
 
 			}
 		}
-		score(document);
 	}
 
 	@Override

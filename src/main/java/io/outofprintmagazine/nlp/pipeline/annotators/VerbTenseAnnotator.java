@@ -91,7 +91,6 @@ public class VerbTenseAnnotator extends AbstractPosAnnotator implements Annotato
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

@@ -454,9 +454,9 @@ public class OOPAnnotations {
 		}
 	}
 
-	public static class OOPWikipediaCategoriesAnnotation implements CoreAnnotation<Map<String, BigDecimal>> {
+	public static class OOPWikipediaCategoriesAnnotation implements CoreAnnotation<List<PhraseAnnotation>> {
 		@Override
-		public Class<Map<String, BigDecimal>> getType() {
+		public Class<List<PhraseAnnotation>> getType() {
 			return ErasureUtils.uncheckedCast(Map.class);
 		}
 	}
@@ -503,16 +503,16 @@ public class OOPAnnotations {
 		}
 	}
 
-	public static class OOPLocationsAnnotation implements CoreAnnotation<Map<String, BigDecimal>> {
+	public static class OOPLocationsAnnotation implements CoreAnnotation<List<PhraseAnnotation>> {
 		@Override
-		public Class<Map<String, BigDecimal>> getType() {
+		public Class<List<PhraseAnnotation>> getType() {
 			return ErasureUtils.uncheckedCast(Map.class);
 		}
 	}
 
-	public static class OOPPeopleAnnotation implements CoreAnnotation<Map<String, BigDecimal>> {
+	public static class OOPPeopleAnnotation implements CoreAnnotation<List<PhraseAnnotation>> {
 		@Override
-		public Class<Map<String, BigDecimal>> getType() {
+		public Class<List<PhraseAnnotation>> getType() {
 			return ErasureUtils.uncheckedCast(Map.class);
 		}
 	}

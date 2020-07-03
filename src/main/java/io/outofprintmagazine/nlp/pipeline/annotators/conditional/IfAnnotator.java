@@ -98,7 +98,6 @@ public class IfAnnotator extends AbstractTreeAnnotator implements Annotator, OOP
 				logger.error(e);
 			}
 		}
-		score(document);
 	}
 	
 	@Override

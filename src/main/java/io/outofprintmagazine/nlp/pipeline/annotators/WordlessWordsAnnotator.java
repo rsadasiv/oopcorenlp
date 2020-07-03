@@ -35,6 +35,7 @@ import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 import io.outofprintmagazine.nlp.utils.WiktionaryUtils;
+import io.outofprintmagazine.nlp.utils.WordnetUtils;
 
 public class WordlessWordsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
@@ -65,7 +66,14 @@ public class WordlessWordsAnnotator extends AbstractPosAnnotator implements Anno
 			for (CoreLabel token : sentence.tokens()) {
 				if (isDictionaryWord(token)) {
 					if (!getTags().contains(token.lemma())) {
-						queries.add(token.originalText().toLowerCase());
+						try {
+							if (WordnetUtils.getInstance(getParameterStore()).getIndexWord(token) == null) {
+								queries.add(token.originalText().toLowerCase());
+							}
+						}
+						catch (Exception e) {
+							queries.add(token.originalText().toLowerCase());
+						}
 					}
 				}
 			}
@@ -77,11 +85,13 @@ public class WordlessWordsAnnotator extends AbstractPosAnnotator implements Anno
 				try {
 					if (isDictionaryWord(token)) {
 						if (!getTags().contains(token.lemma())) {
-							String wordCache = WiktionaryUtils.getInstance(getParameterStore()).getWordCache(token.originalText().toLowerCase());
-							if (wordCache == null) {
-								Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-								addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
-								token.set(getAnnotationClass(), scoreMap);
+							if (WordnetUtils.getInstance(getParameterStore()).getIndexWord(token) == null) {
+								String wordCache = WiktionaryUtils.getInstance(getParameterStore()).getWordCache(token.originalText().toLowerCase());
+								if (wordCache == null) {
+									Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
+									addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
+									token.set(getAnnotationClass(), scoreMap);
+								}
 							}
 						}
 					}
@@ -95,8 +105,6 @@ public class WordlessWordsAnnotator extends AbstractPosAnnotator implements Anno
 		catch (Exception e) {
 			logger.error(e);
 		}
-
-		score(document);
 	}
 
 	@Override

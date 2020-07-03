@@ -115,7 +115,6 @@ public class FleschKincaidAnnotator extends AbstractPosAnnotator implements Anno
 
 		double fk = (206.835 - (1.015*wordCount/sentenceCount) - (84.6*syllableCount/wordCount))/100;
         document.annotation().set(getAnnotationClass(), new BigDecimal(fk));
-		score(document);
 	}
 
 	@Override

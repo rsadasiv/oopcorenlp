@@ -84,7 +84,6 @@ public class QuotesAnnotator extends AbstractAnnotator implements Annotator, OOP
 			addToScoreList(scoreMap, new PhraseAnnotation(quote.text().replaceAll("\"", ""), new BigDecimal(1)));
 			sentence.coreMap().set(getAnnotationClass(), scoreMap);
 		}
-		score(document);
 	}
 
 	@Override

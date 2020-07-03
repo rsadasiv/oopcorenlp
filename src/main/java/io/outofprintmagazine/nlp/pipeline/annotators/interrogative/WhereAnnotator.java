@@ -104,7 +104,6 @@ public class WhereAnnotator extends AbstractTreeAnnotator implements Annotator, 
 				logger.error(e);
 			}
 		}
-		score(document);
 	}
 	
 	@Override

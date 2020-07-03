@@ -68,7 +68,6 @@ public class NonAffirmativeAnnotator extends AbstractPosAnnotator implements Ann
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

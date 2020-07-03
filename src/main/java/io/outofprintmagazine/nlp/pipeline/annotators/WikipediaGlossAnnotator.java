@@ -92,8 +92,6 @@ public class WikipediaGlossAnnotator extends AbstractPosAnnotator implements Ann
 		catch (Exception e) {
 			logger.error(e);
 		}
-
-		score(document);
 	}
 	
 /*	@SuppressWarnings("unchecked")

@@ -80,7 +80,6 @@ public class CoreNlpSentimentAnnotator extends AbstractAnnotator implements Anno
 				}
 			}
 		}
-		score(document);
 	}
 	
 	@Override

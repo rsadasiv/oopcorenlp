@@ -79,7 +79,6 @@ public class ActionlessVerbsAnnotator extends AbstractPosAnnotator implements An
 				}
 			}
 		}
-		score(document);
 	}
 
 	/**

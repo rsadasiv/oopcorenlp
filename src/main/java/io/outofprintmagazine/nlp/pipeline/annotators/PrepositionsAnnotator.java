@@ -69,7 +69,6 @@ public class PrepositionsAnnotator extends AbstractPosAnnotator implements Annot
 				}
 			}
 		}
-		score(document);
 	}
 	
 	@Override

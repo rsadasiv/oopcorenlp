@@ -93,7 +93,6 @@ public class CoreNlpGenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnno
 	@Override
 	public void annotate(Annotation annotation) {
 		super.annotate(annotation);
-		score(new CoreDocument(annotation));
 	}
 
 	@SuppressWarnings("unchecked")

@@ -44,9 +44,12 @@ import edu.stanford.nlp.pipeline.CoreEntityMention;
 import edu.stanford.nlp.pipeline.CoreQuote;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
+import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
+import io.outofprintmagazine.nlp.pipeline.scorers.PhraseScorer;
 import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.PhraseSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
 
@@ -65,8 +68,8 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotato
 
 	public PeopleAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
+		this.setScorer((Scorer) new PhraseScorer(this.getAnnotationClass()));
+		this.setSerializer((Serializer) new PhraseSerializer(this.getAnnotationClass()));
 		this.setTags(Arrays.asList("NNP", "NNPS", "NN", "NNS"));
 	}
 	
@@ -109,7 +112,6 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotato
 			logger.error(e);
 		}
 		annotateNarrator(document);
-		score(document);
 	}
 	
 	private List<CoreEntityMention> getAllPersonEntityMentions(CoreDocument document) {
@@ -202,7 +204,6 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotato
 					&& !personName.equalsIgnoreCase("she") 
 					&& !personName.equalsIgnoreCase("her")
 			) {
-				Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
 				String entityName = allEntityAliases.get(personName.toLowerCase());
 
 				for (CoreLabel token : entityMention.tokens()) {
@@ -215,10 +216,9 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotato
 //					logger.debug("entityType: " + entityMention.entityType());
 //					logger.debug("------------");
 					if (!token.containsKey(getAnnotationClass())) {
-//						logger.debug("scoreUpdated: " + entityName);
-//						logger.debug("------------");
-						addToScoreMap(scoreMap, entityName, new BigDecimal(1));
-						token.set(getAnnotationClass(), scoreMap);
+						List<PhraseAnnotation> scoreList = new ArrayList<PhraseAnnotation>();
+						addToScoreList(scoreList, new PhraseAnnotation(entityName, new BigDecimal(1)));
+						token.set(getAnnotationClass(), scoreList);
 					}
 				}
 			}
@@ -246,11 +246,9 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotato
 //						logger.debug("personName: " + personName); 
 //						logger.debug("------------");
 						if (!token.containsKey(getAnnotationClass())) {
-//							logger.debug("scoreUpdated: " + personName);
-//							logger.debug("------------");
-							Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-							addToScoreMap(scoreMap, personName, new BigDecimal(1));
-							token.set(getAnnotationClass(), scoreMap);
+							List<PhraseAnnotation> scoreList = new ArrayList<PhraseAnnotation>();
+							addToScoreList(scoreList, new PhraseAnnotation(personName, new BigDecimal(1)));
+							token.set(getAnnotationClass(), scoreList);
 						}
 					}
 
@@ -273,28 +271,36 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotato
          return list;
 	}
 	
+	
 	private void annotateCoref(CoreDocument document) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		for (Map.Entry<Integer, CorefChain> corefChainEntry : document.corefChains().entrySet()) {
 			CorefChain corefChain = corefChainEntry.getValue();
+			
 			Map<String, BigDecimal> corefPeople = new HashMap<String,BigDecimal>();
+			
 			for (CorefMention corefMention : corefChain.getMentionsInTextualOrder()) {
 				for (CoreEntityMention entityMention : CoreNlpUtils.getInstance(getParameterStore()).getCoreEntityMentionFromCorefMention(document, corefMention)) {
-					for (CoreLabel token : entityMention.tokens()) {
+					for (CoreLabel token : entityMention.tokens()) {	
 						if (token.containsKey(getAnnotationClass())) {
-							Map<String,BigDecimal> personMap = (Map<String, BigDecimal>) token.get(getAnnotationClass());
-							for (Map.Entry<String, BigDecimal> personEntry : personMap.entrySet()) {
-								BigDecimal existingScore = corefPeople.get(personEntry.getKey());
+							List<PhraseAnnotation> existingScores = (List<PhraseAnnotation>) token.get(getAnnotationClass());
+							//Map<String,BigDecimal> personMap = (Map<String, BigDecimal>) token.get(getAnnotationClass());
+							//for (Map.Entry<String, BigDecimal> personEntry : personMap.entrySet()) {
+							for (PhraseAnnotation personScore : existingScores) {
+								BigDecimal existingScore = corefPeople.get(personScore.getName());
 								if (existingScore == null) {
 									existingScore = new BigDecimal(0);
 								}
-								corefPeople.put(personEntry.getKey(), existingScore.add(personEntry.getValue()));
+								corefPeople.put(personScore.getName(), existingScore.add(personScore.getValue()));
 							}
 						}
+						
 					}
 				}
 			}
 			if (corefPeople.size() > 0) {
+				
 				String corefPersonName = sortMapByValueDescending(corefPeople).get(0).getKey();
+				
 				boolean haveSeenProper = false;
 				for (CorefMention corefMention : corefChain.getMentionsInTextualOrder()) {
 //					if (corefMention.mentionType.compareTo(Dictionaries.MentionType.PROPER) == 0) {
@@ -308,30 +314,10 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotato
 					//if (corefMention.mentionType.compareTo(Dictionaries.MentionType.PRONOMINAL) == 0) {
 						for (CoreEntityMention entityMention : CoreNlpUtils.getInstance(getParameterStore()).getCoreEntityMentionFromCorefMention(document, corefMention)) {
 							for (CoreLabel token : entityMention.tokens()) {
-								
-								String existingAnnotation = "empty";
-								if (token.containsKey(getAnnotationClass())) {
-									Map<String,BigDecimal> personMap = (Map<String, BigDecimal>) token.get(getAnnotationClass());
-									Iterator<String> personMapKeysIter = personMap.keySet().iterator();
-									if (personMapKeysIter.hasNext()) {
-										existingAnnotation = personMapKeysIter.next();
-									}
-								}
-//								logger.debug("Coref");
-//								logger.debug("corefChainID: " + corefChain.getChainID());
-//								logger.debug("corefMentionID: " + corefMention.mentionID);
-//								logger.debug("token.sentIndex: " + token.sentIndex());
-//								logger.debug("token.index: " + token.index());
-//								logger.debug("token.lemma: " + token.lemma());
-//								logger.debug("corefPersonName: " + corefPersonName); 
-//								logger.debug("existingPersonName: " + existingAnnotation);
-//								logger.debug("------------");
 								if (!token.containsKey(getAnnotationClass())) {
-									Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-									addToScoreMap(scoreMap, corefPersonName, new BigDecimal(1));
-									token.set(getAnnotationClass(), scoreMap);
-//									logger.debug("scoreUpdated: " + corefPersonName);
-//									logger.debug("------------");
+									List<PhraseAnnotation> scoreList = new ArrayList<PhraseAnnotation>();
+									addToScoreList(scoreList, new PhraseAnnotation(corefPersonName, new BigDecimal(1)));
+									token.set(getAnnotationClass(), scoreList);
 								}
 							}
 						}
@@ -359,9 +345,9 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotato
 						}
 					}
 					if (shouldScore) {
-						Map<String, BigDecimal> scoreMap = new HashMap<String, BigDecimal>();
-						addToScoreMap(scoreMap, token.lemma(), new BigDecimal(1));
-						token.set(getAnnotationClass(), scoreMap);
+						List<PhraseAnnotation> scoreList = new ArrayList<PhraseAnnotation>();
+						addToScoreList(scoreList, new PhraseAnnotation(token.lemma(), new BigDecimal(1)));
+						token.set(getAnnotationClass(), scoreList);
 					}
 				}
 			}

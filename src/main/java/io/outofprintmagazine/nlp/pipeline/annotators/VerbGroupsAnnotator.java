@@ -82,7 +82,6 @@ public class VerbGroupsAnnotator extends AbstractPosAnnotator implements Annotat
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

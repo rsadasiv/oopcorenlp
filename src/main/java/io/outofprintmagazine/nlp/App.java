@@ -183,12 +183,13 @@ public class App {
 		);
 	}
 	
-	private void writeOutput(String outputPath, Properties metadata, String document, Map<String,ObjectNode> json) throws IOException {
+	protected void writeOutput(String outputPath, Properties metadata, String document, Map<String,ObjectNode> json) throws IOException {
 		String docID = metadata.getProperty(CoreAnnotations.DocIDAnnotation.class.getSimpleName());
 		writeFile(outputPath, "TXT_" + docID + ".txt", document); 
 		writeFile(outputPath, "STANFORD_" + docID + ".json", json.get("STANFORD"));
 		writeFile(outputPath, "OOP_" + docID + ".json", json.get("OOP"));
 		writeFile(outputPath, "PIPELINE_" + docID + ".json", json.get("PIPELINE"));
+		writeFile(outputPath, "AGGREGATES_" + docID + ".json", json.get("AGGREGATES"));
 	}
 		
 	protected ParameterStore loadParameterStore(String path, String fileName) throws IOException {

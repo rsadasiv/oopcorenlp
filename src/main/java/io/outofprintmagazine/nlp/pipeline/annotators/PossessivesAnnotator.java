@@ -69,7 +69,6 @@ public class PossessivesAnnotator extends AbstractPosAnnotator implements Annota
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

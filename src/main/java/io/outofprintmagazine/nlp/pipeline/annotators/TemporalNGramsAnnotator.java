@@ -138,7 +138,6 @@ public class TemporalNGramsAnnotator extends AbstractPosAnnotator implements Ann
 		catch (Exception e) {
 			logger.error(e);
 		}
-		score(document);
 	}
 	
 	@Override

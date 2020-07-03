@@ -70,7 +70,6 @@ public class ColorsAnnotator extends AbstractPosAnnotator implements Annotator, 
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

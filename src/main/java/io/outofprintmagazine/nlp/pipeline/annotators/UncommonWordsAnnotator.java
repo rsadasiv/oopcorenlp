@@ -70,7 +70,6 @@ public class UncommonWordsAnnotator extends AbstractPosAnnotator implements Anno
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

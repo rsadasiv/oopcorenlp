@@ -74,7 +74,6 @@ public class FlavorsAnnotator extends AbstractPosAnnotator implements Annotator,
 				}
 			}
 		}
-		score(document);
 	}
 
 }

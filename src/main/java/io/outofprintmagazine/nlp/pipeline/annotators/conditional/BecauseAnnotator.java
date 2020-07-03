@@ -40,7 +40,7 @@ import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 import io.outofprintmagazine.nlp.pipeline.annotators.AbstractTreeAnnotator;
 import io.outofprintmagazine.nlp.pipeline.annotators.OOPAnnotator;
 
-public class BecauseAnnotator extends  AbstractTreeAnnotator implements Annotator, OOPAnnotator {
+public class BecauseAnnotator extends AbstractTreeAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BecauseAnnotator.class);
@@ -98,7 +98,6 @@ public class BecauseAnnotator extends  AbstractTreeAnnotator implements Annotato
 				logger.error(e);
 			}
 		}
-		score(document);
 	}
 	
 	@Override

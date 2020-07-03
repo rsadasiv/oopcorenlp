@@ -8,7 +8,7 @@ io.outofprintmagazine.nlp.pipeline.annotators.count.ParagraphCountAnnotator
 io.outofprintmagazine.nlp.pipeline.annotators.count.SentenceCountAnnotator
 io.outofprintmagazine.nlp.pipeline.annotators.count.SyllableCountAnnotator
 io.outofprintmagazine.nlp.pipeline.annotators.count.TokenCountAnnotator
-io.outofprintmagazine.nlp.pipeline.annotators.count.WordCountAnnotator	    		
+io.outofprintmagazine.nlp.pipeline.annotators.count.WordCountAnnotator
 io.outofprintmagazine.nlp.pipeline.annotators.CoreNlpSentimentAnnotator
 io.outofprintmagazine.nlp.pipeline.annotators.VaderSentimentAnnotator
 io.outofprintmagazine.nlp.pipeline.annotators.VerbTenseAnnotator
@@ -68,4 +68,3 @@ io.outofprintmagazine.nlp.pipeline.annotators.WikipediaPageviewTopicsAnnotator
 io.outofprintmagazine.nlp.pipeline.annotators.WikipediaCategoriesAnnotator
 #io.outofprintmagazine.nlp.pipeline.annotators.ActorsAnnotator
 #io.outofprintmagazine.nlp.pipeline.annotators.SettingsAnnotator
-				

@@ -77,7 +77,6 @@ public class VaderSentimentAnnotator extends AbstractPosAnnotator implements Ann
 				sentence.coreMap().set(getAnnotationClass(), score );
 			}
         }
-		score(document);
 	}
 	
 	@Override

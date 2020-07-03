@@ -74,6 +74,5 @@ public class FunctionWordsAnnotator extends AbstractPosAnnotator implements Anno
 				}
 			}
 		}
-		score(document);
 	}
 }

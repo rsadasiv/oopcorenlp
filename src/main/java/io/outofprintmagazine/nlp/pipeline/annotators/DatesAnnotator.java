@@ -84,7 +84,6 @@ public class DatesAnnotator extends AbstractTreeAnnotator implements Annotator, 
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

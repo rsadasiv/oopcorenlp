@@ -76,7 +76,6 @@ public class AdjectivesAnnotator extends AbstractPosAnnotator implements Annotat
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

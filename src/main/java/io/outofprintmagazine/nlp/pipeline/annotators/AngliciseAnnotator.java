@@ -76,7 +76,6 @@ public class AngliciseAnnotator extends AbstractPosAnnotator implements Annotato
 					}
 				}
 			}
-			score(document);
 		}
 		catch (IOException e) {
 			getLogger().error(e);

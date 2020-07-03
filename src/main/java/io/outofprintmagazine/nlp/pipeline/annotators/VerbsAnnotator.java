@@ -76,7 +76,6 @@ public class VerbsAnnotator extends AbstractPosAnnotator implements Annotator, O
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

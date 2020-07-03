@@ -69,7 +69,6 @@ public class VerblessSentencesAnnotator extends AbstractPosAnnotator implements 
 				sentence.coreMap().set(getAnnotationClass(), new BigDecimal(1));
 			}
 		}
-		score(document);
 	}
 
 	@Override

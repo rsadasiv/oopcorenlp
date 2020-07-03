@@ -1,4 +1,4 @@
-package io.outofprintmagazine.nlp.pipeline.annotators;
+package io.outofprintmagazine.util;
 
 import java.io.IOException;
 import java.util.Iterator;

@@ -75,7 +75,6 @@ public class PointlessAdjectivesAnnotator extends AbstractPosAnnotator implement
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

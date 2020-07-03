@@ -78,13 +78,12 @@ public class AsAnnotator extends AbstractTreeAnnotator implements Annotator, OOP
 				logger.error(e);
 			}
 		}
-		score(document);
 	}
 	
 
 	@Override
 	public String getDescription() {
-		return "Constituency Parse: PP, as. https://gist.github.com/nlothian/9240750"; 
+		return "Constituency Parse: SBAR, as. https://gist.github.com/nlothian/9240750"; 
 	}
 
 

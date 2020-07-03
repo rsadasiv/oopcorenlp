@@ -123,7 +123,6 @@ public class PerfecttenseAnnotator extends AbstractPosAnnotator implements Annot
 		catch (Exception e) {
 			logger.error(e);
 		}
-		score(document);
 	}
 	
 	@Override

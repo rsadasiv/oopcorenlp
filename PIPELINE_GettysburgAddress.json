@@ -1,0 +1,200 @@
+{
+  "annotations" : [ {
+    "OOPBiberAnnotation" : "Biber: Variation across speech and writing. https://sites.google.com/site/multidimensionaltagger/MAT%20v%201.2%20-%20Manual.pdf."
+  }, {
+    "ParagraphIndexAnnotation" : "CoreAnnotations.ParagraphIndexAnnotation.class. Recorded per sentence, index starts at 0."
+  }, {
+    "CoreNlpGenderAnnotation" : "edu/stanford/nlp/models/gender/male_first_names.txt edu/stanford/nlp/models/gender/female_first_names.txt"
+  }, {
+    "OOPGenderAnnotation" : "io/outofprintmagazine/nlp/models/MaleNames.txt io/outofprintmagazine/nlp/models/FemaleNames.txt"
+  }, {
+    "OOPPronounAnnotation" : "PRP minus -self, -selves, -'s"
+  }, {
+    "OOPCharCountAnnotation" : "characterCount"
+  }, {
+    "OOPParagraphCountAnnotation" : "paragraphCount"
+  }, {
+    "OOPSentenceCountAnnotation" : "sentenceCount"
+  }, {
+    "OOPSyllableCountAnnotation" : "eu.crydee.syllablecounter.SyllableCounter"
+  }, {
+    "OOPTokenCountAnnotation" : "tokenCount"
+  }, {
+    "OOPWordCountAnnotation" : "wordCount"
+  }, {
+    "CoreNlpSentimentAnnotation" : "edu.stanford.nlp.sentiment.SentimentCoreAnnotations.SentimentClass scaled from 0 to 1"
+  }, {
+    "VaderSentimentAnnotation" : "com.vader.sentiment.analyzer.SentimentAnalyzer"
+  }, {
+    "OOPVerbTenseAnnotation" : "Verb tenses. past: VBD,VBN present: VB,VBP,VBZ future: MD progressive: VBG infinitive: TO"
+  }, {
+    "OOPPunctuationMarkAnnotation" : "Question, Exclamation, Colon, Semicolon, Comma, Hypen, Period, Apostrophe, Quotation"
+  }, {
+    "OOPAdjectivesAnnotation" : "JJ, JJR, JJS not in io/outofprintmagazine/nlp/models/Adjectives.txt"
+  }, {
+    "OOPPointlessAdjectivesAnnotation" : "JJ, JJR, JJS in io/outofprintmagazine/nlp/models/Adjectives.txt"
+  }, {
+    "OOPAdjectiveCategoriesAnnotation" : "Good-Better-Best. JJ, JJR, JJS: descriptive, comparative, superlative."
+  }, {
+    "OOPAdverbsAnnotation" : "RB, RBR, RBS not in io/outofprintmagazine/nlp/models/Adverbs.txt"
+  }, {
+    "OOPPointlessAdverbsAnnotation" : "RB, RBR, RBS in io/outofprintmagazine/nlp/models/Adverbs.txt"
+  }, {
+    "OOPAdverbCategoriesAnnotation" : "Fast-Faster-Fasest. RB, RBR, RBS: descriptive, comparative, superlative."
+  }, {
+    "OOPPossessivesAnnotation" : "PRP$, POS, WP$"
+  }, {
+    "OOPPrepositionCategoriesAnnotation" : "IN, CC. subordinating, coordinating."
+  }, {
+    "OOPPrepositionsAnnotation" : "IN or CC."
+  }, {
+    "OOPVerbsAnnotation" : "Transitive Verbs. VB,VBD,VBG,VBN,VBP,VBZ not in io/outofprintmagazine/nlp/models/StativeVerbs.txt"
+  }, {
+    "OOPActionlessVerbsAnnotation" : "Intransitive Verbs. VB,VBD,VBG,VBN,VBP,VBZ in io/outofprintmagazine/nlp/models/StativeVerbs.txt"
+  }, {
+    "OOPNounsAnnotation" : "NN, NNS"
+  }, {
+    "OOPTopicsAnnotation" : "NNP, NNPS"
+  }, {
+    "OOPSVOAnnotation" : "CoreNLP dependency parse subject-verb-object-indirectObject-auxVerb: nsubj, root, dobj, iobj. http://universaldependencies.org/docsv1/en/dep/index.html"
+  }, {
+    "OOPLikeAnnotation" : "Constituency Parse: PP, like. https://gist.github.com/nlothian/9240750"
+  }, {
+    "OOPAsAnnotation" : "Constituency Parse: SBAR, as. https://gist.github.com/nlothian/9240750"
+  }, {
+    "OOPColorsAnnotation" : "io/outofprintmagazine/nlp/models/Colors.txt"
+  }, {
+    "OOPFlavorsAnnotation" : "io/outofprintmagazine/nlp/models/Flavors.txt"
+  }, {
+    "OOPVerblessSentencesAnnotation" : "VB,VBD,VBG,VBN,VBP,VBZ,MD not in sentence."
+  }, {
+    "OOPWordlessWordsAnnotation" : "Wiktionary lookup is null"
+  }, {
+    "OOPWordnetGlossAnnotation" : "Wordnet gloss if not in io/outofprintmagazine/nlp/models/COCA/en_20k.txt"
+  }, {
+    "OOPUncommonWordsAnnotation" : "not in io/outofprintmagazine/nlp/models/COCA/en_20k.txt"
+  }, {
+    "OOPCommonWordsAnnotation" : "io/outofprintmagazine/nlp/models/COCA/Dolch.txt"
+  }, {
+    "OOPFunctionWordsAnnotation" : "io/outofprintmagazine/nlp/models/FunctionWords.txt"
+  }, {
+    "OOPAngliciseAnnotation" : "io/outofprintmagazine/nlp/models/EN_GB/american_spellings.json"
+  }, {
+    "OOPAmericanizeAnnotation" : "io/outofprintmagazine/nlp/models/EN_GB/british_spellings.json"
+  }, {
+    "OOPVerbGroupsAnnotation" : "Wordnet lexical file name. https://wordnet.princeton.edu/documentation/lexnames5wn."
+  }, {
+    "OOPVerbnetGroupsAnnotation" : "Verbnet senses. https://uvi.colorado.edu/"
+  }, {
+    "OOPNounGroupsAnnotation" : "Wordnet lexical file name. https://wordnet.princeton.edu/documentation/lexnames5wn."
+  }, {
+    "OOPWhoAnnotation" : "Constituency Parse: SBARQ, WHNP || WHADVP, who. https://gist.github.com/nlothian/9240750"
+  }, {
+    "OOPWhatAnnotation" : "Constituency Parse: SBARQ, WHNP || WHADVP, what. https://gist.github.com/nlothian/9240750"
+  }, {
+    "OOPWhenAnnotation" : "Constituency Parse: SBARQ, WHNP || WHADVP, when. https://gist.github.com/nlothian/9240750"
+  }, {
+    "OOPWhereAnnotation" : "Constituency Parse: SBARQ, WHNP || WHADVP, when. https://gist.github.com/nlothian/9240750"
+  }, {
+    "OOPWhyAnnotation" : "Constituency Parse: SBARQ, WHNP || WHADVP, why. https://gist.github.com/nlothian/9240750"
+  }, {
+    "OOPHowAnnotation" : "Constituency Parse: SBARQ, WHNP || WHADVP, how. https://gist.github.com/nlothian/9240750"
+  }, {
+    "OOPLocationsAnnotation" : "CoreNLP NER mentions: LOCATION"
+  }, {
+    "OOPPeopleAnnotation" : "CoreNLP NER mentions: I, PERSON minus PRP, PRP$, stray NNP/NNPS; coref"
+  }, {
+    "OOPMyersBriggsAnnotation" : "Personality types. https://www.myersbriggs.org/my-mbti-personality-type/mbti-basics/"
+  }, {
+    "OOPDatesAnnotation" : "CoreNLP NER mentions: DATE or TIME"
+  }, {
+    "OOPIfAnnotation" : "Constituency Parse: SBAR, if. https://gist.github.com/nlothian/9240750"
+  }, {
+    "OOPBecauseAnnotation" : "Constituency Parse: PP, because. https://gist.github.com/nlothian/9240750"
+  }, {
+    "OOPQuotesAnnotation" : "CoreNLP: QuoteAnnotator plus NER speaker."
+  }, {
+    "OOPWordsAnnotation" : "word frequency - all tokens."
+  }, {
+    "OOPFleschKincaidAnnotation" : "(206.835 - (1.015*wordCount/sentenceCount) - (84.6*syllableCount/wordCount))/100"
+  }, {
+    "OOPVerbHypernymsAnnotation" : "Wordnet hypernym."
+  }, {
+    "OOPNounHypernymsAnnotation" : "Wordnet most likely hypernym based on hyponym match against all nouns."
+  }, {
+    "OOPWikipediaGlossAnnotation" : "Wikipedia gloss (first sentence of page body) if NN,NNS,NNP,NNPS."
+  }, {
+    "OOPWikipediaPageviewTopicsAnnotation" : "Wikipedia pageviews for the past month (https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia.org/all-access/all-agents/Shakespeare) for Topics (NNP,NNPS)."
+  }, {
+    "OOPWikipediaCategoriesAnnotation" : "Wikipedia page categories (https://en.wikipedia.org/w/api.php?format=json&action=query&prop=categories&utf8=1&titles=Shakespeare) for Topics (NNP,NNPS)."
+  }, {
+    "OOPBiberDimensionsAnnotation" : "Biber: Variation across speech and writing, Dimensions 1-6. https://sites.google.com/site/multidimensionaltagger/MAT%20v%201.2%20-%20Manual.pdf."
+  } ],
+  "coreNlpProperties" : [ {
+    "name" : "pos.maxlen",
+    "value" : "70"
+  }, {
+    "name" : "quote.asciiQuotes",
+    "value" : "true"
+  }, {
+    "name" : "coref.maxMentionDistanceWithStringMatch",
+    "value" : "50"
+  }, {
+    "name" : "ner.useSUTime",
+    "value" : "true"
+  }, {
+    "name" : "coref.algorithm",
+    "value" : "statistical"
+  }, {
+    "name" : "quote.singleQuotes",
+    "value" : "true"
+  }, {
+    "name" : "quote.maxLength",
+    "value" : "70"
+  }, {
+    "name" : "ner.combinationMode",
+    "value" : "NORMAL"
+  }, {
+    "name" : "annotators",
+    "value" : "tokenize,ssplit,pos,lemma,ner,parse,sentiment,depparse,coref,quote"
+  }, {
+    "name" : "ner.applyNumericClassifiers",
+    "value" : "true"
+  }, {
+    "name" : "enforceRequirements",
+    "value" : "true"
+  }, {
+    "name" : "quote.attributeQuotes",
+    "value" : "true"
+  }, {
+    "name" : "parse.maxlen",
+    "value" : "70"
+  }, {
+    "name" : "coref.maxMentionDistance",
+    "value" : "15"
+  }, {
+    "name" : "ner.additional.regexner.mapping",
+    "value" : "io/outofprintmagazine/nlp/models/NER/regexner.txt"
+  }, {
+    "name" : "ner.applyFineGrained",
+    "value" : "false"
+  }, {
+    "name" : "ner.maxlen",
+    "value" : "70"
+  }, {
+    "name" : "parse.model",
+    "value" : "edu/stanford/nlp/models/srparser/englishSR.ser.gz"
+  }, {
+    "name" : "coref.statisical.pairwiseScoreThresholds",
+    "value" : ".15"
+  } ],
+  "analysis" : [ {
+    "startTime" : "2020-07-03 18:33:07.698-0400"
+  }, {
+    "endTime" : "2020-07-03 18:34:06.142-0400"
+  }, {
+    "elapsedMS" : "58444"
+  }, {
+    "host" : "Harrison/192.168.1.11"
+  } ]
+}

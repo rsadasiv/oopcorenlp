@@ -106,7 +106,6 @@ public class MyersBriggsAnnotator extends AbstractPosAnnotator implements Annota
 			}
 			sentence.coreMap().set(getAnnotationClass(), scoreMap);
 		}
-		score(document);
 	}
 	
 }

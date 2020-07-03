@@ -94,7 +94,6 @@ public class GenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnnotator i
 	@Override
 	public void annotate(Annotation annotation) {
 		super.annotate(annotation);
-		score(new CoreDocument(annotation));
 	}
 
 	@Override

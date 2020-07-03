@@ -87,7 +87,6 @@ public class PunctuationMarkAnnotator extends AbstractPosAnnotator implements An
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

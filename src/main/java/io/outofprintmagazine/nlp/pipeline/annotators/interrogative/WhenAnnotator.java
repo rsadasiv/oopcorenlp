@@ -104,7 +104,6 @@ public class WhenAnnotator extends AbstractTreeAnnotator implements Annotator, O
 				logger.error(e);
 			}
 		}
-		score(document);
 	}
 	
 	@Override

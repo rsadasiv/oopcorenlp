@@ -75,7 +75,6 @@ public class AdverbsAnnotator extends AbstractPosAnnotator implements Annotator,
 				}
 			}
 		}
-		score(document);
 	}
 
 	@Override

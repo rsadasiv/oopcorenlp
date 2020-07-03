@@ -88,7 +88,6 @@ public class WordCountAnnotator extends AbstractAnnotator implements Annotator, 
 			}
 			sentence.coreMap().set(getAnnotationClass(), new BigDecimal(wordCount));
 		}
-		score(document);
 	}
 
 	@Override

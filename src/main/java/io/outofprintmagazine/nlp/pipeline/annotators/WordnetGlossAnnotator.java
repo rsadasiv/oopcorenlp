@@ -74,7 +74,6 @@ public class WordnetGlossAnnotator extends AbstractPosAnnotator implements Annot
 				}
 			}
 		}
-		score(document);
 	}
 	
 	@Override
