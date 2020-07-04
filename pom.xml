@@ -36,7 +36,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-		<maven-shade-plugin.version>3.2.3</maven-shade-plugin.version>
+		<java.release.version>11</java.release.version>
+		<java.version>1.8</java.version>
+		<maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
 		<maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
 		<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
 		<jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
@@ -52,7 +54,7 @@
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-1.2-api -->
-		<log4j.version>2.12.0</log4j.version>
+		<log4j.version>2.13.3</log4j.version>
 		
 		<!-- https://mvnrepository.com/artifact/edu.stanford.nlp/stanford-corenlp -->
 		<stanford-corenlp.version>4.0.0</stanford-corenlp.version>
@@ -99,14 +101,9 @@
 		
 		<!-- https://mvnrepository.com/artifact/io.burt/jmespath-jackson -->
 		<jmespath-jackson.version>0.5.0</jmespath-jackson.version>
-		
-		<!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
-		<commons-cli.version>1.4</commons-cli.version>
-		
 	</properties>
 	
 	<dependencies>
-		
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
@@ -265,12 +262,6 @@
 		    <artifactId>flickr4java</artifactId>
 		    <version>${flickr4java.version}</version>
 		</dependency>
-
-		<dependency>
-		    <groupId>commons-cli</groupId>
-		    <artifactId>commons-cli</artifactId>
-		    <version>${commons-cli.version}</version>
-		</dependency>
 		
 		<dependency>
 			<groupId>org.apache.maven.doxia</groupId>
@@ -287,8 +278,9 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven-compiler-plugin.version}</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<!-- <release>${java.release.version}</release> -->
+				    <source>${java.version}</source>
+				    <target>${java.version}</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -349,52 +341,18 @@
 				</dependencies>
 			</plugin>
 	      	
-			<plugin>
+	      	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>${maven-shade-plugin.version}</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<filters>
-								<filter>
-									<artifact>junit:junit</artifact>
-									<includes>
-										<include>junit/framework/**</include>
-										<include>org/junit/**</include>
-									</includes>
-									<excludes>
-										<exclude>org/junit/experimental/**</exclude>
-										<exclude>org/junit/runners/**</exclude>
-									</excludes>
-								</filter>
-								<filter>
-									<artifact>*:*</artifact>
-									<excludes>
-										<exclude>META-INF/*.SF</exclude>
-										<exclude>META-INF/*.DSA</exclude>
-										<exclude>META-INF/*.RSA</exclude>
-										<exclude>log4j2.xml</exclude>
-										<exclude>logback.xml</exclude>
-										<exclude>simplelogger.properties</exclude>
-									</excludes>
-								</filter>
-							</filters>
-							<transformers>
-								<transformer
-									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>io.outofprintmagazine.nlp.App</mainClass>
-								</transformer>
-							</transformers>
-						</configuration>
-					</execution>
-				</executions>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven-jar-plugin.version}</version>
+				<configuration>
+				  <excludes>
+					<exclude>**/log4j2.xml</exclude>
+					<exclude>**/logback.xml</exclude>
+					<exclude>**/simplelogger.properties</exclude>
+				  </excludes>
+				</configuration>
 			</plugin>
-
 		</plugins>
 
 	</build>

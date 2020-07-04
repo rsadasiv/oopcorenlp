@@ -18,10 +18,12 @@ package io.outofprintmagazine.nlp.utils;
 
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -61,12 +63,28 @@ public class TextUtils {
 	//
 	//still having a problem with plural possessive. The Smiths' house.
 	
-	public String processPlainUnicode(String input) {
-		input = Pattern.compile("^\\u2018", Pattern.MULTILINE).matcher(input).replaceAll("\"");
-		input = Pattern.compile("\\s\\u2018(\\S)", Pattern.MULTILINE).matcher(input).replaceAll(" \"$1");
-		input = Pattern.compile("\\u2019$", Pattern.MULTILINE).matcher(input).replaceAll("\"");
-		input = Pattern.compile("(\\S)\\u2019\\s", Pattern.MULTILINE).matcher(input).replaceAll("$1\" ");
-		input = Pattern.compile("\\u2019(\\.)", Pattern.MULTILINE).matcher(input).replaceAll("\"$1");
-		return StringUtils.toAscii(StringUtils.normalize(input)).trim();
+	public String processPlainUnicode(String input) throws IOException {
+		Pattern startLine = Pattern.compile("^\\u2018");
+		Pattern startWord = Pattern.compile("\\s\\u2018(\\S)");
+		Pattern endLine = Pattern.compile("\\u2019$");
+		Pattern endWord = Pattern.compile("(\\S)\\u2019\\s");
+		Pattern endSentence = Pattern.compile("\\u2019(\\.)");
+		StringBuffer output = new StringBuffer();
+		for (String line : IOUtils.readLines(new StringReader(input))) {
+			line = line.replaceAll("[\\u00A0\\u2007\\u202F]+", " ").trim();
+			line = line.replaceAll("[\\u2028]", "/n").trim();
+			if (line.length() > 0) {
+				line = startLine.matcher(line).replaceAll("\"");
+				line = startWord.matcher(line).replaceAll(" \"$1");
+				line = endLine.matcher(line).replaceAll("\"");
+				line = endWord.matcher(line).replaceAll("$1\" ");
+				line = endSentence.matcher(line).replaceAll("\"$1");
+				line = StringUtils.toAscii(StringUtils.normalize(line));
+				output.append(line);
+				output.append('\n');
+				output.append('\n');
+			}
+		}
+		return output.toString();
 	}
 }
