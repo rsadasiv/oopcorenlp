@@ -59,8 +59,8 @@ public class Annotator_Test {
 		if (parameterStore == null) {
 			ObjectMapper mapper = new ObjectMapper();
 			ObjectNode p = mapper.createObjectNode();
-			p.put("wordNet_location", "data/dict");
-			p.put("verbNet_location", "data/verbnet3.3");
+			p.put("wordNet_location", "../data/dict");
+			p.put("verbNet_location", "../data/verbnet3.3");
 			p.put("wikipedia_apikey", "OOPCoreNlp/0.9.1 httpclient/4.5.6");
 			parameterStore = new ParameterStoreLocal(p);
 		}
