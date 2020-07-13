@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Functionality - OOP</title>
+	</head>
+	<body>
+		<h2>OOP</h2>
+		<p>This is the Stanford document-sentences-tokens json tree decorated with the results of the OOP analysis of the text.</p>
+		<p>In general, organic annotations will be aggregated up the tree 
+			but synthetic annotations will not be generated down the tree. As an
+			example, sentiment organically occurs at the sentence level, thus you
+			will see an sentiment annotation at the document level containing the
+			average of all the sentence annotations, but you will not see a
+			sentiment annotation at the token level. Categorical annotations that
+			organically occur at the token level (usually expressed as
+			Map&lt;String,BigDecimal&gt;) are generally summed at the sentence and
+			document levels.
+		</p>
+		<p>The list of annotations is customizable via the ParameterStore input, but the default list is as follows:</p>
+		<table>
+			<tr>
+				<td><h5>OOPBiberAnnotation</h5></td>
+				<td><h6><a href="https://sites.google.com/site/multidimensionaltagger/MAT%20v%201.2%20-%20Manual.pdf">Biber: Variation across speech and writing</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>ParagraphIndexAnnotation</h5></td>
+				<td><h6><a href="https://github.com/stanfordnlp/CoreNLP/blob/master/src/edu/stanford/nlp/paragraphs/ParagraphAnnotator.java">Recorded per sentence, index starts at 0</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>CoreNlpGenderAnnotation</h5></td>
+				<td><h6><a href="https://github.com/stanfordnlp/CoreNLP/blob/master/src/edu/stanford/nlp/pipeline/GenderAnnotator.java">edu/stanford/nlp/models/gender/male_first_names.txt, edu/stanford/nlp/models/gender/female_first_names.txt</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPGenderAnnotation</h5></td>
+				<td><h6>
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/MaleNames.txt">
+						io/outofprintmagazine/nlp/models/MaleNames.txt
+					</a>,
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/FemaleNames.txt">
+						io/outofprintmagazine/nlp/models/FemaleNames.txt.
+					</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPPronounAnnotation</h5></td>
+				<td><h6><a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">PRP</a> minus -self, -selves, -'s</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPCharCountAnnotation</h5></td>
+				<td><h6>characterCount</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPParagraphCountAnnotation</h5></td>
+				<td><h6>paragraphCount</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPSentenceCountAnnotation</h5></td>
+				<td><h6>sentenceCount</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPSyllableCountAnnotation</h5></td>
+				<td><h6><a href="https://github.com/m09/syllable-counter/blob/master/src/main/java/eu/crydee/syllablecounter/SyllableCounter.java">syllableCount</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPTokenCountAnnotation</h5></td>
+				<td><h6>tokenCount</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWordCountAnnotation</h5></td>
+				<td><h6>wordCount</h6></td>
+			</tr>
+			<tr>
+				<td><h5>CoreNlpSentimentAnnotation></h5></td>
+				<td><h6><a href="https://github.com/stanfordnlp/CoreNLP/blob/master/src/edu/stanford/nlp/pipeline/SentimentAnnotator.java">sentiment scaled from 0 to 1</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>VaderSentimentAnnotation</h5></td>
+				<td><h6><a href="https://github.com/apanimesh061/VaderSentimentJava">sentiment scaled from 0 to 1</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPVerbTenseAnnotation</h5></td>
+				<td><h6>Verb tenses</h6> 
+						<ul>
+							<li>past: <a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">VBD,VBN</a></li>
+							<li>present: <a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">VB,VBP,VBZ</a></li>
+							<li>future: <a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">MD</a></li>
+							<li>progressive: <a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">VBG</a></li>
+							<li>infinitive: <a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">TO</a></li>
+						</ul>
+				</td>
+			</tr>
+			<tr>
+				<td><h5>OOPPunctuationMarkAnnotation</h5></td>
+				<td><h6>Question, Exclamation, Colon, Semicolon, Comma, Hypen, Period, Apostrophe, Quotation</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPAdjectivesAnnotation</h5></td>
+				<td><h6><a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">JJ, JJR, JJS</a> not in 
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/Adjectives.txt">
+						io/outofprintmagazine/nlp/models/Adjectives.txt
+					</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPPointlessAdjectivesAnnotation</h5></td>
+				<td><h6><a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">JJ, JJR, JJS</a> in  
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/Adjectives.txt">
+						io/outofprintmagazine/nlp/models/Adjectives.txt
+					</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPAdjectiveCategoriesAnnotation</h5></td>
+				<td><h6>Good-Better-Best. <a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">JJ, JJR, JJS</a>: descriptive, comparative, superlative</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPAdverbsAnnotation</h5></td>
+				<td><h6><a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">RB, RBR, RBS</a> not in  
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/Adverbs.txt">
+						io/outofprintmagazine/nlp/models/Adverbs.txt
+					</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPPointlessAdverbsAnnotation</h5></td>
+				<td><h6><a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">RB, RBR, RBS</a> in 
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/Adverbs.txt">
+						io/outofprintmagazine/nlp/models/Adverbs.txt
+					</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPAdverbCategoriesAnnotation</h5></td>
+				<td><h6>Fast-Faster-Fasest. <a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">RB, RBR, RBS</a>: descriptive, comparative, superlative</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPPossessivesAnnotation</h5></td>
+				<td><h6><a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">PRP$, POS, WP$</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPPrepositionCategoriesAnnotation</h5></td>
+				<td><h6><a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">IN, CC</a>. subordinating, coordinating</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPPrepositionsAnnotation</h5></td>
+				<td><h6><a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">IN or CC</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPVerbsAnnotation</h5></td>
+				<td><h6>Transitive Verbs. 
+					<a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">VB,VBD,VBG,VBN,VBP,VBZ</a>
+				 	not in 
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/StativeVerbs.txt">			 
+				 	io/outofprintmagazine/nlp/models/StativeVerbs.txt</a>
+			 	</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPActionlessVerbsAnnotation</h5></td>
+				<td><h6>Intransitive Verbs. 
+					<a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">VB,VBD,VBG,VBN,VBP,VBZ</a> 
+					in  
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/StativeVerbs.txt">			 
+				 	io/outofprintmagazine/nlp/models/StativeVerbs.txt</a>
+			 	</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPNounsAnnotation</h5></td>
+				<td><h6><a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">NN, NNS</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPTopicsAnnotation</h5></td>
+				<td><h6><a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">NNP, NNPS</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPSVOAnnotation</h5></td>
+				<td><h6>CoreNLP dependency parse subject-verb-object-indirectObject-auxVerb: <a href="https://universaldependencies.org/en/dep/">nsubj, root, obj, iobj, obl</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPLikeAnnotation</h5></td>
+				<td><h6><a href="https://gist.github.com/nlothian/9240750">Constituency Parse: PP, like</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPAsAnnotation</h5></td>
+				<td><h6><a href="https://gist.github.com/nlothian/9240750">Constituency Parse: SBAR, as</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPColorsAnnotation</h5></td>
+				<td><h6>
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/Colors.txt">
+					io/outofprintmagazine/nlp/models/Colors.txt</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPFlavorsAnnotation</h5></td>
+				<td><h6>
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/Flavors.txt">
+					io/outofprintmagazine/nlp/models/Flavors.txt</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPVerblessSentencesAnnotation</h5></td>
+				<td><h6><a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">VB,VBD,VBG,VBN,VBP,VBZ,MD</a> not in sentence</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWordlessWordsAnnotation</h5></td>
+				<td><h6><a href="https://en.wiktionary.org/wiki/Wiktionary:Main_Page">Wiktionary lookup is null</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWordnetGlossAnnotation</h5></td>
+				<td><h6>Wordnet gloss if not in 
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/COCA/en_20k.txt">
+					io/outofprintmagazine/nlp/models/COCA/en_20k.txt</a>
+			</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPUncommonWordsAnnotation</h5></td>
+				<td><h6>not in 
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/COCA/en_20k.txt">
+					io/outofprintmagazine/nlp/models/COCA/en_20k.txt</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPCommonWordsAnnotation</h5></td>
+				<td><h6>
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/COCA/Dolch.txt">
+					io/outofprintmagazine/nlp/models/COCA/Dolch.txt</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPFunctionWordsAnnotation</h5></td>
+				<td><h6>
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/FunctionWords.txt">
+					io/outofprintmagazine/nlp/models/FunctionWords.txt</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPAngliciseAnnotation</h5></td>
+				<td><h6>
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/EN_GB/american_spellings.json">
+					io/outofprintmagazine/nlp/models/EN_GB/american_spellings.json</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPAmericanizeAnnotation</h5></td>
+				<td><h6>
+					<a href="https://github.com/rsadasiv/oopcorenlp/blob/master/src/main/resources/io/outofprintmagazine/nlp/models/EN_GB/british_spellings.json">			
+					io/outofprintmagazine/nlp/models/EN_GB/british_spellings.json</a>
+				</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPVerbGroupsAnnotation</h5></td>
+				<td><h6><a href="https://wordnet.princeton.edu/documentation/lexnames5wn">Wordnet lexical file name</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPVerbnetGroupsAnnotation</h5></td>
+				<td><h6><a href="https://uvi.colorado.edu/">Verbnet senses</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPNounGroupsAnnotation</h5></td>
+				<td><h6><a href="https://wordnet.princeton.edu/documentation/lexnames5wn">Wordnet lexical file name</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWhoAnnotation</h5></td>
+				<td><h6><a href="https://gist.github.com/nlothian/9240750">Constituency Parse: SBARQ, WHNP || WHADVP, who</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWhatAnnotation</h5></td>
+				<td><h6><a href="https://gist.github.com/nlothian/9240750">Constituency Parse: SBARQ, WHNP || WHADVP, what</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWhenAnnotation</h5></td>
+				<td><h6><a href="https://gist.github.com/nlothian/9240750">Constituency Parse: SBARQ, WHNP || WHADVP, when</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWhereAnnotation</h5></td>
+				<td><h6><a href="https://gist.github.com/nlothian/9240750">Constituency Parse: SBARQ, WHNP || WHADVP, when</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWhyAnnotation</h5></td>
+				<td><h6><a href="https://gist.github.com/nlothian/9240750">Constituency Parse: SBARQ, WHNP || WHADVP, why</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPHowAnnotation</h5></td>
+				<td><h6><a href="https://gist.github.com/nlothian/9240750">Constituency Parse: SBARQ, WHNP || WHADVP, how</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPLocationsAnnotation</h5></td>
+				<td><h6>CoreNLP NER mentions: LOCATION</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPPeopleAnnotation</h5></td>
+				<td><h6>CoreNLP NER mentions: I, PERSON minus <a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">PRP, PRP$, stray NNP/NNPS</a>; coref</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPMyersBriggsAnnotation</h5></td>
+				<td><h6><a href="https://www.myersbriggs.org/my-mbti-personality-type/mbti-basics/">Personality types</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPDatesAnnotation</h5></td>
+				<td><h6>CoreNLP NER mentions: DATE or TIME</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPIfAnnotation</h5></td>
+				<td><h6><a href="https://gist.github.com/nlothian/9240750">Constituency Parse: SBAR, if</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPBecauseAnnotation</h5></td>
+				<td><h6><a href="https://gist.github.com/nlothian/9240750">Constituency Parse: PP, because</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPQuotesAnnotation</h5></td>
+				<td><h6>CoreNLP: QuoteAnnotator plus NER speaker</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWordsAnnotation</h5></td>
+				<td><h6>word frequency - all tokens</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPFleschKincaidAnnotation</h5></td>
+				<td><h6><a href="https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests">(206.835 - (1.015*wordCount/sentenceCount) - (84.6*syllableCount/wordCount))/100</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPVerbHypernymsAnnotation</h5></td>
+				<td><h6><a href="http://wordnetweb.princeton.edu/perl/webwn">Wordnet hypernym</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPNounHypernymsAnnotation</h5></td>
+				<td><h6><a href="http://wordnetweb.princeton.edu/perl/webwn">Wordnet most likely hypernym based on hyponym match against all nouns</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWikipediaGlossAnnotation</h5></td>
+				<td><h6>Wikipedia gloss (first sentence of page body) if <a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">NN,NNS,NNP,NNPS</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWikipediaPageviewTopicsAnnotation</h5></td>
+				<td><h6><a href="(https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia.org/all-access/all-agents/Shakespeare">Wikipedia pageviews for the past month</a> 
+				for Topics (<a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">NNP,NNPS</a>)</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPWikipediaCategoriesAnnotation</h5></td>
+				<td><h6><a href="https://en.wikipedia.org/w/api.php?format=json&amp;action=query&amp;prop=categories&amp;titles=Shakespeare">Wikipedia page categories</a>
+				for Topics (<a href="https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html">NNP,NNPS</a>)</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPBiberDimensionsAnnotation</h5></td>
+				<td><h6><a href="https://sites.google.com/site/multidimensionaltagger/MAT%20v%201.2%20-%20Manual.pdf">Biber: Variation across speech and writing, Dimensions 1-6</a></h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPSettingsAnnotation</h5></td>
+				<td><h6>OOPLocationAnnotation with sentiment, quotes, coref, and universal dependencies <a href="https://universaldependencies.org/en/dep/">nsubj, nmod:poss, advmod, amod nsubj, root, obj, iobj, obl</a>.</h6></td>
+			</tr>
+			<tr>
+				<td><h5>OOPActorsAnnotation</h5></td>
+				<td><h6>OOPPersonAnnotation with sentiment, quotes, coref, and universal dependencies <a href="https://universaldependencies.org/en/dep/">nsubj, nmod:poss, advmod, amod nsubj, root, obj, iobj, obl</a>.</h6></td>
+			</tr>							
+		</table>
+	
+	</body>
+</html>

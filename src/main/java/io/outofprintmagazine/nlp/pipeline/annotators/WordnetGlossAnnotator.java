@@ -35,8 +35,8 @@ public class WordnetGlossAnnotator extends AbstractPosAnnotator implements Annot
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WordnetGlossAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

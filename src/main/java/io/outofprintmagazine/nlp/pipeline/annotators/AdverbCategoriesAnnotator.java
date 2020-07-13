@@ -40,8 +40,8 @@ public class AdverbCategoriesAnnotator extends AbstractPosAnnotator implements A
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(AdverbCategoriesAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 

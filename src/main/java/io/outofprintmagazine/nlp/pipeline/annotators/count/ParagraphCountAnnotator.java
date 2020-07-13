@@ -43,8 +43,8 @@ public class ParagraphCountAnnotator extends AbstractAnnotator implements Annota
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(ParagraphCountAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 

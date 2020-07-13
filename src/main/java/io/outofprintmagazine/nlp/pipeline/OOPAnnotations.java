@@ -33,22 +33,6 @@ import edu.stanford.nlp.util.ErasureUtils;
 public class OOPAnnotations {
 
 	private OOPAnnotations() {} // only static members
-
-	// Problematic
-	public static class OOPActorsAnnotation implements CoreAnnotation<Map<String, ActorAnnotation>> {
-		@Override
-		public Class<Map<String, ActorAnnotation>> getType() {
-			return ErasureUtils.uncheckedCast(Map.class);
-		}
-	}
-	
-	public static class OOPSettingsAnnotation implements CoreAnnotation<Map<String, SettingAnnotation>> {
-		@Override
-		public Class<Map<String, SettingAnnotation>> getType() {
-			return ErasureUtils.uncheckedCast(Map.class);
-		}
-	}
-	
 	
 	// per document
 	// metadata
@@ -236,6 +220,42 @@ public class OOPAnnotations {
 	public static class OOPDatesAnnotation implements CoreAnnotation<List<PhraseAnnotation>> {
 		@Override
 		public Class<List<PhraseAnnotation>> getType() {
+			return ErasureUtils.uncheckedCast(List.class);
+		}
+	}
+	
+	public static class OOPLocationsAnnotation implements CoreAnnotation<List<PhraseAnnotation>> {
+		@Override
+		public Class<List<PhraseAnnotation>> getType() {
+			return ErasureUtils.uncheckedCast(List.class);
+		}
+	}
+
+	public static class OOPPeopleAnnotation implements CoreAnnotation<List<PhraseAnnotation>> {
+		@Override
+		public Class<List<PhraseAnnotation>> getType() {
+			return ErasureUtils.uncheckedCast(List.class);
+		}
+	}
+	
+	public static class OOPWikipediaCategoriesAnnotation implements CoreAnnotation<List<PhraseAnnotation>> {
+		@Override
+		public Class<List<PhraseAnnotation>> getType() {
+			return ErasureUtils.uncheckedCast(List.class);
+		}
+	}
+	
+	// Problematic
+	public static class OOPActorsAnnotation implements CoreAnnotation<List<ActorAnnotation>> {
+		@Override
+		public Class<List<ActorAnnotation>> getType() {
+			return ErasureUtils.uncheckedCast(List.class);
+		}
+	}
+	
+	public static class OOPSettingsAnnotation implements CoreAnnotation<List<SettingAnnotation>> {
+		@Override
+		public Class<List<SettingAnnotation>> getType() {
 			return ErasureUtils.uncheckedCast(List.class);
 		}
 	}
@@ -454,12 +474,6 @@ public class OOPAnnotations {
 		}
 	}
 
-	public static class OOPWikipediaCategoriesAnnotation implements CoreAnnotation<List<PhraseAnnotation>> {
-		@Override
-		public Class<List<PhraseAnnotation>> getType() {
-			return ErasureUtils.uncheckedCast(Map.class);
-		}
-	}
 
 	public static class OOPVerbHypernymsAnnotation implements CoreAnnotation<Map<String, BigDecimal>> {
 		@Override
@@ -503,19 +517,6 @@ public class OOPAnnotations {
 		}
 	}
 
-	public static class OOPLocationsAnnotation implements CoreAnnotation<List<PhraseAnnotation>> {
-		@Override
-		public Class<List<PhraseAnnotation>> getType() {
-			return ErasureUtils.uncheckedCast(Map.class);
-		}
-	}
-
-	public static class OOPPeopleAnnotation implements CoreAnnotation<List<PhraseAnnotation>> {
-		@Override
-		public Class<List<PhraseAnnotation>> getType() {
-			return ErasureUtils.uncheckedCast(Map.class);
-		}
-	}
 
 	public static class OOPNonAffirmativeAnnotation implements CoreAnnotation<Map<String, BigDecimal>> {
 		@Override

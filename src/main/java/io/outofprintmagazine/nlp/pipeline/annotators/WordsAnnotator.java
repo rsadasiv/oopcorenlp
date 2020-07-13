@@ -44,8 +44,8 @@ public class WordsAnnotator extends AbstractPosAnnotator implements Annotator, O
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WordsAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

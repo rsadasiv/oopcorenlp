@@ -50,8 +50,8 @@ public class BiberAnnotator extends AbstractPosAnnotator implements Annotator, O
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BiberAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

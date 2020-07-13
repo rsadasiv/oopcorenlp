@@ -45,16 +45,21 @@
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
 		<junit.jupiter.version>5.6.2</junit.jupiter.version>
 				
-		<maven-site-plugin.version>3.7.1</maven-site-plugin.version>
+		<maven-site-plugin.version>3.9.1</maven-site-plugin.version>
 		<maven-fluido-skin.version>1.9</maven-fluido-skin.version>
 		<maven-project-info-reports-plugin.version>3.0.0</maven-project-info-reports-plugin.version>
 		<maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>		
 		<doxia-site-renderer.version>1.9.2</doxia-site-renderer.version>
+		<doxiaVersion>1.9.1</doxiaVersion>
+    	<doxiaSitetoolsVersion>1.9.2</doxiaSitetoolsVersion>
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
 		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-1.2-api -->
 		<log4j.version>2.13.3</log4j.version>
+		
+		<!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+		<slf4j-api.version>1.7.30</slf4j-api.version>
 		
 		<!-- https://mvnrepository.com/artifact/edu.stanford.nlp/stanford-corenlp -->
 		<stanford-corenlp.version>4.0.0</stanford-corenlp.version>
@@ -121,7 +126,13 @@
 			<artifactId>log4j-1.2-api</artifactId>
 			<version>${log4j.version}</version>
 		</dependency>
-
+		
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>${slf4j-api.version}</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
@@ -263,11 +274,44 @@
 		    <version>${flickr4java.version}</version>
 		</dependency>
 		
-		<dependency>
-			<groupId>org.apache.maven.doxia</groupId>
-			<artifactId>doxia-site-renderer</artifactId>
-			<version>${doxia-site-renderer.version}</version>
-		</dependency>		
+	    <!-- Doxia -->
+	    <dependency>
+	      <groupId>org.apache.maven.doxia</groupId>
+	      <artifactId>doxia-sink-api</artifactId>
+	      <version>${doxiaVersion}</version>
+	    </dependency>
+	
+	    <dependency>
+	      <groupId>org.apache.maven.doxia</groupId>
+	      <artifactId>doxia-core</artifactId>
+	      <version>${doxiaVersion}</version>
+	    </dependency>
+	    
+	    <dependency>
+	      <groupId>org.apache.maven.doxia</groupId>
+	      <artifactId>doxia-module-xhtml</artifactId>
+	      <version>${doxiaVersion}</version>
+	    </dependency>
+
+	
+	    <!-- Doxia Sitetools -->
+	    <dependency>
+	      <groupId>org.apache.maven.doxia</groupId>
+	      <artifactId>doxia-decoration-model</artifactId>
+	      <version>${doxiaSitetoolsVersion}</version>
+	    </dependency>
+	
+	    <dependency>
+	      <groupId>org.apache.maven.doxia</groupId>
+	      <artifactId>doxia-site-renderer</artifactId>
+	      <version>${doxiaSitetoolsVersion}</version>
+	    </dependency>
+	
+	    <dependency>
+	      <groupId>org.apache.maven.doxia</groupId>
+	      <artifactId>doxia-integration-tools</artifactId>
+	      <version>${doxiaSitetoolsVersion}</version>
+	    </dependency>	
 		
 	</dependencies>
 

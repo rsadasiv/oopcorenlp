@@ -47,7 +47,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.outofprintmagazine.util.ParameterStore;
-
+/**
+ * <p>You will need to set faceplusplus_apiKey and faceplusplus_secret in your ParameterStore.</p>
+ * <p>Visit: <a href="https://www.faceplusplus.com/face-detection/">Faceplusplus</a> to sign up.</p> 
+ * @author Ram Sadasiv
+ */
 public class FacePlusPlusUtils {
 	
 	private static final Logger logger = LogManager.getLogger(FacePlusPlusUtils.class);

@@ -39,8 +39,8 @@ public class NonAffirmativeAnnotator extends AbstractPosAnnotator implements Ann
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(NonAffirmativeAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 		

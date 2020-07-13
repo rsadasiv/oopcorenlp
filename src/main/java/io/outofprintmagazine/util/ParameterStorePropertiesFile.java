@@ -77,7 +77,8 @@ public class ParameterStorePropertiesFile implements ParameterStore {
 	public Properties getProperties() {
 		return props;
 	}
-        
+
+	@Override
     public String getProperty(String name) throws IOException {
     	//return getProperties("data", "oopcorenlp.properties").getProperty(name);
     	return props.getProperty(name);

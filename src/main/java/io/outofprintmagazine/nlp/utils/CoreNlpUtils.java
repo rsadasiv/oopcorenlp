@@ -40,8 +40,20 @@ import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.trees.TypedDependency;
+import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 import io.outofprintmagazine.util.ParameterStore;
 
+/**
+ * <p>Main integration point to the CoreNLP pipeline.</p>
+ * <p>Singleton class: get instance via static getInstance(ParameterStore) call.</p>
+ * <p>getPipelineProps() returns a Properties object to configure the StanfordCoreNLP pipeline. MODIFY ONLY WITH EXTREME CARE!</p>
+ * <p>getPipeline() returns a (singleton) StanfordCoreNLP pipeline. NOT THREAD SAFE!</p>
+ * <p>Most of the rest of the methods are utility functions to integrate Tokens, Sentences, EntityMentions, CorefChains, and TypedDependencies.</p>
+ * 
+ * @author Ram Sadasiv
+ *
+ */
 public class CoreNlpUtils {
 	
 	@SuppressWarnings("unused")

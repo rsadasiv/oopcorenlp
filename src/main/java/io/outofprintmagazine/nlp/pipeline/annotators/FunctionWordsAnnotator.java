@@ -38,8 +38,8 @@ public class FunctionWordsAnnotator extends AbstractPosAnnotator implements Anno
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(FunctionWordsAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

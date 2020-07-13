@@ -16,15 +16,12 @@
  ******************************************************************************/
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,6 +32,7 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.flickr4java.flickr.FlickrException;
 
 import edu.stanford.nlp.coref.CorefCoreAnnotations;
 import edu.stanford.nlp.ling.CoreAnnotation;
@@ -49,8 +47,12 @@ import edu.stanford.nlp.trees.GrammaticalRelation;
 import edu.stanford.nlp.trees.TypedDependency;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.ContextualAnnotation;
+import io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPWikipediaGlossAnnotation;
+import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 import io.outofprintmagazine.nlp.utils.BingUtils;
 import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
+import io.outofprintmagazine.nlp.utils.FlickrUtils;
+import io.outofprintmagazine.nlp.utils.WikimediaUtils;
 
 /**
  * <p>Base class for custom annotators that work with dependency trees (Core Nlp depparse).</p>
@@ -61,8 +63,8 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 	
 	private static final Logger logger = LogManager.getLogger(AbstractContextualAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	
@@ -111,44 +113,45 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 	@Override
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
-		Map<String,ContextualAnnotation> scoreMap = new HashMap<String,ContextualAnnotation>();
-		Map<String,BigDecimal> entities = (Map<String, BigDecimal>) document.annotation().get(getEntityAnnotationClass());
-	    for (String canonicalEntityName : entities.keySet()) {
+		List<ContextualAnnotation> scoreList = new ArrayList<ContextualAnnotation>();
+		List<PhraseAnnotation> entities = (List<PhraseAnnotation>) document.annotation().get(getEntityAnnotationClass());
+		for (PhraseAnnotation phraseAnnotation : entities) {
 	    	ContextualAnnotation contextualAnnotation = getConcreteAnnotation();
-	    	contextualAnnotation.setCanonicalName(canonicalEntityName);
+	    	contextualAnnotation.setCanonicalName(phraseAnnotation.getName());
 	    	try {
+	    		scoreDocument(document, contextualAnnotation);
 	    		for (CoreSentence sentence: document.sentences()) {
-	    			Map<String,BigDecimal> sentencePeople = (Map<String, BigDecimal>) sentence.coreMap().get(getEntityAnnotationClass());
-	    			if (sentencePeople != null && sentencePeople.get(canonicalEntityName) != null) {
-	    				scoreSentence(document, sentence, contextualAnnotation);
-	    			}
-	    			for (CoreLabel token : sentence.tokens()) {
-		    			Map<String,BigDecimal> tokenPeople = (Map<String, BigDecimal>) token.get(getEntityAnnotationClass());
-		    			if (tokenPeople != null && tokenPeople.get(canonicalEntityName) != null) {
-		    				scoreToken(document, token, contextualAnnotation);
+	    			if (sentence.coreMap().containsKey(getEntityAnnotationClass())) {
+		    			List<PhraseAnnotation> sentencePeople = (List<PhraseAnnotation>) sentence.coreMap().get(getEntityAnnotationClass());
+		    			for (PhraseAnnotation sentenceAnnotation : sentencePeople) {
+			    			if (sentenceAnnotation.getName().equals(phraseAnnotation.getName())) {
+			    				scoreSentence(document, sentence, contextualAnnotation);
+			    			}
+		    			}
+		    			for (CoreLabel token : sentence.tokens()) {
+		    				if (token.containsKey(getEntityAnnotationClass())) {
+			    				List<PhraseAnnotation> tokenPeople = (List<PhraseAnnotation>) token.get(getEntityAnnotationClass());
+			    				for (PhraseAnnotation tokenAnnotation : tokenPeople ) {
+					    			if (tokenAnnotation.getName().equals(phraseAnnotation.getName())) {
+					    				scoreToken(document, token, contextualAnnotation);
+					    			}
+				    			}
+		    				}
 		    			}
 	    			}
 	    		}
-		    	scoreThumbnails(contextualAnnotation);
-
 	    	}
 	    	catch (Exception e) {
-	    		ByteArrayOutputStream os = new ByteArrayOutputStream();
-	    		PrintStream ps = new PrintStream(os);
-	    		e.printStackTrace(ps);
-	    		try {
-					getLogger().error(os.toString("UTF8"));
-				} catch (UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-				}
+	    		e.printStackTrace();
+	    		getLogger().error(e);
 	    	}
 	    	if (contextualAnnotation.getImportance().compareTo(new BigDecimal(1)) > 0) {
 	    		contextualAnnotation.setVaderSentimentAvg();
 	    		contextualAnnotation.setCoreNlpSentimentAvg();
-	    		scoreMap.put(toAlphaNumeric(canonicalEntityName), contextualAnnotation);
+	    		scoreList.add(contextualAnnotation);
 	    	}
 	    }
-	    document.annotation().set(getAnnotationClass(), scoreMap);
+	    document.annotation().set(getAnnotationClass(), scoreList);
 	}
 	
 	@Override
@@ -170,9 +173,22 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 		//TODO
 	}
 	
+	protected void scoreDocument(CoreDocument document, ContextualAnnotation annotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException, URISyntaxException, FlickrException {
+		scoreThumbnails(annotation);
+	}
 	
-	protected void scoreThumbnails(ContextualAnnotation annotation) throws IOException, URISyntaxException {
-		annotation.getThumbnails().addAll(BingUtils.getInstance(getParameterStore()).getImagesByText(annotation.getCanonicalName()));		
+	
+	protected void scoreThumbnails(ContextualAnnotation annotation) throws IOException, URISyntaxException, FlickrException {
+		if (getParameterStore().getProperty("azure_apiKey") != null) {
+			annotation.getThumbnails().addAll(BingUtils.getInstance(getParameterStore()).getImagesByText(annotation.getCanonicalName()));
+		}
+		else if (getParameterStore().getProperty("flickr_apiKey") != null && getParameterStore().getProperty("faceplusplus_apiKey") != null) {
+			annotation.getThumbnails().addAll(FlickrUtils.getInstance(getParameterStore()).getImagesByText(annotation.getCanonicalName()));
+		}
+		else {
+			annotation.getThumbnails().addAll(WikimediaUtils.getInstance(getParameterStore()).getImagesByText(annotation.getCanonicalName()));
+		}
+		
 	}
 	
 	
@@ -192,6 +208,19 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 
 	}
 	
+	protected void scoreToken(CoreDocument document, CoreLabel token, ContextualAnnotation annotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+		scoreDependencies(document, token, annotation);
+		scoreWikipediaGloss(document, token, annotation);
+	}
+
+	
+	protected void scoreWikipediaGloss(CoreDocument document, CoreLabel token, ContextualAnnotation annotation) {
+		if (token.containsKey(OOPWikipediaGlossAnnotation.class)) {
+			if (!annotation.getWikipediaGlosses().contains(token.get(OOPWikipediaGlossAnnotation.class))) {
+				annotation.getWikipediaGlosses().add(token.get(OOPWikipediaGlossAnnotation.class));
+			}
+		}
+	}
 	
 	protected void scoreSubAnnotation(Map<String, BigDecimal> annotationScore, Map<String, BigDecimal> existingScoreMap) {
 		if (annotationScore != null) {
@@ -251,9 +280,9 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 			scoreSubAnnotation(annotationScore, existingScoreMap);
 		}
 		return existingScoreMap;
-	}
+	}	
 	
-	protected void scoreToken(CoreDocument document, CoreLabel token, ContextualAnnotation annotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+	protected void scoreDependencies(CoreDocument document, CoreLabel token, ContextualAnnotation annotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		List<TypedDependency> deps = CoreNlpUtils.getInstance(getParameterStore()).getTypedDependencyDepFromToken(document, token);
 		for (TypedDependency dependency : deps) {
 			GrammaticalRelation rn = dependency.reln();

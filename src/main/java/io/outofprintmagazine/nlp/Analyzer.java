@@ -46,7 +46,13 @@ import io.outofprintmagazine.util.ParameterStore;
 
 /**
  * <p>The main library execution entry point for oopcorenlp.</p>
- * <p>analyze runs the coreNLP annotators, runs the custom annotators, serializes the annotation tree, and returns four JsonDocuments: STANFORD, OOP, AGGREGATES, PIPELINE</p>
+ * <p>analyze runs the coreNLP annotators, runs the custom annotators, serializes the annotation tree, and returns four JsonDocuments:</p> 
+ * <ul>
+ * 	<li>STANFORD</li>
+ * 	<li>OOP</li>
+ * 	<li>AGGREGATES</li>
+ *  <li>PIPELINE</li>
+ * </ul>
  * @see CoreNlpUtils
  * @see OOPAnnotator
  * @see CoreNlpSerializer

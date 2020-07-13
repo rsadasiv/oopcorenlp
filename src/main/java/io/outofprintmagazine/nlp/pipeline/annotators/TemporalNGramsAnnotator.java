@@ -48,8 +48,8 @@ public class TemporalNGramsAnnotator extends AbstractPosAnnotator implements Ann
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(TemporalNGramsAnnotator.class);
 
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

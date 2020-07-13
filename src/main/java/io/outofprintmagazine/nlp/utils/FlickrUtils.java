@@ -40,7 +40,11 @@ import com.flickr4java.flickr.photos.PhotoList;
 import com.flickr4java.flickr.photos.SearchParameters;
 
 import io.outofprintmagazine.util.ParameterStore;
-
+/**
+ * <p>You will need to set flickr_apiKey and flickr_secret in your ParameterStore.</p>
+ * <p>Visit: <a href="https://www.flickr.com/services/api/">Flickr</a> to sign up.</p> 
+ * @author Ram Sadasiv
+ */
 public class FlickrUtils {
 	
 	private static final Logger logger = LogManager.getLogger(FlickrUtils.class);
@@ -75,6 +79,15 @@ public class FlickrUtils {
     	return getImages(searchParameters);
     }
     
+    public List<String> getFacesByText(String text) throws FlickrException {
+    	SearchParameters searchParameters = new SearchParameters();
+	    searchParameters.setText(text);
+	    searchParameters.setSort(SearchParameters.RELEVANCE);
+    	searchParameters.setSafeSearch(com.flickr4java.flickr.Flickr.SAFETYLEVEL_SAFE);
+	    //searchParameters.setSort(SearchParameters.INTERESTINGNESS_DESC);
+    	return getFaces(searchParameters);
+    }
+    
     public List<String> getImagesByTag(String tag) throws FlickrException {
     	SearchParameters searchParameters = new SearchParameters();
 	    String[] tags = {tag};
@@ -87,6 +100,39 @@ public class FlickrUtils {
     }
     
     public List<String> getImages(SearchParameters searchParameters) throws FlickrException {
+    	List<String> retval = new ArrayList<String>();
+    	Set<String> extras = new HashSet<String>();
+    	extras.add("count_faves");
+    	extras.add("count_comments");
+    	extras.add("count_views");
+    	searchParameters.setExtras(extras);
+	    PhotoList<Photo> list = flickr.getPhotosInterface().search(searchParameters, 25, 1);
+	    Collections.sort(list, new Comparator<Photo>() {
+	        @Override
+	        public int compare(Photo a, Photo b) {
+	            return new Integer(b.getStats().getViews()).compareTo(new Integer(a.getStats().getViews()));
+	        }
+	    });
+	    for (Photo p : list) {
+	        Photo nfo = flickr.getPhotosInterface().getInfo(p.getId(), null);
+	        try {
+		        if (nfo.getOriginalSecret().isEmpty()) {
+		        	retval.add(p.getSmallUrl());
+		        } 
+		        else {
+	                p.setOriginalSecret(nfo.getOriginalSecret());
+		        	retval.add(p.getSmallUrl());
+		        }
+	        }
+	    	catch (Exception e) {
+	    		logger.error(e);
+	    		logger.error(searchParameters);
+	    	}
+		}
+	    return retval;
+    }
+    
+    public List<String> getFaces(SearchParameters searchParameters) throws FlickrException {
     	List<String> retval = new ArrayList<String>();
     	Set<String> extras = new HashSet<String>();
     	extras.add("count_faves");

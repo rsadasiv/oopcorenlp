@@ -22,19 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 public class ActorAnnotation extends ContextualAnnotation{
-
-	@SuppressWarnings("unused")
-	private static final Logger logger = LogManager.getLogger(ActorAnnotation.class);
-	
-	private Logger getLogger() {
-		return logger;
-	}
 	
 	public ActorAnnotation() {
 		super();

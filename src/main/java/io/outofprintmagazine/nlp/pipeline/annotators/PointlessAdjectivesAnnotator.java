@@ -40,8 +40,8 @@ public class PointlessAdjectivesAnnotator extends AbstractPosAnnotator implement
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PointlessAdjectivesAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

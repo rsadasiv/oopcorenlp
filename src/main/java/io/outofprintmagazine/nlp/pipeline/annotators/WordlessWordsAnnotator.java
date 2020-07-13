@@ -41,8 +41,8 @@ public class WordlessWordsAnnotator extends AbstractPosAnnotator implements Anno
 	
 	private static final Logger logger = LogManager.getLogger(WordlessWordsAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

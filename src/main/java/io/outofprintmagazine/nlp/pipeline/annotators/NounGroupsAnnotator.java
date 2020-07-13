@@ -41,8 +41,8 @@ public class NounGroupsAnnotator extends AbstractPosAnnotator implements Annotat
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(NounGroupsAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

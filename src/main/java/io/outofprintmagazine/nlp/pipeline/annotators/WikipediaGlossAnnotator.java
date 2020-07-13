@@ -39,8 +39,8 @@ public class WikipediaGlossAnnotator extends AbstractPosAnnotator implements Ann
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WikipediaGlossAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

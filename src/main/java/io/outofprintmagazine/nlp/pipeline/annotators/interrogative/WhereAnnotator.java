@@ -45,8 +45,8 @@ public class WhereAnnotator extends AbstractTreeAnnotator implements Annotator, 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WhereAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

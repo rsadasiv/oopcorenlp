@@ -38,11 +38,10 @@ public class AsAnnotator extends AbstractTreeAnnotator implements Annotator, OOP
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(AsAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
-	
 	
 	public AsAnnotator() {
 		super();

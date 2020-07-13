@@ -44,8 +44,8 @@ public class BiberDimensionsAnnotator extends AbstractPosAnnotator implements An
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BiberDimensionsAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 

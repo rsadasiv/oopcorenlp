@@ -38,8 +38,8 @@ public class FlavorsAnnotator extends AbstractPosAnnotator implements Annotator,
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(FlavorsAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

@@ -20,9 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -37,20 +35,17 @@ import edu.stanford.nlp.pipeline.CoreEntityMention;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
-import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
 import io.outofprintmagazine.nlp.pipeline.scorers.PhraseScorer;
 import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
-import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.PhraseSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
 public class LocationsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
-	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(LocationsAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 

@@ -42,8 +42,8 @@ public class DatesAnnotator extends AbstractTreeAnnotator implements Annotator, 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(DatesAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 

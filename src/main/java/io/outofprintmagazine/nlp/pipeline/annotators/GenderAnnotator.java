@@ -47,6 +47,11 @@ public class GenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnnotator i
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(GenderAnnotator.class);
 
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
+		return logger;
+	}
+	
 	protected Scorer scorer;
 	protected Serializer serializer;
 	protected ParameterStore properties;

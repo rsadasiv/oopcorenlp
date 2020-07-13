@@ -46,7 +46,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.outofprintmagazine.util.ParameterStore;
-
+/**
+ * <p>You will need to set azure_apiKey in your ParameterStore.</p>
+ * <p>Visit: <a href="https://azure.microsoft.com/en-us/services/cognitive-services/bing-image-search-api/">Azure</a> to sign up.</p> 
+ * @author Ram Sadasiv
+ */
 public class BingUtils {
 	
 	private static final Logger logger = LogManager.getLogger(BingUtils.class);

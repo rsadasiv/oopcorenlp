@@ -42,6 +42,12 @@ public class CoreNlpParagraphAnnotator extends edu.stanford.nlp.paragraphs.Parag
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(CoreNlpParagraphAnnotator.class);
 	
+	
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
+		return logger;
+	}
+	
 	public CoreNlpParagraphAnnotator() {
 		super(CoreNlpParagraphAnnotator.getProperties(), false);
 	}

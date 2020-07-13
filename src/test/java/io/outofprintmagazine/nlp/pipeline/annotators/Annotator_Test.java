@@ -98,7 +98,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void ActionlessVerbsAnnotator_Test() throws IOException {
+	public void ActionlessVerbsAnnotator_Test() throws IOException {
 		String text = "These are the times that try men's souls.";
 		OOPAnnotator annotator = new ActionlessVerbsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -131,12 +131,12 @@ public class Annotator_Test {
 	
 	//NOT IN OSS
 	//@Test
-	//void ActorsAnnotator_Test() throws IOException {
+	//public void ActorsAnnotator_Test() throws IOException {
 	//	assertEquals("Implemented", "todo");
 	//}
 	
 	@Test
-	void AdjectiveCategoriesAnnotator_Test() throws IOException {
+	public void AdjectiveCategoriesAnnotator_Test() throws IOException {
 		String text = "The hungry fox was eaten by the hungrier wolf.";
 		OOPAnnotator annotator = new AdjectiveCategoriesAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -182,7 +182,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void AdjectivesAnnotator_Test() throws IOException {
+	public void AdjectivesAnnotator_Test() throws IOException {
 		String text = "The quick brown fox jumped over the lazy white dog.";
 		OOPAnnotator annotator = new AdjectivesAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -258,7 +258,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void AdverbCategoriesAnnotator_Test() throws IOException {
+	public void AdverbCategoriesAnnotator_Test() throws IOException {
 		String text = "The fox ran quickly, but the wolf ran quicker.";
 		OOPAnnotator annotator = new AdverbCategoriesAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -304,7 +304,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void AdverbsAnnotator_Test() throws IOException {
+	public void AdverbsAnnotator_Test() throws IOException {
 		String text = "The fox ran quickly, but the wolf ran quicker.";
 		OOPAnnotator annotator = new AdverbsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -349,7 +349,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void AmericanizeAnnotator_Test() throws IOException {
+	public void AmericanizeAnnotator_Test() throws IOException {
 		String text = "I agonised over this decision.";
 		OOPAnnotator annotator = new AmericanizeAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -381,7 +381,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void AngliciseAnnotator_Test() throws IOException {
+	public void AngliciseAnnotator_Test() throws IOException {
 		String text = "I agonized over this decision.";
 		OOPAnnotator annotator = new AngliciseAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -413,7 +413,7 @@ public class Annotator_Test {
 	}	
 
 	@Test
-	void BiberAnnotatorAMP_Test() throws IOException {
+	public void BiberAnnotatorAMP_Test() throws IOException {
 		String text = "I thoroughly enjoyed our conversation.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -436,7 +436,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorAWL_Test() throws IOException {
+	public void BiberAnnotatorAWL_Test() throws IOException {
 		String text = "Four letter words are fun.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -454,7 +454,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorBEMA_Test() throws IOException {
+	public void BiberAnnotatorBEMA_Test() throws IOException {
 		String text = "Rain is wet.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -477,7 +477,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorBYPA_Test() throws IOException {
+	public void BiberAnnotatorBYPA_Test() throws IOException {
 		String text = "The crime was committed by person or persons unknown.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -500,7 +500,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorCAUS_Test() throws IOException {
+	public void BiberAnnotatorCAUS_Test() throws IOException {
 		String text = "Because I said so.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -523,7 +523,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorCONC_Test() throws IOException {
+	public void BiberAnnotatorCONC_Test() throws IOException {
 		String text = "He did it, although we'll never be able to prove it.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -546,7 +546,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorCOND_Test() throws IOException {
+	public void BiberAnnotatorCOND_Test() throws IOException {
 		String text = "Unless someone rats him out.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -569,7 +569,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorCONJ_Test() throws IOException {
+	public void BiberAnnotatorCONJ_Test() throws IOException {
 		String text = "And furthermore, I don't like your trousers. Or your appalling taste in women.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -592,7 +592,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorCONT_Test() throws IOException {
+	public void BiberAnnotatorCONT_Test() throws IOException {
 		String text = "And futhermore, I don't like your trousers. Or your appalling taste in women.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -615,7 +615,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorDEMO_Test() throws IOException {
+	public void BiberAnnotatorDEMO_Test() throws IOException {
 		String text = "Dis, dat, dese, and those?";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -638,7 +638,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorDPAR_Test() throws IOException {
+	public void BiberAnnotatorDPAR_Test() throws IOException {
 		String text = "That's how we feel about it around here, anyways.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -661,7 +661,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorDWNT_Test() throws IOException {
+	public void BiberAnnotatorDWNT_Test() throws IOException {
 		String text = "Hardly seems worth it.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -684,7 +684,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorEMPH_Test() throws IOException {
+	public void BiberAnnotatorEMPH_Test() throws IOException {
 		String text = "It's just a damn shame.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -707,7 +707,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorEX_Test() throws IOException {
+	public void BiberAnnotatorEX_Test() throws IOException {
 		String text = "There is a place where I can go.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -730,7 +730,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorFPP1_Test() throws IOException {
+	public void BiberAnnotatorFPP1_Test() throws IOException {
 		String text = "I'm the man who loves you.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -753,7 +753,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorGER_Test() throws IOException {
+	public void BiberAnnotatorGER_Test() throws IOException {
 		String text = "Running away to get away ha ha ha ha you're wearing out your shoes.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -776,7 +776,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorHDG_Test() throws IOException {
+	public void BiberAnnotatorHDG_Test() throws IOException {
 		String text = "Maybe you're going to be the one that saves me.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -799,7 +799,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorINPR_Test() throws IOException {
+	public void BiberAnnotatorINPR_Test() throws IOException {
 		String text = "Anyone who tells you different is a liar.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -822,7 +822,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorJJ_Test() throws IOException {
+	public void BiberAnnotatorJJ_Test() throws IOException {
 		String text = "The quick brown fox jumped over the lazy white dog.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -845,7 +845,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorNEMD_Test() throws IOException {
+	public void BiberAnnotatorNEMD_Test() throws IOException {
 		String text = "We should go.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -868,7 +868,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorNN_Test() throws IOException {
+	public void BiberAnnotatorNN_Test() throws IOException {
 		String text = "Snow is cold.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -891,7 +891,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorNOMZ_Test() throws IOException {
+	public void BiberAnnotatorNOMZ_Test() throws IOException {
 		String text = "Come on baby, do the locomotion with me.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -914,7 +914,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorOSUB_Test() throws IOException {
+	public void BiberAnnotatorOSUB_Test() throws IOException {
 		String text = "Since you've been gone, all I have left is this band of gold.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -937,7 +937,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPASS_Test() throws IOException {
+	public void BiberAnnotatorPASS_Test() throws IOException {
 		String text = "The crime was committed by person or persons unknown.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -961,7 +961,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPASTP_Test() throws IOException {
+	public void BiberAnnotatorPASTP_Test() throws IOException {
 		String text = "Rome wasn't built in a day.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -984,7 +984,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPEAS_Test() throws IOException {
+	public void BiberAnnotatorPEAS_Test() throws IOException {
 		String text = "I have heard rumours of such things.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1007,7 +1007,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPHC_Test() throws IOException {
+	public void BiberAnnotatorPHC_Test() throws IOException {
 		String text = "Jack and Jill went up the hill to fetch a pail of water.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1030,7 +1030,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPIN_Test() throws IOException {
+	public void BiberAnnotatorPIN_Test() throws IOException {
 		String text = "Life flows on within you and without you.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1053,7 +1053,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPIT_Test() throws IOException {
+	public void BiberAnnotatorPIT_Test() throws IOException {
 		String text = "It's in the way that you use it.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1076,7 +1076,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPLACE_Test() throws IOException {
+	public void BiberAnnotatorPLACE_Test() throws IOException {
 		String text = "Up, up, and away.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1099,7 +1099,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPOMD_Test() throws IOException {
+	public void BiberAnnotatorPOMD_Test() throws IOException {
 		String text = "Winnipeg can get cold in the winter.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1122,7 +1122,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPRED_Test() throws IOException {
+	public void BiberAnnotatorPRED_Test() throws IOException {
 		String text = "The horse is big.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1145,7 +1145,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPRESP_Test() throws IOException {
+	public void BiberAnnotatorPRESP_Test() throws IOException {
 		String text = "Stuffing his mouth with cookies, Joe ran out the door.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1168,7 +1168,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPRIV_Test() throws IOException {
+	public void BiberAnnotatorPRIV_Test() throws IOException {
 		String text = "I accept your judgement.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1191,7 +1191,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPRMD_Test() throws IOException {
+	public void BiberAnnotatorPRMD_Test() throws IOException {
 		String text = "Letting I dare not wait upon I would, like the poor cat in the adage?";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1214,7 +1214,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPROD_Test() throws IOException {
+	public void BiberAnnotatorPROD_Test() throws IOException {
 		String text = "I do the absolute minimum to get by.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1237,7 +1237,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorPUBV_Test() throws IOException {
+	public void BiberAnnotatorPUBV_Test() throws IOException {
 		String text = "I pronounce you husband and wife.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1260,7 +1260,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorRB_Test() throws IOException {
+	public void BiberAnnotatorRB_Test() throws IOException {
 		String text = "I wrote quickly";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1283,7 +1283,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorSEMP_Test() throws IOException {
+	public void BiberAnnotatorSEMP_Test() throws IOException {
 		String text = "I seem to have misplaced my glasses.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1306,7 +1306,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorSERE_Test() throws IOException {
+	public void BiberAnnotatorSERE_Test() throws IOException {
 		String text = "I didn't hear the conclusion, which may have been the point.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1329,7 +1329,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorSPAU_Test() throws IOException {
+	public void BiberAnnotatorSPAU_Test() throws IOException {
 		String text = "No one believes it until they are objectively shown that it is true.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1352,7 +1352,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorSPIN_Test() throws IOException {
+	public void BiberAnnotatorSPIN_Test() throws IOException {
 		String text = "He wants to convincingly prove that he is right.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1375,7 +1375,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorSPP2_Test() throws IOException {
+	public void BiberAnnotatorSPP2_Test() throws IOException {
 		String text = "You don't know what it's like.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1398,7 +1398,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorSTPR_Test() throws IOException {
+	public void BiberAnnotatorSTPR_Test() throws IOException {
 		String text = "The candidate that I was thinking of.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1421,7 +1421,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorSUAV_Test() throws IOException {
+	public void BiberAnnotatorSUAV_Test() throws IOException {
 		String text = "I recommend a different course.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1444,7 +1444,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorSYNE_Test() throws IOException {
+	public void BiberAnnotatorSYNE_Test() throws IOException {
 		String text = "He was no true friend.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1467,7 +1467,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorTHAC_Test() throws IOException {
+	public void BiberAnnotatorTHAC_Test() throws IOException {
 		String text = "She was so beautiful that it made me cry";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1490,7 +1490,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorTHVC_Test() throws IOException {
+	public void BiberAnnotatorTHVC_Test() throws IOException {
 		String text = "And that is how the cookie crumbles.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1513,7 +1513,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorTIME_Test() throws IOException {
+	public void BiberAnnotatorTIME_Test() throws IOException {
 		String text = "And they lived happily ever afterwards. The end.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1536,7 +1536,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorTO_Test() throws IOException {
+	public void BiberAnnotatorTO_Test() throws IOException {
 		String text = "To be or not to be, that is the question.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1559,7 +1559,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorTOBJ_Test() throws IOException {
+	public void BiberAnnotatorTOBJ_Test() throws IOException {
 		String text = "The dog that I saw was yellow.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1583,7 +1583,7 @@ public class Annotator_Test {
 	
 	
 	@Test
-	void BiberAnnotatorTPP3_Test() throws IOException {
+	public void BiberAnnotatorTPP3_Test() throws IOException {
 		String text = "She was the best damn woman that I'd ever seen.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1606,7 +1606,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorTSUB_Test() throws IOException {
+	public void BiberAnnotatorTSUB_Test() throws IOException {
 		String text = "The dog that bit me was rabid.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1629,7 +1629,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorVBD_Test() throws IOException {
+	public void BiberAnnotatorVBD_Test() throws IOException {
 		String text = "Jesus wept.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1652,7 +1652,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorVPRT_Test() throws IOException {
+	public void BiberAnnotatorVPRT_Test() throws IOException {
 		String text = "Jesus weeps.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1675,7 +1675,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorWHCL_Test() throws IOException {
+	public void BiberAnnotatorWHCL_Test() throws IOException {
 		String text = "I believed what he told me.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1698,7 +1698,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorWHOBJ_Test() throws IOException {
+	public void BiberAnnotatorWHOBJ_Test() throws IOException {
 		String text = "The man who Sally likes.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1721,7 +1721,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorWHQU_Test() throws IOException {
+	public void BiberAnnotatorWHQU_Test() throws IOException {
 		String text = "Who do you love?";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1744,7 +1744,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorWHSUB_Test() throws IOException {
+	public void BiberAnnotatorWHSUB_Test() throws IOException {
 		String text = "I'm the man who loves you.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1767,7 +1767,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorWZPAST_Test() throws IOException {
+	public void BiberAnnotatorWZPAST_Test() throws IOException {
 		String text = "The solution produced by this process is toxic.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1790,7 +1790,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorWZPRES_Test() throws IOException {
+	public void BiberAnnotatorWZPRES_Test() throws IOException {
 		String text = "The event causing this decline is unknown at this time.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1813,7 +1813,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BiberAnnotatorXX0_Test() throws IOException {
+	public void BiberAnnotatorXX0_Test() throws IOException {
 		String text = "I don't know why I didn't come.";
 		OOPAnnotator annotator = new BiberAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1837,12 +1837,12 @@ public class Annotator_Test {
 	
 	//TODO
 	//@Test
-	//void BiberDimensionsAnnotator_Test() throws IOException {
+	//public void BiberDimensionsAnnotator_Test() throws IOException {
 	//	assertEquals("Implemented", "TODO");
 	//}
 	
 	@Test
-	void ColorsAnnotator_Test() throws IOException {
+	public void ColorsAnnotator_Test() throws IOException {
 		String text = "The quick brown fox jumped over the lazy white dog.";
 		OOPAnnotator annotator = new ColorsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1887,7 +1887,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void CommonWordsAnnotator_Test() throws IOException {
+	public void CommonWordsAnnotator_Test() throws IOException {
 		String text = "These are the times that try men's souls.";
 		OOPAnnotator annotator = new CommonWordsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1919,7 +1919,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void CoreNlpGenderAnnotator_Test() throws IOException {
+	public void CoreNlpGenderAnnotator_Test() throws IOException {
 		String text = "Suzanne takes you down to her place near the river.";
 		OOPAnnotator annotator = new CoreNlpGenderAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1951,7 +1951,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void CoreNlpParagraphAnnotator_Test() throws IOException {
+	public void CoreNlpParagraphAnnotator_Test() throws IOException {
 		String text = "Suzanne takes you down to her place near the river.\n\n" + 
 				"You can hear the boats go by, you can spend the night forever.";
 		OOPAnnotator annotator = new CoreNlpParagraphAnnotator();
@@ -1984,7 +1984,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void CoreNlpSentimentAnnotator_Test() throws IOException {
+	public void CoreNlpSentimentAnnotator_Test() throws IOException {
 		String text = "I love you Suzanne.";
 		OOPAnnotator annotator = new CoreNlpSentimentAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2019,7 +2019,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void DatesAnnotator_Test() throws IOException {
+	public void DatesAnnotator_Test() throws IOException {
 		String text = "From January 4, 1966, Kawara made a long series of \"Date paintings\" (the Today series), which consist entirely of the date on which the painting was executed in simple white lettering set against a solid background.";
 		OOPAnnotator annotator =  new DatesAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2052,7 +2052,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void FlavorsAnnotator_Test() throws IOException {
+	public void FlavorsAnnotator_Test() throws IOException {
 		String text = "It won't do to dream of caramel, to think of cinnamon, and long for you.";
 		OOPAnnotator annotator =  new FlavorsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2085,7 +2085,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void FleschKincaidAnnotator_Text() throws IOException {
+	public void FleschKincaidAnnotator_Text() throws IOException {
 		String text = "But I had seen first one and then another of the rooms in which I had slept during my life, "
 				+ "and in the end I would revisit them all in the long course of my waking dream: rooms in winter, "
 				+ "where on going to bed I would at once bury my head in a nest, built up out of the most diverse materials, "
@@ -2140,7 +2140,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void FunctionWordsAnnotator_Test() throws IOException {
+	public void FunctionWordsAnnotator_Test() throws IOException {
 		String text = "These are the times that try men's souls.";
 		OOPAnnotator annotator = new FunctionWordsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2172,7 +2172,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void GenderAnnotator_Test() throws IOException {
+	public void GenderAnnotator_Test() throws IOException {
 		String text = "Anjali is a punk rocker.";
 		OOPAnnotator annotator = new GenderAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2204,7 +2204,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void LocationsAnnotator_Test() throws IOException {
+	public void LocationsAnnotator_Test() throws IOException {
 		String text = "She feeds you tea and oranges that come all the way from China.";
 		OOPAnnotator annotator = new LocationsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2243,7 +2243,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void NonAffirmativeAnnotator_Test() throws IOException {
+	public void NonAffirmativeAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
 		OOPAnnotator annotator = new NonAffirmativeAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2277,7 +2277,7 @@ public class Annotator_Test {
 
 	
 	@Test
-	void NounGroupsAnnotator_Test() throws IOException {
+	public void NounGroupsAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
 		OOPAnnotator annotator = new NounGroupsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2309,7 +2309,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void NounHypernymsAnnotator_Test() throws IOException {
+	public void NounHypernymsAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
 		CoreDocument document = new CoreDocument(text);
 		CoreNlpUtils.getInstance(getParameterStore()).getPipeline().annotate(document);
@@ -2351,7 +2351,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void NounsAnnotator_Test() throws IOException {
+	public void NounsAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
 		OOPAnnotator annotator = new NounsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2386,7 +2386,7 @@ public class Annotator_Test {
 	
 
 	@Test
-	void PeopleAnnotator_Test() throws IOException {
+	public void PeopleAnnotator_Test() throws IOException {
 		String text = "Barack Obama was born in Hawaii. He is the president. Obama was elected in 2008.";
 		OOPAnnotator annotator = new PeopleAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2466,12 +2466,12 @@ public class Annotator_Test {
 	
 	//NOT IN OSS VERSION
 	//@Test
-	//void PerfecttenseAnnotator_Test() throws IOException {
+	//public void PerfecttenseAnnotator_Test() throws IOException {
 	//	assertEquals("Implemented", "todo");
 	//}
 	
 	@Test
-	void PointlessAdjectivesAnnotator_Test() throws IOException {
+	public void PointlessAdjectivesAnnotator_Test() throws IOException {
 		String text = "I would not eat such green eggs and ham.";
 		OOPAnnotator annotator = new PointlessAdjectivesAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2503,7 +2503,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void PointlessAdverbsAnnotator_Test() throws IOException {
+	public void PointlessAdverbsAnnotator_Test() throws IOException {
 		String text = "I would rather not eat green eggs and ham.";
 		OOPAnnotator annotator = new PointlessAdverbsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2535,7 +2535,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void PossessivesAnnotator_Test() throws IOException {
+	public void PossessivesAnnotator_Test() throws IOException {
 		String text = "Suzanne takes you down to her place near the river.";
 		OOPAnnotator annotator = new PossessivesAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2567,7 +2567,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void PrepositionCategoriesAnnotator_Test() throws IOException {
+	public void PrepositionCategoriesAnnotator_Test() throws IOException {
 		String text = "She feeds you tea and oranges that come all the way from China.";
 		OOPAnnotator annotator = new PrepositionCategoriesAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2612,7 +2612,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void PrepositionsAnnotator_Test() throws IOException {
+	public void PrepositionsAnnotator_Test() throws IOException {
 		String text = "She feeds you tea and oranges that come all the way from China.";
 		OOPAnnotator annotator = new PrepositionsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2657,7 +2657,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void PronounAnnotator_Test() throws IOException {
+	public void PronounAnnotator_Test() throws IOException {
 		String text = "She feeds you tea and oranges that come all the way from China.";
 		OOPAnnotator annotator = new PronounAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2702,7 +2702,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void PunctuationMarkAnnotator_Test() throws IOException {
+	public void PunctuationMarkAnnotator_Test() throws IOException {
 		String text = "The panda eats, shoots, and leaves.";
 		OOPAnnotator annotator = new PunctuationMarkAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2760,7 +2760,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void QuotesAnnotator_Test() throws IOException {
+	public void QuotesAnnotator_Test() throws IOException {
 		String text = "She said \"I know what it's like to be dead\".";
 		OOPAnnotator annotator = new QuotesAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2777,13 +2777,13 @@ public class Annotator_Test {
 	
 	//NOT IN OSS VERSION
 	//@Test
-	//void SettingsAnnotator_Test() throws IOException {
+	//public void SettingsAnnotator_Test() throws IOException {
 	//	assertEquals("Implemented", "todo");
 	//}
 	
 
 	@Test
-	void SVOAnnotator_Test() throws IOException {
+	public void SVOAnnotator_Test() throws IOException {
 		//String text = "She gave me a raise.";
 		String text = "You should read the story to me.";
 		OOPAnnotator annotator = new SVOAnnotator();
@@ -2870,12 +2870,12 @@ public class Annotator_Test {
 	
 	//NOT IN OSS VERSION
 	//@Test
-	//void TemporalNGramsAnnotator_Test() throws IOException {
+	//public void TemporalNGramsAnnotator_Test() throws IOException {
 	//	assertEquals("Implemented", "todo");
 	//}
 	
 	@Test
-	void TopicsAnnotator_Test() throws IOException {
+	public void TopicsAnnotator_Test() throws IOException {
 		String text = "She feeds you tea and oranges that come all the way from China.";
 		OOPAnnotator annotator = new TopicsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2907,7 +2907,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void UncommonWordsAnnotator_Test() throws IOException {
+	public void UncommonWordsAnnotator_Test() throws IOException {
 		String text = "It thus differs from a nonce word, which may never be recorded.";
 		OOPAnnotator annotator = new UncommonWordsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2940,7 +2940,7 @@ public class Annotator_Test {
 	
 	
 	@Test
-	void VaderSentimentAnnotator_Test() throws IOException {
+	public void VaderSentimentAnnotator_Test() throws IOException {
 		String text = "I love you Suzanne.";
 		OOPAnnotator annotator = new VaderSentimentAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -2975,7 +2975,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void VerbGroupsAnnotator_Test() throws IOException {
+	public void VerbGroupsAnnotator_Test() throws IOException {
 		String text = "I'm just sitting here watching the wheels go round and round.";
 		OOPAnnotator annotator = new VerbGroupsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3008,7 +3008,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void VerbHypernymsAnnotator_Test() throws IOException {
+	public void VerbHypernymsAnnotator_Test() throws IOException {
 		String text = "I'm just sitting here watching the wheels go round and round.";
 		CoreDocument document = new CoreDocument(text);
 		CoreNlpUtils.getInstance(getParameterStore()).getPipeline().annotate(document);
@@ -3049,7 +3049,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void VerblessSentencesAnnotator_Test() throws IOException {
+	public void VerblessSentencesAnnotator_Test() throws IOException {
 		String text = "sadasf ads asdf dsaf.";
 		OOPAnnotator annotator = new VerblessSentencesAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3071,7 +3071,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void VerbnetGroupsAnnotator_Test() throws IOException {
+	public void VerbnetGroupsAnnotator_Test() throws IOException {
 		String text = "I'm just sitting here watching the wheels go round and round.";
 		OOPAnnotator annotator = new VerbnetGroupsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3105,7 +3105,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void VerbsAnnotator_Test() throws IOException {
+	public void VerbsAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
 		OOPAnnotator annotator = new VerbsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3132,7 +3132,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void VerbTenseAnnotator_Test() throws IOException {
+	public void VerbTenseAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
 		OOPAnnotator annotator = new VerbTenseAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3159,7 +3159,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void WikipediaCategoriesAnnotator_Test() throws IOException {
+	public void WikipediaCategoriesAnnotator_Test() throws IOException {
 		String text = "Visit Winnipeg in the summer.";
 		CoreDocument document = new CoreDocument(text);
 		CoreNlpUtils.getInstance(getParameterStore()).getPipeline().annotate(document);
@@ -3177,6 +3177,7 @@ public class Annotator_Test {
 		targetSubscoreName = "Cities in Manitoba";
 		boolean foundSubscore = false;
 		for (PhraseAnnotation subscore : score) {
+			//System.out.println(subscore.getName());
 			if (subscore.getName().startsWith(targetSubscoreName)) {
 				foundSubscore = true;
 				break;
@@ -3189,7 +3190,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void WikipediaGlossAnnotator_Test() throws IOException {
+	public void WikipediaGlossAnnotator_Test() throws IOException {
 		String text = "Visit Winnipeg in the summer.";
 		OOPAnnotator annotator = new WikipediaGlossAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3204,7 +3205,7 @@ public class Annotator_Test {
 	
 
 	@Test
-	void WikipediaPageviewTopicsAnnotator_Test() throws IOException {
+	public void WikipediaPageviewTopicsAnnotator_Test() throws IOException {
 		String text = "Visit Winnipeg in the summer.";
 		CoreDocument document = new CoreDocument(text);
 		CoreNlpUtils.getInstance(getParameterStore()).getPipeline().annotate(document);
@@ -3234,7 +3235,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void WordlessWordsAnnotator_Test() throws IOException {
+	public void WordlessWordsAnnotator_Test() throws IOException {
 		String text = "asdfa sadf asdf sadf.";
 		OOPAnnotator annotator = new WordlessWordsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3259,7 +3260,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void WordnetGlossAnnotator_Test() throws IOException {
+	public void WordnetGlossAnnotator_Test() throws IOException {
 		String text = "Visit Winnipeg in the summer.";
 		OOPAnnotator annotator = new WordnetGlossAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3273,7 +3274,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void WordsAnnotator_Test() throws IOException {
+	public void WordsAnnotator_Test() throws IOException {
 		String text = "These are the times that try men's souls.";
 		OOPAnnotator annotator = new WordsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3305,7 +3306,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void BecauseAnnotator_Test() throws IOException {
+	public void BecauseAnnotator_Test() throws IOException {
 		String text = "Because the world is round it turns me on.";
 		OOPAnnotator annotator =  new BecauseAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3338,7 +3339,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void IfAnnotator_Test() throws IOException {
+	public void IfAnnotator_Test() throws IOException {
 		String text = "If a picture paints a thousand words, then why can't I paint you?";
 		OOPAnnotator annotator =  new IfAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3371,7 +3372,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void CharCountAnnotator_Test() throws IOException {
+	public void CharCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party.";
 		OOPAnnotator annotator =  new CharCountAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3393,7 +3394,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void ParagraphCountAnnotator_Test() throws IOException {
+	public void ParagraphCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party.";
 		OOPAnnotator annotator =  new ParagraphCountAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3415,7 +3416,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void SentenceCountAnnotator_Test() throws IOException {
+	public void SentenceCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party. Donate now.";
 		OOPAnnotator annotator =  new SentenceCountAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3437,7 +3438,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void SyllableCountAnnotator_Test() throws IOException {
+	public void SyllableCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party.";
 		OOPAnnotator annotator =  new SyllableCountAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3459,7 +3460,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void TokenCountAnnotator_Test() throws IOException {
+	public void TokenCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party.";
 		OOPAnnotator annotator =  new TokenCountAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3481,7 +3482,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void WordCountAnnotator_Test() throws IOException {
+	public void WordCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party.";
 		OOPAnnotator annotator =  new WordCountAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3503,7 +3504,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void HowAnnotator_Test() throws IOException {
+	public void HowAnnotator_Test() throws IOException {
 		String text = "How can I go forward when I don't know which way I'm facing?";
 		OOPAnnotator annotator =  new HowAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3536,7 +3537,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void WhatAnnotator_Test() throws IOException {
+	public void WhatAnnotator_Test() throws IOException {
 		String text = "What do you want me to do, to do for you, to see you through?";
 		OOPAnnotator annotator =  new WhatAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3569,7 +3570,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void WhenAnnotator_Test() throws IOException {
+	public void WhenAnnotator_Test() throws IOException {
 		String text = "When can I see you again?";
 		OOPAnnotator annotator =  new WhenAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3602,7 +3603,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void WhereAnnotator_Test() throws IOException {
+	public void WhereAnnotator_Test() throws IOException {
 		String text = "Where are you going?";
 		OOPAnnotator annotator =  new WhereAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3635,7 +3636,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void WhoAnnotator_Test() throws IOException {
+	public void WhoAnnotator_Test() throws IOException {
 		String text = "Who let the dogs out?";
 		OOPAnnotator annotator =  new WhoAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3668,7 +3669,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void WhyAnnotator_Test() throws IOException {
+	public void WhyAnnotator_Test() throws IOException {
 		String text = "Why you wanna treat me so bad?";
 		OOPAnnotator annotator =  new WhyAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3701,7 +3702,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void AsAnnotator_Test() throws IOException {
+	public void AsAnnotator_Test() throws IOException {
 		String text = "We are such stuff as dreams are made on, and our little life is rounded with a sleep.";
 		OOPAnnotator annotator =  new AsAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -3734,7 +3735,7 @@ public class Annotator_Test {
 	}
 	
 	@Test
-	void LikeAnnotator_Test() throws IOException {
+	public void LikeAnnotator_Test() throws IOException {
 		String text = "Happy like a cabbie in a rainstorm.";
 		OOPAnnotator annotator =  new LikeAnnotator();
 		CoreDocument document = annotate(text, annotator);

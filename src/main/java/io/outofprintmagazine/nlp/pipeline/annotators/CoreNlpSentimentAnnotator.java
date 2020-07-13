@@ -46,6 +46,11 @@ public class CoreNlpSentimentAnnotator extends AbstractAnnotator implements Anno
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(CoreNlpSentimentAnnotator.class);
 	
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
+		return logger;
+	}
+	
 	public CoreNlpSentimentAnnotator() {
 		super();
 		this.setScorer((Scorer)new BigDecimalAvg(this.getAnnotationClass()));

@@ -45,8 +45,8 @@ public class WhyAnnotator extends AbstractTreeAnnotator implements Annotator, OO
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WhyAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

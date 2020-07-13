@@ -45,8 +45,8 @@ public class IfAnnotator extends AbstractTreeAnnotator implements Annotator, OOP
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(IfAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 

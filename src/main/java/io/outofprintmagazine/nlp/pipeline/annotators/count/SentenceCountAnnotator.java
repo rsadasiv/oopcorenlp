@@ -42,11 +42,10 @@ public class SentenceCountAnnotator extends AbstractAnnotator implements Annotat
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(SentenceCountAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
-
 	
 	public SentenceCountAnnotator() {
 		super();

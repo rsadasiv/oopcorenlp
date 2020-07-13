@@ -44,9 +44,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import io.outofprintmagazine.nlp.pipeline.annotators.OOPAnnotator;
+import io.outofprintmagazine.nlp.pipeline.serializers.CoreNlpSerializer;
 import io.outofprintmagazine.util.ParameterStore;
 
-
+/**
+ * <p>You will need to set perfecttense_apikey and perfecttense_appkey in your ParameterStore.</p>
+ * <p>Visit: <a href="https://www.perfecttense.com/">Perfecttense</a> to sign up.</p> 
+ * @author Ram Sadasiv
+ */
 public class PerfecttenseUtils {
 	
 	@SuppressWarnings("unused")

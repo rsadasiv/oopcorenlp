@@ -37,8 +37,8 @@ public class VerblessSentencesAnnotator extends AbstractPosAnnotator implements 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(VerblessSentencesAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

@@ -36,21 +36,18 @@ import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
-import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
 import io.outofprintmagazine.nlp.pipeline.scorers.PhraseScorer;
 import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
-import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.PhraseSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 import io.outofprintmagazine.nlp.utils.WikipediaUtils;
 
 public class WikipediaCategoriesAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
 	
-	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WikipediaCategoriesAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

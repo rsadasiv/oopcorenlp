@@ -40,8 +40,8 @@ public class VerbsAnnotator extends AbstractPosAnnotator implements Annotator, O
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(VerbsAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

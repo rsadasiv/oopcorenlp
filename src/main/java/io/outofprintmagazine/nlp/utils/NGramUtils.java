@@ -51,7 +51,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.outofprintmagazine.util.ParameterStore;
 
-
+/**
+ * <p>You will need to set phrasefinder_ApiKey in your ParameterStore.</p>
+ * <p>Visit: <a href="https://phrasefinder.io/api">Phrase Finder</a> to sign up.</p> 
+ * @author Ram Sadasiv
+ */
 public class NGramUtils {
 	
 	@SuppressWarnings("unused")

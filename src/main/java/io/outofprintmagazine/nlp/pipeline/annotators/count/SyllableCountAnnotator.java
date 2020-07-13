@@ -44,8 +44,8 @@ public class SyllableCountAnnotator extends AbstractAnnotator implements Annotat
 	
 	private static final Logger logger = LogManager.getLogger(SyllableCountAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 

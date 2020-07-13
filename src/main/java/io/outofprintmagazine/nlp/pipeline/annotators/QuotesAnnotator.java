@@ -45,8 +45,8 @@ public class QuotesAnnotator extends AbstractAnnotator implements Annotator, OOP
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(QuotesAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 

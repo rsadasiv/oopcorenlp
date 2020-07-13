@@ -44,8 +44,8 @@ public class WikipediaPageviewTopicsAnnotator extends AbstractPosAnnotator imple
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WikipediaPageviewTopicsAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 		

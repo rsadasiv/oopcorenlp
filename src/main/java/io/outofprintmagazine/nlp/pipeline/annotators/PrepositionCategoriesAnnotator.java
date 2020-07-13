@@ -36,11 +36,10 @@ import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
 
 public class PrepositionCategoriesAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
 	
-	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PrepositionCategoriesAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

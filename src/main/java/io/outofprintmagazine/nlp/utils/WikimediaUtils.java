@@ -100,10 +100,12 @@ public class WikimediaUtils {
 			else {
 				gimcontinue = null;
 			}
-			JsonNode pagesNode = rootNode.get("query").get("pages");
-			Iterator<Entry<String, JsonNode>> pagesIter = pagesNode.fields();
-			while (pagesIter.hasNext()) {
-				imageTitles.add(pagesIter.next().getValue().get("title").asText());
+			if (rootNode != null && rootNode.get("query") != null && rootNode.get("query").get("pages") != null) {
+				JsonNode pagesNode = rootNode.get("query").get("pages");
+				Iterator<Entry<String, JsonNode>> pagesIter = pagesNode.fields();
+				while (pagesIter.hasNext()) {
+					imageTitles.add(pagesIter.next().getValue().get("title").asText());
+				}
 			}
 		}
 		

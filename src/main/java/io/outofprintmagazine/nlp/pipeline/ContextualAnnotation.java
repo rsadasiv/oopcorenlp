@@ -23,9 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public abstract class ContextualAnnotation {
 	
 	protected String CanonicalName = "";
@@ -38,6 +35,7 @@ public abstract class ContextualAnnotation {
 	protected List<String> Thumbnails = new ArrayList<String>();
 	protected BigDecimal VaderSentimentAvg = new BigDecimal(.5);
 	protected BigDecimal CoreNlpSentimentAvg = new BigDecimal(.5);
+	protected List<String> WikipediaGlosses = new ArrayList<String>();
 
 	public String getCanonicalName() {
 		return CanonicalName;
@@ -153,6 +151,14 @@ public abstract class ContextualAnnotation {
 
 	public void setAttributes(Map<String, Map<String, BigDecimal>> attributes) {
 		Attributes = attributes;
+	}
+	
+	public List<String> getWikipediaGlosses() {
+		return WikipediaGlosses;
+	}
+
+	public void setWikipediaGlosses(List<String> wikipediaGlosses) {
+		WikipediaGlosses = wikipediaGlosses;
 	}
 
 	public ContextualAnnotation() {

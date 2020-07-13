@@ -40,8 +40,8 @@ public class AngliciseAnnotator extends AbstractPosAnnotator implements Annotato
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(AngliciseAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

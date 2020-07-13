@@ -45,8 +45,8 @@ public class WhenAnnotator extends AbstractTreeAnnotator implements Annotator, O
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WhenAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

@@ -1,13 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-
-<project>
-  <body>
-	<menu ref="reports" />
-  </body>
-  	<skin>
+<project name="oopcorenlp">
+	<body>
+	    <menu name="Overview">
+	      <item name="Audience" href="audience.html" collapse="true">
+	      	<item name="Non-Technical" href="audience-nontechnical.html" />
+	      	<item name="Technical" href="audience-technical.html" />
+	      </item>	   
+	      <item name="Functionality" href="functionality.html" collapse="true">
+	      	<item name="Stanford" href="functionality-stanford.html" />
+	      	<item name="OOP" href="functionality-oop.html" />
+	      	<item name="Aggregates" href="functionality-aggregates.html" />
+	      	<item name="Pipeline" href="functionality-pipeline.html" />
+	      </item>
+	      <item name="Developers" href="developers.html" collapse="true">
+	      	<item name="Overview" href="developers-overview.html" />
+	      	<item name="Dependencies" href="developers-dependencies.html" />
+	      	<item name="Compliation" href="developers-compilation.html" />
+	      	<item name="Testing" href="developers-testing.html" />
+	      	<item name="Packaging" href="developers-packaging.html" />
+	      	<item name="Project Documentation" href="developers-documentation.html" />
+	      	<item name="Source Code" href="developers-code.html" />	      	
+	      </item>      	    	
+	      <item name="Acknowledgments" href="acknowledgments.html" />
+	    </menu>	
+		<menu ref="reports" />
+	</body>
+	<skin>
 		<groupId>org.apache.maven.skins</groupId>
 		<artifactId>maven-fluido-skin</artifactId>
 		<version>1.9</version>
 	</skin>
+	<custom>
+	    <fluidoSkin>
+			<gitHub>
+				<projectId>rsadasiv/oopcorenlp</projectId>
+				<ribbonOrientation>right</ribbonOrientation>
+				<ribbonColor>black</ribbonColor>
+			</gitHub>
+			<twitter>
+	        	<user>CheerfullySynt1</user>
+	        	<showUser>true</showUser>
+	        	<showFollowers>false</showFollowers>
+	      	</twitter>
+      		<!-- a href="https://twitter.com/CheerfullySynt1?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">Follow @CheerfullySynt1</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
+      	
+	    </fluidoSkin>
+	</custom>
 </project>

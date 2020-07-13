@@ -51,8 +51,8 @@ public class SVOAnnotator extends AbstractPosAnnotator implements Annotator, OOP
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(SVOAnnotator.class);
 
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	
@@ -221,6 +221,9 @@ public class SVOAnnotator extends AbstractPosAnnotator implements Annotator, OOP
 					if (directObject == null && rn.getShortName().equals("obj") && dependency.gov().backingLabel().equals(verb)) {
 						directObject = dependency.dep().backingLabel();
 					}
+					if (indirectObject == null && rn.getShortName().equals("iobj") && dependency.gov().backingLabel().equals(verb)) {
+						indirectObject = dependency.dep().backingLabel();
+					}
 					if (indirectObject == null && rn.getShortName().equals("obl") && dependency.gov().backingLabel().equals(verb)) {
 						indirectObject = dependency.dep().backingLabel();
 					}
@@ -294,6 +297,6 @@ public class SVOAnnotator extends AbstractPosAnnotator implements Annotator, OOP
 
 	@Override
 	public String getDescription() {
-		return "CoreNLP dependency parse subject-verb-object-indirectObject-auxVerb: nsubj, root, dobj, iobj. http://universaldependencies.org/docsv1/en/dep/index.html";
+		return "CoreNLP dependency parse subject-verb-object-indirectObject-auxVerb: nsubj, root, obj, iobj. https://universaldependencies.org/en/dep/";
 	}
 }

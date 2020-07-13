@@ -45,11 +45,11 @@ public class BecauseAnnotator extends AbstractTreeAnnotator implements Annotator
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BecauseAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
-
+	
 	public BecauseAnnotator() {
 		super();
 		this.setTags(Arrays.asList("because"));

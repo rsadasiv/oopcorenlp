@@ -16,26 +16,23 @@
  ******************************************************************************/
 package io.outofprintmagazine.nlp.pipeline.annotators;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.flickr4java.flickr.FlickrException;
+
 import edu.stanford.nlp.coref.CorefCoreAnnotations;
 import edu.stanford.nlp.ling.CoreAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreQuote;
@@ -45,14 +42,16 @@ import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.ActorAnnotation;
 import io.outofprintmagazine.nlp.pipeline.ContextualAnnotation;
 import io.outofprintmagazine.nlp.utils.BingUtils;
+import io.outofprintmagazine.nlp.utils.FlickrUtils;
+import io.outofprintmagazine.nlp.utils.WikimediaUtils;
 
 public class ActorsAnnotator extends AbstractContextualAnnotator implements Annotator, OOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(ActorsAnnotator.class);
 	
-	@Override
-	public Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 
@@ -110,54 +109,20 @@ public class ActorsAnnotator extends AbstractContextualAnnotator implements Anno
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public void annotate(Annotation annotation) {
-		CoreDocument document = new CoreDocument(annotation);
-		Map<String,ActorAnnotation> scoreMap = new HashMap<String,ActorAnnotation>();
-		Map<String,BigDecimal> entities = (Map<String, BigDecimal>) document.annotation().get(getEntityAnnotationClass());
-	    for (String canonicalEntityName : entities.keySet()) {
-	    	ActorAnnotation characterAnnotation = new ActorAnnotation();
-	    	characterAnnotation.setCanonicalName(canonicalEntityName);
-	    	try {
-	    		for (CoreSentence sentence: document.sentences()) {
-	    			Map<String,BigDecimal> sentencePeople = (Map<String, BigDecimal>) sentence.coreMap().get(getEntityAnnotationClass());
-	    			if (sentencePeople != null && sentencePeople.get(canonicalEntityName) != null) {
-	    				scoreSentence(document, sentence, characterAnnotation);
-	    			}
-	    			for (CoreLabel token : sentence.tokens()) {
-		    			Map<String,BigDecimal> tokenPeople = (Map<String, BigDecimal>) token.get(getEntityAnnotationClass());
-		    			if (tokenPeople != null && tokenPeople.get(canonicalEntityName) != null) {
-		    				scoreToken(document, token, characterAnnotation);
-		    				scoreOOPGender(token, characterAnnotation);
-		    				scoreCoreGender(token, characterAnnotation);
-		    			}
-	    			}
-	    		}
-		    	scoreQuotes(document, canonicalEntityName, characterAnnotation);
-		    	scoreThumbnails(characterAnnotation);
-
-	    	}
-	    	catch (Exception e) {
-	    		ByteArrayOutputStream os = new ByteArrayOutputStream();
-	    		PrintStream ps = new PrintStream(os);
-	    		e.printStackTrace(ps);
-	    		try {
-					logger.error(os.toString("UTF8"));
-				} catch (UnsupportedEncodingException e1) {
-					e1.printStackTrace();
-				}
-	    	}
-	    	if (characterAnnotation.getImportance().compareTo(new BigDecimal(1)) > 0) {
-	    		characterAnnotation.setVaderSentimentAvg();
-	    		characterAnnotation.setCoreNlpSentimentAvg();
-	    		scoreMap.put(toAlphaNumeric(canonicalEntityName), characterAnnotation);
-	    	}
-	    }
-	    document.annotation().set(getAnnotationClass(), scoreMap);
+	protected void scoreDocument(CoreDocument document, ContextualAnnotation annotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException, URISyntaxException, FlickrException {
+		super.scoreDocument(document, annotation);
+		scoreQuotes(document, annotation.getCanonicalName(), (ActorAnnotation)annotation);
 	}
 	
-
+	@Override
+	protected void scoreToken(CoreDocument document, CoreLabel token, ContextualAnnotation annotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+		super.scoreToken(document, token, annotation);
+		scoreOOPGender(token, (ActorAnnotation)annotation);
+		scoreCoreGender(token, (ActorAnnotation)annotation);
+		
+	}
+	
 	
 	protected void scoreQuotes(CoreDocument document, String canonicalEntityName, ActorAnnotation characterAnnotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		for (CoreQuote quote : document.quotes()) {
@@ -184,20 +149,28 @@ public class ActorsAnnotator extends AbstractContextualAnnotator implements Anno
 	}
 	
 	@Override
-	protected void scoreThumbnails(ContextualAnnotation actor) throws IOException, URISyntaxException {
-		String tmpCharacterName = actor.getCanonicalName();
-		if (!tmpCharacterName.equalsIgnoreCase("I")) {
+	protected void scoreThumbnails(ContextualAnnotation actor) throws IOException, URISyntaxException, FlickrException {
+		String characterName = actor.getCanonicalName();
+		if (!characterName.equalsIgnoreCase("I")) {
 
-			String[] names = tmpCharacterName.split(" ");
+			String[] names = characterName.split(" ");
 			if (names.length > 1) {
 				if (names[0].startsWith("Mr") || names[0].startsWith("Mrs") || names[0].startsWith("Dr")) {
-					tmpCharacterName = names[1];
+					characterName = names[1];
 				}
 				else {
-					tmpCharacterName = names[0];
+					characterName = names[0];
 				}
 			}
-			actor.getThumbnails().addAll(BingUtils.getInstance(getParameterStore()).getImagesByText(tmpCharacterName));
+			if (getParameterStore().getProperty("azure_apiKey") != null) {
+				actor.getThumbnails().addAll(BingUtils.getInstance(getParameterStore()).getImagesByText(characterName));
+			}
+			else if (getParameterStore().getProperty("flickr_apiKey") != null && getParameterStore().getProperty("faceplusplus_apiKey") != null) {
+				actor.getThumbnails().addAll(FlickrUtils.getInstance(getParameterStore()).getFacesByText(characterName));
+			}
+			else {
+				actor.getThumbnails().addAll(WikimediaUtils.getInstance(getParameterStore()).getImagesByText(characterName));
+			}
 		}		
 	}
 	

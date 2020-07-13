@@ -45,8 +45,8 @@ public class HowAnnotator extends AbstractTreeAnnotator implements Annotator, OO
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(HowAnnotator.class);
 	
-	@Override
-	public Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

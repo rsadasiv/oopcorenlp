@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Functionality - Aggregates</title>
+	</head>
+	<body>
+		<h2>Aggregates</h2>
+		<p>This is the OOP document level scores enriched with relevant
+			statistical calculations. The structure of the json document is as
+			follows:
+		</p>	
+		<ul>
+			<li>document
+				<ul>
+					<li>annotation
+						<ul>
+							<li>name (same as annotation)</li>
+							<li>aggregatedScores (list)
+								<ul>
+									<li>name (subannotation name)</li>
+									<li>score
+										<ul>
+											<li>raw (integer, sum of subannotation scores in text)</li>
+											<li>normalized (decimal, raw divided by number of tokens
+												in text)</li>
+											<li>count (integer, count of subannotation scores in
+												text, frequently equal to raw)</li>
+										</ul>
+									</li>
+									<li>aggregateScore
+										<ul>
+											<li>rank (integer, ordinal location of this subannoation
+												inside the annotation)</li>
+											<li>percentage (decimal, subannotation normalized divided
+												by annotation normalized)</li>
+											<li>percentile (integer, subannoation rank plus
+												annotation count divided by annotation count)</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+							<li>scoreStats (object)
+								<ul>
+									<li>score
+										<ul>
+											<li>raw (integer, sum of subannotation scores in text)</li>
+											<li>normalized (decimal, raw divided by number of tokens
+												in text)</li>
+											<li>count (integer, count of subannotations)</li>
+										</ul>
+									</li>
+									<li>stats
+										<ul>
+											<li>min (decimal, lowest subannotation normalized)</li>
+											<li>max (decimal, highest subannotation normalized)</li>
+											<li>mean (decimal, annotation normalized divided by
+												annotation count)</li>
+											<li>median (decimal, midpoint of subannotation
+												normalized)</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>	
+	</body>
+</html>

@@ -38,8 +38,8 @@ public class PunctuationMarkAnnotator extends AbstractPosAnnotator implements An
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PunctuationMarkAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 

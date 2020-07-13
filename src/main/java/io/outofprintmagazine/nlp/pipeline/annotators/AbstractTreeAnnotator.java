@@ -45,8 +45,8 @@ public abstract class AbstractTreeAnnotator extends AbstractPosAnnotator impleme
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(AbstractTreeAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 

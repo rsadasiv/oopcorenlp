@@ -44,11 +44,10 @@ public class WordCountAnnotator extends AbstractAnnotator implements Annotator, 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WordCountAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
-
 	
 	public WordCountAnnotator() {
 		super();

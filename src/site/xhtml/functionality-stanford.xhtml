@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Functionality - Stanford</title>
+	</head>
+	<body>
+		<h2>Stanford</h2>
+		<p>The Stanford output is included mostly as a convenience and a debugging tool, but if you need a more reliable corenlp.run implementation here you go.</p>
+		<p>This is the result of the Stanford CoreNLP analysis of the text using the following annotators:</p>
+		<ul>
+			<li><a href="https://stanfordnlp.github.io/CoreNLP/tokenize.html">tokenize</a>: recognizes individual words.</li>
+			<li><a href="https://stanfordnlp.github.io/CoreNLP/ssplit.html">ssplit</a>: recognizes sentence boundaries.</li>
+			<li><a href="https://stanfordnlp.github.io/CoreNLP/pos.html">pos</a>: identifies the token's part of speech.</li>
+			<li><a href="https://stanfordnlp.github.io/CoreNLP/lemma.html">lemma</a>: identifies the root form of the token.</li>
+			<li><a href="https://stanfordnlp.github.io/CoreNLP/parse.html">parse</a>: creates a syntax tree of the sentence. Main clause, independent clause, noun phrase, verb phrase, etc.</li>
+			<li><a href="https://stanfordnlp.github.io/CoreNLP/depparse.html">depparse</a>: creates a dependency graph of the sentence. Subject, verb, object, modifier, auxilliary, etc.</li>
+			<li><a href="https://stanfordnlp.github.io/CoreNLP/ner.html">ner</a>: recognizes named entities. Is this a person? Is this a	place?</li>
+			<li><a href="https://stanfordnlp.github.io/CoreNLP/coref.html">coref</a>: links pronouns to antecedents.</li>
+			<li><a href="https://stanfordnlp.github.io/CoreNLP/quote.html">quote</a>: recognizes quotations and links quotes to speakers.</li>
+			<li><a href="https://stanfordnlp.github.io/CoreNLP/sentiment.html">sentiment</a>: classifies the emotional content of a sentence on a scale from most negative to most positive.</li>
+		</ul>
+
+		<p>The structure of the STANFORD json is as follows:</p>
+		<ul>
+			<li>document
+				<ul>
+					<li>various document level annotations</li>
+					<li>corefs</li>
+					<li>quotes</li>
+					<li>sentences
+						<ul>
+							<li>various sentence level annotations</li>
+							<li>tokens
+								<ul>
+									<li>various token level annotations</li>
+									<li>word</li>
+									<li>lemma</li>
+									<li>pos</li>
+									<li>ner</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+
+	</body>
+</html>

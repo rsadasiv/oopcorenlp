@@ -66,5 +66,5 @@ io.outofprintmagazine.nlp.pipeline.annotators.NounHypernymsAnnotator
 io.outofprintmagazine.nlp.pipeline.annotators.WikipediaGlossAnnotator
 io.outofprintmagazine.nlp.pipeline.annotators.WikipediaPageviewTopicsAnnotator
 io.outofprintmagazine.nlp.pipeline.annotators.WikipediaCategoriesAnnotator
-#io.outofprintmagazine.nlp.pipeline.annotators.ActorsAnnotator
-#io.outofprintmagazine.nlp.pipeline.annotators.SettingsAnnotator
+io.outofprintmagazine.nlp.pipeline.annotators.ActorsAnnotator
+io.outofprintmagazine.nlp.pipeline.annotators.SettingsAnnotator

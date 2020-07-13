@@ -38,8 +38,8 @@ public class CommonWordsAnnotator extends AbstractPosAnnotator implements Annota
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(CommonWordsAnnotator.class);
 	
-	@Override
-	protected Logger getLogger() {
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
 		return logger;
 	}
 	

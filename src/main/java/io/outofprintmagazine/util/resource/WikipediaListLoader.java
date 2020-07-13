@@ -31,7 +31,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import edu.stanford.nlp.io.IOUtils;
-import io.outofprintmagazine.nlp.pipeline.annotators.AbstractAnnotator;
 
 public class WikipediaListLoader {
 	
