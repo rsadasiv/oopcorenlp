@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
@@ -100,7 +101,22 @@ public class PhraseSerializer implements Serializer {
 
 	@SuppressWarnings("unchecked")
 	protected void serializeTokens(CoreDocument coreNlpDocument, ObjectNode jsonDocument) {
-		//pass
+		ObjectMapper mapper = new ObjectMapper();
+
+		Iterator<CoreSentence> coreNlpSentencesIter = coreNlpDocument.sentences().iterator();
+		Iterator<JsonNode> jsonSentencesIter = ((ArrayNode) jsonDocument.get("sentences")).iterator();
+		while (coreNlpSentencesIter.hasNext() && jsonSentencesIter.hasNext()) {
+			Iterator<CoreLabel> coreNlpTokensIter = coreNlpSentencesIter.next().tokens().iterator();
+			Iterator<JsonNode> jsonTokensIter = ((ArrayNode) jsonSentencesIter.next().get("tokens")).iterator();
+			while (coreNlpTokensIter.hasNext() && jsonTokensIter.hasNext()) {
+				CoreLabel token = coreNlpTokensIter.next();
+				ObjectNode tokenNode = (ObjectNode) jsonTokensIter.next();
+				if (token.containsKey(getAnnotationClass())) {
+					List<PhraseAnnotation> rawScores = (List<PhraseAnnotation>) token.get(getAnnotationClass());
+					tokenNode.set(getAnnotationClass().getSimpleName(), mapper.valueToTree(rawScores));
+				}
+			}
+		}
 	}
 	
 	@Override

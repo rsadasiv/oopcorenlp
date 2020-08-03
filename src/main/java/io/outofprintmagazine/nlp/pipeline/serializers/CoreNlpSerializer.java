@@ -207,7 +207,7 @@ public class CoreNlpSerializer implements Serializer {
 			sentencesList.add(sentenceNode);
 			sentenceNode.put(CoreAnnotations.SentenceIndexAnnotation.class.getSimpleName(),
 					sentence.coreMap().get(CoreAnnotations.SentenceIndexAnnotation.class));
-			sentenceNode.put("text", sentence.text());
+			sentenceNode.put("text", sentence.text().replace("\"", ""));
 			ArrayNode tokensList = sentenceNode.putArray("tokens");
 			for (CoreLabel token : sentence.tokens()) {
 				ObjectNode tokenNode = mapper.createObjectNode();

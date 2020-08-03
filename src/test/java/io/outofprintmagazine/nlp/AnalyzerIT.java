@@ -30,9 +30,9 @@ import io.burt.jmespath.jackson.JacksonRuntime;
 import io.outofprintmagazine.util.ParameterStore;
 import io.outofprintmagazine.util.ParameterStoreLocal;
 
-public class AnalyzerIT_Test {
+public class AnalyzerIT {
 
-	public AnalyzerIT_Test() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public AnalyzerIT() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super();
 		loadGoldSource();
 		loadCandidate();

@@ -5,14 +5,18 @@
 	</head>
 	<body>
 		<h4>Dependencies</h4>
-		<p>oopcorenlp depends on a great many external java libraries. These dependencies are specified in the pom.xml and are managed by maven.</p> 
-		<p>There are two non-java dependencies: wordnet and verbnet. These are available as http downloads and are conventionally expected to be installed one directory above the oopcorenlp installation.
-		See <a href="../oopcorenlp_ci/index.html">oopcorenlp_ci</a> for more information.</p>
-		<p>There are a few API key dependencies. While the software will work without them, the results will be better with them.</p>
+		<p>oopcorenlp depends on a great many <a href="dependencies.html">external java libraries</a>. These dependencies are specified in pom.xml and are managed by maven.</p>
+		<p>I'm waiting on the package maintainer to merge my PR, but until then you will need to build jVerbnet from my fork: <a href="https://github.com/rsadasiv/jverbnet/tree/bugfix/verbnet33">https://github.com/rsadasiv/jverbnet/tree/bugfix/verbnet33</a>. 
+		Other than that, all java dependencies are available from maven central: https://search.maven.org/. Please respect the licensing on any 3rd party libraries.</p>
+		<p>There are two non-java dependencies: <a href="http://wordnetcode.princeton.edu/wn3.1.dict.tar.gz">wordnet</a> and <a href="http://verbs.colorado.edu/verb-index/vn/verbnet-3.3.tar.gz">verbnet</a>. 
+		These are available as http downloads and are conventionally installed in a directory named "data" which is a sibling to the oopcorenlp directory.
+		</p>
+		<p>For automated build scripts, visit <a href="../oopcorenlp_ci/index.html">oopcorenlp_ci</a>.</p>
+		<p>There are a few non-free external dependencies which require API keys. While oopcorenlp will work without them, the results will be better with them. Support the community and go sign up.</p>
 		<ul>
 			<li><a href="https://www.perfecttense.com/">Perfecttense</a></li>
 			<li><a href="https://phrasefinder.io/api">Phrase Finder</a></li>
-			<li><a href="https://azure.microsoft.com/en-us/services/cognitive-services/bing-image-search-api/">Azure</a> or</li>
+			<li><a href="https://azure.microsoft.com/en-us/services/cognitive-services/bing-image-search-api/">Bing Image Search</a> or</li>
 			<li><a href="https://www.flickr.com/services/api/">Flickr</a> and <a href="https://www.faceplusplus.com/face-detection/">Faceplusplus</a></li>
 		</ul>
 	</body>
