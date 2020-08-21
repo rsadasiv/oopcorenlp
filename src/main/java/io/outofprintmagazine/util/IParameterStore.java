@@ -14,23 +14,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.nlp.pipeline.serializers;
+package io.outofprintmagazine.util;
+
+import java.io.IOException;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import edu.stanford.nlp.pipeline.CoreDocument;
-
-/**
- * <p>Interface for custom annotators json serialization.</p>
- * <p>serialize() should decorate the syntax tree from CoreNlpSerializer with Annotations from OOPAnnotator.</p>
- * <p>serializeAggregate() should decorate the root node of an empty json document with Annotations from Scorer</p>
- * 
- * @author Ram Sadasiv
- *
- */
-public interface Serializer {
-
-	public void serialize(CoreDocument document, ObjectNode json);
-	
-	public void serializeAggregate(Object aggregate, ObjectNode json);
+public interface IParameterStore {
+    
+    public String getProperty(String name) throws IOException;
+    
+    public void init(ObjectNode properties) throws IOException;
+    
 }

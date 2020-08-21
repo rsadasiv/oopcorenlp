@@ -28,7 +28,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import edu.stanford.nlp.util.StringUtils;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
 
 public class TextUtils {
@@ -36,9 +36,9 @@ public class TextUtils {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(TextUtils.class);
 	
-	private static Map<ParameterStore, TextUtils> instances = new HashMap<ParameterStore, TextUtils>();
+	private static Map<IParameterStore, TextUtils> instances = new HashMap<IParameterStore, TextUtils>();
 	
-    public static TextUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static TextUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	TextUtils instance = new TextUtils(parameterStore);
             instances.put(parameterStore, instance);
@@ -46,7 +46,7 @@ public class TextUtils {
         return instances.get(parameterStore); 
     }
 	
-	private TextUtils(ParameterStore parameterStore) {
+	private TextUtils(IParameterStore parameterStore) {
 		super();
 	}
 

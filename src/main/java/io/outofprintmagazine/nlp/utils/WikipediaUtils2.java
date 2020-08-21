@@ -47,7 +47,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.stanford.nlp.util.StringUtils;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
 
 public class WikipediaUtils2 {
@@ -62,14 +62,14 @@ public class WikipediaUtils2 {
 	private Map<String, String> wordCache = new HashMap<String, String>();
 
 	
-	private WikipediaUtils2(ParameterStore parameterStore) throws IOException {
+	private WikipediaUtils2(IParameterStore parameterStore) throws IOException {
 		this.apiKey = parameterStore.getProperty("wikipedia_apikey");
 	}
 	
 	
-	private static Map<ParameterStore, WikipediaUtils2> instances = new HashMap<ParameterStore, WikipediaUtils2>();
+	private static Map<IParameterStore, WikipediaUtils2> instances = new HashMap<IParameterStore, WikipediaUtils2>();
 	
-    public static WikipediaUtils2 getInstance(ParameterStore parameterStore) throws IOException { 
+    public static WikipediaUtils2 getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	WikipediaUtils2 instance = new WikipediaUtils2(parameterStore);
             instances.put(parameterStore, instance);

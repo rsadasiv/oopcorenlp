@@ -40,12 +40,12 @@ import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
 import edu.stanford.nlp.util.CoreMap;
 import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 import io.outofprintmagazine.nlp.utils.ResourceUtils;
 
-public class BiberAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator{
+public class BiberAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator{
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BiberAnnotator.class);
@@ -57,8 +57,8 @@ public class BiberAnnotator extends AbstractPosAnnotator implements Annotator, O
 	
 	public BiberAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));		
+		this.setScorer((IScorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((ISerializer)new MapSerializer(this.getAnnotationClass()));		
 	}
 
 	@Override

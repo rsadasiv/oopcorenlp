@@ -32,7 +32,7 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 
-public class PhraseSerializer implements Serializer {
+public class PhraseSerializer implements ISerializer {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PhraseSerializer.class);

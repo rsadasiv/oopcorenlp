@@ -49,10 +49,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
 /**
- * <p>You will need to set phrasefinder_ApiKey in your ParameterStore.</p>
+ * <p>You will need to set phrasefinder_ApiKey in your IParameterStore.</p>
  * <p>Visit: <a href="https://phrasefinder.io/api">Phrase Finder</a> to sign up.</p> 
  * @author Ram Sadasiv
  */
@@ -81,21 +81,21 @@ public class NGramUtils {
 	private Deque mruWordList = new LinkedList<String>();
 	private Map<String, List<NGramPhraseScore>> wordCache = new HashMap<String, List<NGramPhraseScore>>();
 	
-	private NGramUtils(ParameterStore parameterStore) throws IOException {
+	private NGramUtils(IParameterStore parameterStore) throws IOException {
 		//wildcardOptions.setMaxResults(100);
 		//ngramOptions.setMaxResults(10);
 		//InputStream input = new FileInputStream("data/phrasefinder_credentials.properties");
         //Properties props = new Properties();
         //props.load(input);
-		//Properties props = ParameterStore.getInstance().getProperties("data", "phrasefinder_credentials.properties");
+		//Properties props = IParameterStore.getInstance().getProperties("data", "phrasefinder_credentials.properties");
         //this.apiKey = props.getProperty("phrasefinderApiKey");
 		this.apiKey = parameterStore.getProperty("phrasefinder_ApiKey");
 
 	}
 	
-	private static Map<ParameterStore, NGramUtils> instances = new HashMap<ParameterStore, NGramUtils>();
+	private static Map<IParameterStore, NGramUtils> instances = new HashMap<IParameterStore, NGramUtils>();
 	
-    public static NGramUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static NGramUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	NGramUtils instance = new NGramUtils(parameterStore);
             instances.put(parameterStore, instance);

@@ -46,7 +46,7 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
 
 public class WiktionaryUtils {
@@ -61,13 +61,13 @@ public class WiktionaryUtils {
 	private Map<String, String> wordCache = new HashMap<String, String>();
 
 	
-	private WiktionaryUtils(ParameterStore parameterStore) throws IOException {
+	private WiktionaryUtils(IParameterStore parameterStore) throws IOException {
 		this.apiKey = parameterStore.getProperty("wikipedia_apikey");
 	}
 	
-	private static Map<ParameterStore, WiktionaryUtils> instances = new HashMap<ParameterStore, WiktionaryUtils>();
+	private static Map<IParameterStore, WiktionaryUtils> instances = new HashMap<IParameterStore, WiktionaryUtils>();
 	
-    public static WiktionaryUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static WiktionaryUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	WiktionaryUtils instance = new WiktionaryUtils(parameterStore);
             instances.put(parameterStore, instance);

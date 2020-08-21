@@ -36,28 +36,28 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
+import io.outofprintmagazine.util.IParameterStore;
 
 /**
  * <p>Base class for all custom annotators.</p>
- * <p>constructor called once, conventionally constructs delegates for Scorer and Serializer</p>
- * <p>init called once, with ParameterStore</p>
+ * <p>constructor called once, conventionally constructs delegates for IScorer and ISerializer</p>
+ * <p>init called once, with IParameterStore</p>
  * <p>once per document:</p>
  * <p>annotate(), conventionally implemented in the subclass</p>
- * <p>score(), delegated to an instance of Scorer</p>
- * <p>serialize(), delegated to instance of Serializer</p>
- * <p>serializeAggregateDocument(), delegated to instance of Serializer</p>
-*  @see ParameterStore
- * @see Scorer
- * @see Serializer
+ * <p>score(), delegated to an instance of IScorer</p>
+ * <p>serialize(), delegated to instance of ISerializer</p>
+ * <p>serializeAggregateDocument(), delegated to instance of ISerializer</p>
+*  @see IParameterStore
+ * @see IScorer
+ * @see ISerializer
  * 
  * @author Ram Sadasiv
  *
  */
-public abstract class AbstractAnnotator implements Annotator, OOPAnnotator {
+public abstract class AbstractAnnotator implements Annotator, IOOPAnnotator {
 	
 
 	private static final Logger logger = LogManager.getLogger(AbstractAnnotator.class);
@@ -67,9 +67,9 @@ public abstract class AbstractAnnotator implements Annotator, OOPAnnotator {
 		return logger;
 	}
 	
-	protected Scorer scorer;
-	protected Serializer serializer;
-	protected ParameterStore parameterStore;
+	protected IScorer scorer;
+	protected ISerializer serializer;
+	protected IParameterStore parameterStore;
 	protected List<String> punctuationMarks = Arrays.asList("``", "''","?", "??", "!", ":", ";", ",", "--", "-", ".", "\"", "`", "'", "‘", "’", "“", "”", ".", "*", "[", "]", "{", "}");
 	//protected List<String> nonDictionaryPOS = Arrays.asList("NNP", "NNPS", "CD", "LS", "SYM", "POS", "FW");
 	protected List<String> dictionaryPOS = Arrays.asList(
@@ -105,23 +105,23 @@ public abstract class AbstractAnnotator implements Annotator, OOPAnnotator {
 	
 	public AbstractAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
+		this.setScorer((IScorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((ISerializer)new MapSerializer(this.getAnnotationClass()));
 	}
 	
-	protected Serializer getSerializer() {
+	protected ISerializer getSerializer() {
 		return serializer;
 	}
 
-	protected void setSerializer(Serializer serializer) {
+	protected void setSerializer(ISerializer serializer) {
 		this.serializer = serializer;
 	}
 	
-	protected Scorer getScorer() {
+	protected IScorer getScorer() {
 		return scorer;
 	}
 
-	protected void setScorer(Scorer scorer) {
+	protected void setScorer(IScorer scorer) {
 		this.scorer = scorer;
 	}
 
@@ -130,11 +130,11 @@ public abstract class AbstractAnnotator implements Annotator, OOPAnnotator {
 	
 	
 	@Override
-	public void init(ParameterStore parameterStore) {
+	public void init(IParameterStore parameterStore) {
 		this.parameterStore = parameterStore;
 	}
 	
-	protected ParameterStore getParameterStore() {
+	protected IParameterStore getParameterStore() {
 		return parameterStore;
 	}
 		

@@ -27,7 +27,7 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 
-public class PhraseScorer implements Scorer {
+public class PhraseScorer implements IScorer {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PhraseScorer.class);

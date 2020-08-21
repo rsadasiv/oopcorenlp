@@ -31,7 +31,7 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 
-public class BigDecimalSerializer implements Serializer {
+public class BigDecimalSerializer implements ISerializer {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BigDecimalSerializer.class);

@@ -27,7 +27,7 @@ import edu.stanford.nlp.ling.CoreAnnotations.ParagraphIndexAnnotation;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 
-public class BigDecimalSumSentenceCountScorer extends BigDecimalSum implements Scorer {
+public class BigDecimalSumSentenceCountScorer extends BigDecimalSum implements IScorer {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BigDecimalSumSentenceCountScorer.class);

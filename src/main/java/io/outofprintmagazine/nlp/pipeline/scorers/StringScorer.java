@@ -21,7 +21,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.stanford.nlp.pipeline.CoreDocument;
 
-public class StringScorer implements Scorer {
+public class StringScorer implements IScorer {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(StringScorer.class);

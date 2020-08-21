@@ -40,13 +40,13 @@ import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.trees.TypedDependency;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
+import io.outofprintmagazine.util.IParameterStore;
 
 /**
  * <p>Main integration point to the CoreNLP pipeline.</p>
- * <p>Singleton class: get instance via static getInstance(ParameterStore) call.</p>
+ * <p>Singleton class: get instance via static getInstance(IParameterStore) call.</p>
  * <p>getPipelineProps() returns a Properties object to configure the StanfordCoreNLP pipeline. MODIFY ONLY WITH EXTREME CARE!</p>
  * <p>getPipeline() returns a (singleton) StanfordCoreNLP pipeline. NOT THREAD SAFE!</p>
  * <p>Most of the rest of the methods are utility functions to integrate Tokens, Sentences, EntityMentions, CorefChains, and TypedDependencies.</p>
@@ -59,16 +59,16 @@ public class CoreNlpUtils {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(CoreNlpUtils.class);
 	
-    private ParameterStore parameterStore;
+    private IParameterStore parameterStore;
 
-	private CoreNlpUtils(ParameterStore parameterStore) {
+	private CoreNlpUtils(IParameterStore parameterStore) {
 		super();
 		this.parameterStore = parameterStore; 
 	}
 	
-	private static Map<ParameterStore, CoreNlpUtils> instances = new HashMap<ParameterStore, CoreNlpUtils>();
+	private static Map<IParameterStore, CoreNlpUtils> instances = new HashMap<IParameterStore, CoreNlpUtils>();
 	
-    public static CoreNlpUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static CoreNlpUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	CoreNlpUtils instance = new CoreNlpUtils(parameterStore);
             instances.put(parameterStore, instance);

@@ -24,7 +24,7 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class MapSum extends MapScorer implements Scorer {
+public class MapSum extends MapScorer implements IScorer {
 
 	private static final Logger logger = LogManager.getLogger(MapSum.class);
 	

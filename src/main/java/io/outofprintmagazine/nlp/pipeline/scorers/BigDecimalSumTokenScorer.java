@@ -27,7 +27,7 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 
-public class BigDecimalSumTokenScorer extends BigDecimalSum implements Scorer {
+public class BigDecimalSumTokenScorer extends BigDecimalSum implements IScorer {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BigDecimalSumTokenScorer.class);

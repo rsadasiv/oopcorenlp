@@ -14,16 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.util;
+package io.outofprintmagazine.nlp.pipeline.scorers;
 
-import java.io.IOException;
+import edu.stanford.nlp.pipeline.CoreDocument;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+/**
+ * Interface to apply annotation scores to all nodes of the syntax tree.
+ * @author Ram Sadasiv
+ *
+ */
+public interface IScorer {
+	
+	public void score(CoreDocument document);
+	
+	public Object aggregateDocument(CoreDocument document);
 
-public interface ParameterStore {
-    
-    public String getProperty(String name) throws IOException;
-    
-    public void init(ObjectNode properties) throws IOException;
-    
 }

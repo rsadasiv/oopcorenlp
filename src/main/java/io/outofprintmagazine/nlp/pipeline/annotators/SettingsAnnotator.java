@@ -40,7 +40,7 @@ import io.outofprintmagazine.nlp.utils.BingUtils;
 import io.outofprintmagazine.nlp.utils.FlickrUtils;
 import io.outofprintmagazine.nlp.utils.WikimediaUtils;
 
-public class SettingsAnnotator extends AbstractContextualAnnotator implements Annotator, OOPAnnotator {
+public class SettingsAnnotator extends AbstractContextualAnnotator implements Annotator, IOOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(SettingsAnnotator.class);

@@ -390,7 +390,7 @@
 					</execution>
 					<!-- attached to Maven integration-test phase -->
 					<execution>
-						<id>report</id>
+						<id>report_it</id>
 						<phase>integration-test</phase>
 						<goals>
 							<goal>report</goal>

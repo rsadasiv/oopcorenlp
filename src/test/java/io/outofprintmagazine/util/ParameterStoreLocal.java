@@ -8,9 +8,9 @@ import java.util.Properties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
-public class ParameterStoreLocal implements ParameterStore {
+public class ParameterStoreLocal implements IParameterStore {
 	
 	private Properties props = new Properties();
 
@@ -41,7 +41,5 @@ public class ParameterStoreLocal implements ParameterStore {
 				getProperties().setProperty(fieldNameObject.getKey(), fieldNameObject.getValue().asText());
 			}
 		}
-
 	}
-
 }

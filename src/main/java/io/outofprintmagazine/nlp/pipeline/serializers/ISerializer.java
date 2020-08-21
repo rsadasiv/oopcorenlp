@@ -14,19 +14,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ******************************************************************************/
-package io.outofprintmagazine.nlp.pipeline.scorers;
+package io.outofprintmagazine.nlp.pipeline.serializers;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.stanford.nlp.pipeline.CoreDocument;
 
 /**
- * Interface to apply annotation scores to all nodes of the syntax tree.
+ * <p>Interface for custom annotators json serialization.</p>
+ * <p>serialize() should decorate the syntax tree from CoreNlpSerializer with Annotations from IOOPAnnotator.</p>
+ * <p>serializeAggregate() should decorate the root node of an empty json document with Annotations from IScorer</p>
+ * 
  * @author Ram Sadasiv
  *
  */
-public interface Scorer {
-	
-	public void score(CoreDocument document);
-	
-	public Object aggregateDocument(CoreDocument document);
+public interface ISerializer {
 
+	public void serialize(CoreDocument document, ObjectNode json);
+	
+	public void serializeAggregate(Object aggregate, ObjectNode json);
 }

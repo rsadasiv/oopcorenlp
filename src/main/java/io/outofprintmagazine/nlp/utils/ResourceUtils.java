@@ -27,16 +27,16 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.stanford.nlp.io.IOUtils;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
 public class ResourceUtils {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(ResourceUtils.class);
 	
-	private static Map<ParameterStore, ResourceUtils> instances = new HashMap<ParameterStore, ResourceUtils>();
+	private static Map<IParameterStore, ResourceUtils> instances = new HashMap<IParameterStore, ResourceUtils>();
 	
-    public static ResourceUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static ResourceUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	ResourceUtils instance = new ResourceUtils(parameterStore);
             instances.put(parameterStore, instance);
@@ -47,7 +47,7 @@ public class ResourceUtils {
 	private HashMap<String, HashMap<String, String>> dictionaries = new HashMap<String, HashMap<String, String>>();
 	private HashMap<String, List<String>> lists = new HashMap<String, List<String>>();
 	
-	private ResourceUtils(ParameterStore parameterStore) {
+	private ResourceUtils(IParameterStore parameterStore) {
 		super();
 	}
 	

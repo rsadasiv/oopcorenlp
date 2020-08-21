@@ -44,12 +44,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import io.outofprintmagazine.nlp.pipeline.annotators.OOPAnnotator;
+import io.outofprintmagazine.nlp.pipeline.annotators.IOOPAnnotator;
 import io.outofprintmagazine.nlp.pipeline.serializers.CoreNlpSerializer;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
 /**
- * <p>You will need to set perfecttense_apikey and perfecttense_appkey in your ParameterStore.</p>
+ * <p>You will need to set perfecttense_apikey and perfecttense_appkey in your IParameterStore.</p>
  * <p>Visit: <a href="https://www.perfecttense.com/">Perfecttense</a> to sign up.</p> 
  * @author Ram Sadasiv
  */
@@ -62,14 +62,14 @@ public class PerfecttenseUtils {
 	private String appKey = null;
 
 	
-	private PerfecttenseUtils(ParameterStore parameterStore) throws IOException {
+	private PerfecttenseUtils(IParameterStore parameterStore) throws IOException {
 		this.apiKey = parameterStore.getProperty("perfecttense_apikey");
 		this.appKey = parameterStore.getProperty("perfecttense_appkey");
 	}
 	
-	private static Map<ParameterStore, PerfecttenseUtils> instances = new HashMap<ParameterStore, PerfecttenseUtils>();
+	private static Map<IParameterStore, PerfecttenseUtils> instances = new HashMap<IParameterStore, PerfecttenseUtils>();
 	
-    public static PerfecttenseUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static PerfecttenseUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	PerfecttenseUtils instance = new PerfecttenseUtils(parameterStore);
             instances.put(parameterStore, instance);

@@ -55,7 +55,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 //"data", "oopcorenlp.properties"
 
 
-public class ParameterStorePropertiesFile implements ParameterStore {
+public class ParameterStorePropertiesFile implements IParameterStore {
 
 	private static final Logger logger = LogManager.getLogger(ParameterStorePropertiesFile.class);
 	

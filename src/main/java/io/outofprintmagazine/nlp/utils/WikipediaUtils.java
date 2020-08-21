@@ -46,7 +46,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
 public class WikipediaUtils {
 
@@ -147,14 +147,14 @@ public class WikipediaUtils {
 //		}
 //	}
 	
-	private WikipediaUtils(ParameterStore parameterStore) throws IOException {
+	private WikipediaUtils(IParameterStore parameterStore) throws IOException {
 		super();
 
 	}
 	
-	private static Map<ParameterStore, WikipediaUtils> instances = new HashMap<ParameterStore, WikipediaUtils>();
+	private static Map<IParameterStore, WikipediaUtils> instances = new HashMap<IParameterStore, WikipediaUtils>();
 	
-    public static WikipediaUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static WikipediaUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	WikipediaUtils instance = new WikipediaUtils(parameterStore);
             instances.put(parameterStore, instance);

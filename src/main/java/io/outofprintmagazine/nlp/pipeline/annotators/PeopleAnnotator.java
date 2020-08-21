@@ -44,12 +44,12 @@ import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 import io.outofprintmagazine.nlp.pipeline.scorers.PhraseScorer;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.PhraseSerializer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
 
-public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotator {
+public class PeopleAnnotator extends AbstractPosAnnotator implements IOOPAnnotator {
 	
 	private static final Logger logger = LogManager.getLogger(PeopleAnnotator.class);
 	
@@ -62,8 +62,8 @@ public class PeopleAnnotator extends AbstractPosAnnotator implements OOPAnnotato
 
 	public PeopleAnnotator() {
 		super();
-		this.setScorer((Scorer) new PhraseScorer(this.getAnnotationClass()));
-		this.setSerializer((Serializer) new PhraseSerializer(this.getAnnotationClass()));
+		this.setScorer((IScorer) new PhraseScorer(this.getAnnotationClass()));
+		this.setSerializer((ISerializer) new PhraseSerializer(this.getAnnotationClass()));
 		this.setTags(Arrays.asList("NNP", "NNPS", "NN", "NNS"));
 	}
 	

@@ -34,7 +34,7 @@ import edu.stanford.nlp.pipeline.CoreSentence;
 import io.outofprintmagazine.util.AggregatedScore;
 import io.outofprintmagazine.util.DocumentAggregateScore;
 
-public class BigDecimalAvg extends BigDecimalScorer implements Scorer {
+public class BigDecimalAvg extends BigDecimalScorer implements IScorer {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BigDecimalAvg.class);

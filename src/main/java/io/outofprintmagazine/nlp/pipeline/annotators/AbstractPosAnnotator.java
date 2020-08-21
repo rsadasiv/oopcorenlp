@@ -38,7 +38,7 @@ import edu.stanford.nlp.util.ArraySet;
  * @author Ram Sadasiv
  *
  */
-public abstract class AbstractPosAnnotator extends AbstractAnnotator implements Annotator, OOPAnnotator  {
+public abstract class AbstractPosAnnotator extends AbstractAnnotator implements Annotator, IOOPAnnotator  {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(AbstractPosAnnotator.class);

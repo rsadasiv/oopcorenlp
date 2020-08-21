@@ -79,7 +79,7 @@ import io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPThumbnailAnnotation;
  * @author Ram Sadasiv
  *
  */
-public class CoreNlpSerializer implements Serializer {
+public class CoreNlpSerializer implements ISerializer {
 
 	ObjectMapper mapper = new ObjectMapper();
 	

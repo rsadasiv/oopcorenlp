@@ -45,9 +45,9 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 /**
- * <p>You will need to set azure_apiKey in your ParameterStore.</p>
+ * <p>You will need to set azure_apiKey in your IParameterStore.</p>
  * <p>Visit: <a href="https://azure.microsoft.com/en-us/services/cognitive-services/bing-image-search-api/">Azure</a> to sign up.</p> 
  * @author Ram Sadasiv
  */
@@ -57,15 +57,15 @@ public class BingUtils {
 	
 	private Properties props = new Properties();
 	private ObjectMapper mapper = new ObjectMapper();
-	private static Map<ParameterStore, BingUtils> instances = new HashMap<ParameterStore, BingUtils>();
+	private static Map<IParameterStore, BingUtils> instances = new HashMap<IParameterStore, BingUtils>();
 	
-	private BingUtils(ParameterStore parameterStore) throws IOException {
+	private BingUtils(IParameterStore parameterStore) throws IOException {
 		super();
 		props = new Properties();
 		props.setProperty("apiKey", parameterStore.getProperty("azure_apiKey"));
 	}
 	    
-    public static BingUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static BingUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
             BingUtils instance = new BingUtils(parameterStore);
             instances.put(parameterStore, instance);

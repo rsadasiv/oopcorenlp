@@ -38,10 +38,10 @@ import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.JSONOutputter;
 import io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPThumbnailAnnotation;
-import io.outofprintmagazine.nlp.pipeline.annotators.OOPAnnotator;
+import io.outofprintmagazine.nlp.pipeline.annotators.IOOPAnnotator;
 import io.outofprintmagazine.nlp.pipeline.serializers.CoreNlpSerializer;
 import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
 
 /**
@@ -54,9 +54,9 @@ import io.outofprintmagazine.util.ParameterStore;
  *  <li>PIPELINE</li>
  * </ul>
  * @see CoreNlpUtils
- * @see OOPAnnotator
+ * @see IOOPAnnotator
  * @see CoreNlpSerializer
- * @see io.outofprintmagazine.nlp.pipeline.serializers.Serializer
+ * @see io.outofprintmagazine.nlp.pipeline.serializers.ISerializer
  * @author Ram Sadasiv
  */
 public class Analyzer {
@@ -64,10 +64,10 @@ public class Analyzer {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(Analyzer.class);
 	
-	private ArrayList<OOPAnnotator> customAnnotators = new ArrayList<OOPAnnotator>();
-	private ParameterStore parameterStore;
+	private ArrayList<IOOPAnnotator> customAnnotators = new ArrayList<IOOPAnnotator>();
+	private IParameterStore parameterStore;
 	
-	public Analyzer(ParameterStore parameterStore, List<String> annotatorClassNames) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public Analyzer(IParameterStore parameterStore, List<String> annotatorClassNames) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		super();
 		this.parameterStore = parameterStore;
 		//order is important
@@ -76,8 +76,8 @@ public class Analyzer {
 				if (annotatorClassName.equals(customAnnotatorClassName)) {
 					logger.debug("Adding CustomAnnotator: " + annotatorClassName);
 					Object annotator = Class.forName(annotatorClassName).newInstance();
-					if (annotator instanceof OOPAnnotator) {
-						OOPAnnotator oopAnnotator = (OOPAnnotator) annotator;
+					if (annotator instanceof IOOPAnnotator) {
+						IOOPAnnotator oopAnnotator = (IOOPAnnotator) annotator;
 						oopAnnotator.init(parameterStore);
 						customAnnotators.add(oopAnnotator);
 					}
@@ -87,7 +87,7 @@ public class Analyzer {
 		}
 	}
 	
-	public ArrayList<OOPAnnotator> getCustomAnnotators() {
+	public ArrayList<IOOPAnnotator> getCustomAnnotators() {
 		return customAnnotators;
 	}
 	
@@ -226,27 +226,27 @@ public class Analyzer {
 	}
 	
 	private void annotate(CoreDocument document) {
-		for (OOPAnnotator annotator : customAnnotators) {
+		for (IOOPAnnotator annotator : customAnnotators) {
 			annotator.annotate(document.annotation());
 			annotator.score(document);
 		}
 	}
 	
 	private void serialize(CoreDocument document, ObjectNode json)  {
-		for (OOPAnnotator annotator : customAnnotators) {
+		for (IOOPAnnotator annotator : customAnnotators) {
 			annotator.serialize(document, json);
 		}	
 	}
 	
 	private void serializeAggregates(CoreDocument document, ObjectNode json) {
-		for (OOPAnnotator annotator : customAnnotators) {
+		for (IOOPAnnotator annotator : customAnnotators) {
 			annotator.serializeAggregateDocument(document, json);
 		}	
 	}
 		
 	private void serializePipeline(ObjectNode json, long startTime) throws IOException {
 		ArrayNode annotatorList = json.putArray("annotations");
-		for (OOPAnnotator annotator : customAnnotators) {
+		for (IOOPAnnotator annotator : customAnnotators) {
 			annotatorList.addObject().put(annotator.getAnnotationClass().getSimpleName(), annotator.getDescription());
 		}	
 

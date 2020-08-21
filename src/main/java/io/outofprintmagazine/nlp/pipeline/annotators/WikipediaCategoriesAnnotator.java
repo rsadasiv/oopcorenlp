@@ -37,12 +37,12 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 import io.outofprintmagazine.nlp.pipeline.scorers.PhraseScorer;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.PhraseSerializer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 import io.outofprintmagazine.nlp.utils.WikipediaUtils;
 
-public class WikipediaCategoriesAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
+public class WikipediaCategoriesAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator {
 	
 	private static final Logger logger = LogManager.getLogger(WikipediaCategoriesAnnotator.class);
 	
@@ -53,8 +53,8 @@ public class WikipediaCategoriesAnnotator extends AbstractPosAnnotator implement
 	
 	public WikipediaCategoriesAnnotator() {
 		super();
-		this.setScorer((Scorer) new PhraseScorer(this.getAnnotationClass()));
-		this.setSerializer((Serializer) new PhraseSerializer(this.getAnnotationClass()));	
+		this.setScorer((IScorer) new PhraseScorer(this.getAnnotationClass()));
+		this.setSerializer((ISerializer) new PhraseSerializer(this.getAnnotationClass()));	
 	}
 	
 	@Override

@@ -39,9 +39,9 @@ import com.flickr4java.flickr.photos.Photo;
 import com.flickr4java.flickr.photos.PhotoList;
 import com.flickr4java.flickr.photos.SearchParameters;
 
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 /**
- * <p>You will need to set flickr_apiKey and flickr_secret in your ParameterStore.</p>
+ * <p>You will need to set flickr_apiKey and flickr_secret in your IParameterStore.</p>
  * <p>Visit: <a href="https://www.flickr.com/services/api/">Flickr</a> to sign up.</p> 
  * @author Ram Sadasiv
  */
@@ -49,9 +49,9 @@ public class FlickrUtils {
 	
 	private static final Logger logger = LogManager.getLogger(FlickrUtils.class);
 	private Flickr flickr = null;
-	private ParameterStore parameterStore = null;
+	private IParameterStore parameterStore = null;
 	
-	private FlickrUtils(ParameterStore parameterStore) throws IOException {
+	private FlickrUtils(IParameterStore parameterStore) throws IOException {
 		this.parameterStore = parameterStore;
 		flickr = new Flickr(
 				parameterStore.getProperty("flickr_apiKey"),
@@ -60,9 +60,9 @@ public class FlickrUtils {
 		);
 	}
 	
-	private static Map<ParameterStore, FlickrUtils> instances = new HashMap<ParameterStore, FlickrUtils>();
+	private static Map<IParameterStore, FlickrUtils> instances = new HashMap<IParameterStore, FlickrUtils>();
 	
-    public static FlickrUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static FlickrUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	FlickrUtils instance = new FlickrUtils(parameterStore);
             instances.put(parameterStore, instance);

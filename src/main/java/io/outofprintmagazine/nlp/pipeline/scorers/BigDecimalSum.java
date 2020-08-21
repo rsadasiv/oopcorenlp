@@ -33,7 +33,7 @@ import edu.stanford.nlp.pipeline.CoreSentence;
 import io.outofprintmagazine.util.AggregatedScore;
 import io.outofprintmagazine.util.DocumentAggregateScore;
 
-public class BigDecimalSum extends BigDecimalScorer implements Scorer {
+public class BigDecimalSum extends BigDecimalScorer implements IScorer {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BigDecimalSum.class);

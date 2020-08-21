@@ -30,7 +30,7 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 
-public class StringSerializer implements Serializer {
+public class StringSerializer implements ISerializer {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(StringSerializer.class);

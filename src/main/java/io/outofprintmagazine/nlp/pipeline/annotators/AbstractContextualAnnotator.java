@@ -59,7 +59,7 @@ import io.outofprintmagazine.nlp.utils.WikimediaUtils;
  * @author Ram Sadasiv
  *
  */
-public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
+public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator {
 	
 	private static final Logger logger = LogManager.getLogger(AbstractContextualAnnotator.class);
 	

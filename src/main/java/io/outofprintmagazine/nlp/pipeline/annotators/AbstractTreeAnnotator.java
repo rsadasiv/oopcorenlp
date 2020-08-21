@@ -30,9 +30,9 @@ import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.trees.Tree;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 import io.outofprintmagazine.nlp.pipeline.scorers.PhraseScorer;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.PhraseSerializer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 
 /**
  * <p>Base class for custom annotators that work with constituency trees (Core Nlp parse).</p>
@@ -40,7 +40,7 @@ import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
  * @author Ram Sadasiv
  *
  */
-public abstract class AbstractTreeAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
+public abstract class AbstractTreeAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(AbstractTreeAnnotator.class);
@@ -50,16 +50,16 @@ public abstract class AbstractTreeAnnotator extends AbstractPosAnnotator impleme
 		return logger;
 	}
 
-	protected Scorer listScorer;
-	protected Serializer listSerializer;
+	protected IScorer listScorer;
+	protected ISerializer listSerializer;
 	
 	protected List<String> omitPunctuationMarks = Arrays.asList("``", "''", "?", "??", "!", ".", "\"", "`", "‘", "’", "“", "”", ".", "*");
 	protected List<String> removeLeadingSpace = Arrays.asList("n\'t", "\'s", ",", ":", ";");
 	
 	public AbstractTreeAnnotator() {
 		super();
-		this.setScorer((Scorer) new PhraseScorer(this.getAnnotationClass()));
-		this.setSerializer((Serializer) new PhraseSerializer(this.getAnnotationClass()));
+		this.setScorer((IScorer) new PhraseScorer(this.getAnnotationClass()));
+		this.setSerializer((ISerializer) new PhraseSerializer(this.getAnnotationClass()));
 	}
 	
 	protected void traverseTree(Tree tree, Map<String,BigDecimal> scoreMap) throws IOException {

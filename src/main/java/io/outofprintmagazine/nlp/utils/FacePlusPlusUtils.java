@@ -46,9 +46,9 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 /**
- * <p>You will need to set faceplusplus_apiKey and faceplusplus_secret in your ParameterStore.</p>
+ * <p>You will need to set faceplusplus_apiKey and faceplusplus_secret in your IParameterStore.</p>
  * <p>Visit: <a href="https://www.faceplusplus.com/face-detection/">Faceplusplus</a> to sign up.</p> 
  * @author Ram Sadasiv
  */
@@ -60,15 +60,15 @@ public class FacePlusPlusUtils {
 	private ObjectMapper mapper = new ObjectMapper();
 
 	
-	private FacePlusPlusUtils(ParameterStore parameterStore) throws IOException {
+	private FacePlusPlusUtils(IParameterStore parameterStore) throws IOException {
 		props = new Properties();
 		props.setProperty("apiKey", parameterStore.getProperty("faceplusplus_apiKey"));
 		props.setProperty("secret", parameterStore.getProperty("faceplusplus_secret"));
 	}
 	
-	private static Map<ParameterStore, FacePlusPlusUtils> instances = new HashMap<ParameterStore, FacePlusPlusUtils>();
+	private static Map<IParameterStore, FacePlusPlusUtils> instances = new HashMap<IParameterStore, FacePlusPlusUtils>();
 	
-    public static FacePlusPlusUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static FacePlusPlusUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	FacePlusPlusUtils instance = new FacePlusPlusUtils(parameterStore);
             instances.put(parameterStore, instance);

@@ -28,13 +28,13 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.scorers.StringScorer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.StringSerializer;
 import io.outofprintmagazine.nlp.utils.WikipediaUtils2;
 
-public class WikipediaGlossAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
+public class WikipediaGlossAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WikipediaGlossAnnotator.class);
@@ -47,8 +47,8 @@ public class WikipediaGlossAnnotator extends AbstractPosAnnotator implements Ann
 	public WikipediaGlossAnnotator() {
 		super();
 		this.setTags(Arrays.asList("NN","NNS", "NNP", "NNPS"));
-		this.setScorer((Scorer)new StringScorer(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new StringSerializer(this.getAnnotationClass()));		
+		this.setScorer((IScorer)new StringScorer(this.getAnnotationClass()));
+		this.setSerializer((ISerializer)new StringSerializer(this.getAnnotationClass()));		
 	}
 	
 	@Override

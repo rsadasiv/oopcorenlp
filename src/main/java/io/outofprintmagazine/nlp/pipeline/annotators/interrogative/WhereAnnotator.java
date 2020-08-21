@@ -38,9 +38,9 @@ import edu.stanford.nlp.trees.TreeCoreAnnotations;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 import io.outofprintmagazine.nlp.pipeline.annotators.AbstractTreeAnnotator;
-import io.outofprintmagazine.nlp.pipeline.annotators.OOPAnnotator;
+import io.outofprintmagazine.nlp.pipeline.annotators.IOOPAnnotator;
 
-public class WhereAnnotator extends AbstractTreeAnnotator implements Annotator, OOPAnnotator {
+public class WhereAnnotator extends AbstractTreeAnnotator implements Annotator, IOOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(WhereAnnotator.class);

@@ -33,13 +33,13 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.annotators.AbstractAnnotator;
-import io.outofprintmagazine.nlp.pipeline.annotators.OOPAnnotator;
+import io.outofprintmagazine.nlp.pipeline.annotators.IOOPAnnotator;
 import io.outofprintmagazine.nlp.pipeline.scorers.BigDecimalSumSentenceScorer;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.BigDecimalSerializer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 
-public class TokenCountAnnotator extends AbstractAnnotator implements Annotator, OOPAnnotator {
+public class TokenCountAnnotator extends AbstractAnnotator implements Annotator, IOOPAnnotator {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(TokenCountAnnotator.class);
@@ -51,8 +51,8 @@ public class TokenCountAnnotator extends AbstractAnnotator implements Annotator,
 	
 	public TokenCountAnnotator() {
 		super();
-		this.setScorer((Scorer)new BigDecimalSumSentenceScorer(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new BigDecimalSerializer(this.getAnnotationClass()));
+		this.setScorer((IScorer)new BigDecimalSumSentenceScorer(this.getAnnotationClass()));
+		this.setSerializer((ISerializer)new BigDecimalSerializer(this.getAnnotationClass()));
 	}
 	
 	@Override

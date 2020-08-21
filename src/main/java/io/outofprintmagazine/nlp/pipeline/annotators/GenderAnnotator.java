@@ -37,12 +37,12 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.util.CoreMap;
 import io.outofprintmagazine.nlp.pipeline.OOPAnnotations;
 import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
+import io.outofprintmagazine.util.IParameterStore;
 
-public class GenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnnotator implements Annotator, OOPAnnotator {
+public class GenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnnotator implements Annotator, IOOPAnnotator {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(GenderAnnotator.class);
@@ -52,12 +52,12 @@ public class GenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnnotator i
 		return logger;
 	}
 	
-	protected Scorer scorer;
-	protected Serializer serializer;
-	protected ParameterStore properties;
+	protected IScorer scorer;
+	protected ISerializer serializer;
+	protected IParameterStore properties;
 	
 	@Override
-	public void init(ParameterStore properties) {
+	public void init(IParameterStore properties) {
 		this.properties = properties;
 	}
 
@@ -76,23 +76,23 @@ public class GenderAnnotator extends edu.stanford.nlp.pipeline.GenderAnnotator i
 	
 	public GenderAnnotator() {
 		super("GenderAnnotator", GenderAnnotator.getProperties());
-		this.setScorer((Scorer) new MapSum(this.getAnnotationClass()));
-		this.setSerializer((Serializer) new MapSerializer(this.getAnnotationClass()));
+		this.setScorer((IScorer) new MapSum(this.getAnnotationClass()));
+		this.setSerializer((ISerializer) new MapSerializer(this.getAnnotationClass()));
 	}
 
-	protected Serializer getSerializer() {
+	protected ISerializer getSerializer() {
 		return serializer;
 	}
 
-	protected void setSerializer(Serializer serializer) {
+	protected void setSerializer(ISerializer serializer) {
 		this.serializer = serializer;
 	}
 
-	protected Scorer getScorer() {
+	protected IScorer getScorer() {
 		return scorer;
 	}
 
-	protected void setScorer(Scorer scorer) {
+	protected void setScorer(IScorer scorer) {
 		this.scorer = scorer;
 	}
 

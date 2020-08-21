@@ -5,9 +5,9 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 public class RunnableOOPAnnotator extends Thread {
 
 	private CoreDocument document;
-	private OOPAnnotator annotator;
+	private IOOPAnnotator annotator;
 	
-	public RunnableOOPAnnotator(OOPAnnotator annotator, CoreDocument document) {
+	public RunnableOOPAnnotator(IOOPAnnotator annotator, CoreDocument document) {
 		super();
 		this.annotator = annotator;
 		this.document = document;

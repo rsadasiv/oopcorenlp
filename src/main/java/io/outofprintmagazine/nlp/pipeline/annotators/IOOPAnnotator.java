@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
 /**
  * <p>Interface for all custom annotators.</p>
@@ -28,7 +28,7 @@ import io.outofprintmagazine.util.ParameterStore;
  * <p>Implementations must be re-entrant.</p>
  * <p>Instances will be used by Analyzer as follows:</p>
  * <code>
- * OOPAnnotator oopAnnotator = new Annotator();
+ * IOOPAnnotator oopAnnotator = new Annotator();
  * oopAnnotator.init(parameterStore);
  * oopAnnotator.annotate(coreDocument);
  * oopAnnotator.serialize(coreDocument, json);
@@ -40,7 +40,7 @@ import io.outofprintmagazine.util.ParameterStore;
  * @author Ram Sadasiv
  *
  */
-public interface OOPAnnotator extends Annotator {
+public interface IOOPAnnotator extends Annotator {
 	
 	public Class getAnnotationClass();
 	
@@ -52,6 +52,6 @@ public interface OOPAnnotator extends Annotator {
 	
 	public void serializeAggregateDocument(CoreDocument document, ObjectNode json);
 	
-	public void init(ParameterStore properties);
+	public void init(IParameterStore properties);
 
 }

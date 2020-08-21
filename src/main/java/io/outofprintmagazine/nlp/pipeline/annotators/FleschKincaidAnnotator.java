@@ -35,11 +35,11 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.scorers.BigDecimalAvg;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.BigDecimalSerializer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 
-public class FleschKincaidAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
+public class FleschKincaidAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(FleschKincaidAnnotator.class);
@@ -52,8 +52,8 @@ public class FleschKincaidAnnotator extends AbstractPosAnnotator implements Anno
 	public FleschKincaidAnnotator() {
 		super();
 		this.setTags(Arrays.asList("NNP", "NNPS", "FW"));
-		this.setScorer((Scorer)new BigDecimalAvg(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new BigDecimalSerializer(this.getAnnotationClass()));
+		this.setScorer((IScorer)new BigDecimalAvg(this.getAnnotationClass()));
+		this.setSerializer((ISerializer)new BigDecimalSerializer(this.getAnnotationClass()));
 	}
 	
 	@Override

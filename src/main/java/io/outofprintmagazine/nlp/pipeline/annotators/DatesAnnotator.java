@@ -37,7 +37,7 @@ import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 
-public class DatesAnnotator extends AbstractTreeAnnotator implements Annotator, OOPAnnotator {
+public class DatesAnnotator extends AbstractTreeAnnotator implements Annotator, IOOPAnnotator {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(DatesAnnotator.class);

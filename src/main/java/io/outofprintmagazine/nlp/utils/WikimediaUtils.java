@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
 public class WikimediaUtils {
 	
@@ -43,15 +43,15 @@ public class WikimediaUtils {
 	private ObjectMapper mapper = null;
 	private String apiKey = null;
 	
-	private WikimediaUtils(ParameterStore parameterStore) throws IOException {
+	private WikimediaUtils(IParameterStore parameterStore) throws IOException {
 		//this.apiKey = "OOPCoreNlp/0.9 (rsadasiv@gmail.com) httpclient/4.5.6";
 		this.apiKey = parameterStore.getProperty("wikipedia_apikey");
 		mapper = new ObjectMapper();
 	}
 	
-	private static Map<ParameterStore, WikimediaUtils> instances = new HashMap<ParameterStore, WikimediaUtils>();
+	private static Map<IParameterStore, WikimediaUtils> instances = new HashMap<IParameterStore, WikimediaUtils>();
 	
-    public static WikimediaUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static WikimediaUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	WikimediaUtils instance = new WikimediaUtils(parameterStore);
             instances.put(parameterStore, instance);

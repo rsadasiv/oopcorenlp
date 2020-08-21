@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.burt.jmespath.Expression;
 import io.burt.jmespath.JmesPath;
 import io.burt.jmespath.jackson.JacksonRuntime;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 import io.outofprintmagazine.util.ParameterStoreLocal;
 
 public class AnalyzerIT {
@@ -51,9 +51,9 @@ public class AnalyzerIT {
 	 *	#https://www.mediawiki.org/wiki/API:Etiquette
 	 *	wikipedia_apikey=OOPCoreNlp/0.9.1 httpclient/4.5.6
 	*/
-	private ParameterStore parameterStore = null;
+	private IParameterStore parameterStore = null;
 
-	public ParameterStore getParameterStore() throws IOException {
+	public IParameterStore getParameterStore() throws IOException {
 		if (parameterStore == null) {
 			ObjectMapper mapper = new ObjectMapper();
 			ObjectNode p = mapper.createObjectNode();
@@ -970,9 +970,15 @@ public class AnalyzerIT {
 	@Test
 	public void wikipediaCategoriesAnnotatorIT_Test() {
 		String annotationName = "OOPWikipediaCategoriesAnnotation";
-		assertEquals(
-				((ArrayNode)goldSource.get(annotationName)).size(), 
-				((ArrayNode)candidate.get(annotationName)).size()
+		assertTrue(
+				Math.abs(
+						(((ArrayNode)goldSource.get(annotationName)).size()) - (((ArrayNode)candidate.get(annotationName)).size())
+				) < 3,
+				String.format(
+						"%s : Document: %s", 
+						((ArrayNode)goldSource.get(annotationName)).size(),
+						((ArrayNode)candidate.get(annotationName)).size()
+				)
 		);
 	}
 	

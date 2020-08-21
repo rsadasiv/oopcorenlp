@@ -25,7 +25,7 @@ import org.apache.logging.log4j.Logger;
 
 import edu.stanford.nlp.pipeline.CoreDocument;
 
-public class BigDecimalSumDocumentScorer extends BigDecimalSum implements Scorer {
+public class BigDecimalSumDocumentScorer extends BigDecimalSum implements IScorer {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BigDecimalSumDocumentScorer.class);

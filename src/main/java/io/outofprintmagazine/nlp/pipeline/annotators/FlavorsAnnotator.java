@@ -29,11 +29,11 @@ import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 
-public class FlavorsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
+public class FlavorsAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(FlavorsAnnotator.class);
@@ -46,8 +46,8 @@ public class FlavorsAnnotator extends AbstractPosAnnotator implements Annotator,
 	public FlavorsAnnotator() {
 		super();
 		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/Flavors.txt");
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));			
+		this.setScorer((IScorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((ISerializer)new MapSerializer(this.getAnnotationClass()));			
 	}
 	
 	@Override

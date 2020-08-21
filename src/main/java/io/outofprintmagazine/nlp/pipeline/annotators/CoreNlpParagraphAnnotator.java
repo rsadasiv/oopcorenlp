@@ -35,9 +35,9 @@ import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.util.ArraySet;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
-public class CoreNlpParagraphAnnotator extends edu.stanford.nlp.paragraphs.ParagraphAnnotator implements Annotator, OOPAnnotator {
+public class CoreNlpParagraphAnnotator extends edu.stanford.nlp.paragraphs.ParagraphAnnotator implements Annotator, IOOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(CoreNlpParagraphAnnotator.class);
@@ -52,10 +52,10 @@ public class CoreNlpParagraphAnnotator extends edu.stanford.nlp.paragraphs.Parag
 		super(CoreNlpParagraphAnnotator.getProperties(), false);
 	}
 	
-	protected ParameterStore properties;
+	protected IParameterStore properties;
 	
 	@Override
-	public void init(ParameterStore properties) {
+	public void init(IParameterStore properties) {
 		this.properties = properties;
 	}
 

@@ -28,11 +28,11 @@ import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import io.outofprintmagazine.nlp.pipeline.scorers.BigDecimalSumSentenceScorer;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.BigDecimalSerializer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 
-public class VerblessSentencesAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
+public class VerblessSentencesAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(VerblessSentencesAnnotator.class);
@@ -45,8 +45,8 @@ public class VerblessSentencesAnnotator extends AbstractPosAnnotator implements 
 	public VerblessSentencesAnnotator() {
 		super();
 		this.setTags(Arrays.asList("VB","VBD","VBG","VBN","VBP","VBZ","MD"));
-		this.setScorer((Scorer) new BigDecimalSumSentenceScorer(this.getAnnotationClass()));
-		this.setSerializer((Serializer) new BigDecimalSerializer(this.getAnnotationClass()));
+		this.setScorer((IScorer) new BigDecimalSumSentenceScorer(this.getAnnotationClass()));
+		this.setSerializer((ISerializer) new BigDecimalSerializer(this.getAnnotationClass()));
 	}
 	
 	@Override

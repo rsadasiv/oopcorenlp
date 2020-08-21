@@ -47,7 +47,7 @@ import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
 import edu.mit.jwi.item.Pointer;
 import edu.stanford.nlp.ling.CoreLabel;
-import io.outofprintmagazine.util.ParameterStore;
+import io.outofprintmagazine.util.IParameterStore;
 
 
 public class WordnetUtils {
@@ -56,11 +56,11 @@ public class WordnetUtils {
 	
 	private IDictionary wordnet = null;
 	private HashMap<String, ArrayList<String>> verbnet = new HashMap<String, ArrayList<String>>();
-	private ParameterStore parameterStore = null;
+	private IParameterStore parameterStore = null;
 
 	
 	
-	private WordnetUtils(ParameterStore parameterStore) throws IOException {
+	private WordnetUtils(IParameterStore parameterStore) throws IOException {
 		wordnet = new Dictionary(
 				new URL(
 						"file", 
@@ -75,9 +75,9 @@ public class WordnetUtils {
 		this.parameterStore = parameterStore;
 	}
 	
-	private static Map<ParameterStore, WordnetUtils> instances = new HashMap<ParameterStore, WordnetUtils>();
+	private static Map<IParameterStore, WordnetUtils> instances = new HashMap<IParameterStore, WordnetUtils>();
 	
-    public static WordnetUtils getInstance(ParameterStore parameterStore) throws IOException { 
+    public static WordnetUtils getInstance(IParameterStore parameterStore) throws IOException { 
         if (instances.get(parameterStore) == null) {
         	WordnetUtils instance = new WordnetUtils(parameterStore);
             instances.put(parameterStore, instance);

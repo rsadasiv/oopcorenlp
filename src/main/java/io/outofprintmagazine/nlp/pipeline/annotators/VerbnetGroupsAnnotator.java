@@ -33,12 +33,12 @@ import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
-import io.outofprintmagazine.nlp.pipeline.scorers.Scorer;
+import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
-import io.outofprintmagazine.nlp.pipeline.serializers.Serializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 import io.outofprintmagazine.nlp.utils.WordnetUtils;
 
-public class VerbnetGroupsAnnotator extends AbstractPosAnnotator implements Annotator, OOPAnnotator {
+public class VerbnetGroupsAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(VerbnetGroupsAnnotator.class);
@@ -52,8 +52,8 @@ public class VerbnetGroupsAnnotator extends AbstractPosAnnotator implements Anno
 	
 	public VerbnetGroupsAnnotator() {
 		super();
-		this.setScorer((Scorer)new MapSum(this.getAnnotationClass()));
-		this.setSerializer((Serializer)new MapSerializer(this.getAnnotationClass()));
+		this.setScorer((IScorer)new MapSum(this.getAnnotationClass()));
+		this.setSerializer((ISerializer)new MapSerializer(this.getAnnotationClass()));
 		this.appendTagsFromFile("io/outofprintmagazine/nlp/models/StativeVerbs.txt");
 	}
 	

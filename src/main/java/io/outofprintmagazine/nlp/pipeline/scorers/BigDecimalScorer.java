@@ -28,7 +28,7 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
 
-public abstract class BigDecimalScorer implements Scorer {
+public abstract class BigDecimalScorer implements IScorer {
 
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(BigDecimalScorer.class);
