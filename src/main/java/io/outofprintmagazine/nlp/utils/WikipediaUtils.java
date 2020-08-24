@@ -23,6 +23,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Deque;
@@ -200,7 +201,7 @@ public class WikipediaUtils {
 			JsonNode obj = mapper.readTree(
 					new URL(
 							"https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia.org/all-access/all-agents/" 
-							+ URLEncoder.encode(title,"utf-8") 
+							+ URLEncoder.encode(title,StandardCharsets.UTF_8.name()) 
 							+ "/monthly/"
 							+ startDate
 							+ "/"
@@ -229,10 +230,10 @@ public class WikipediaUtils {
 				JsonNode categoryRootNode = null;
 		
 				if (clcontinue.equals("init")) {
-					categoryRootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=categories&utf8=1&titles="+(URLEncoder.encode(title, "UTF-8"))), JsonNode.class);
+					categoryRootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=categories&utf8=1&titles="+(URLEncoder.encode(title, StandardCharsets.UTF_8.name()))), JsonNode.class);
 				}
 				else {
-					categoryRootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=categories&utf8=1&titles="+(URLEncoder.encode(title, "UTF-8")+"&clcontinue="+clcontinue)), JsonNode.class);
+					categoryRootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=categories&utf8=1&titles="+(URLEncoder.encode(title, StandardCharsets.UTF_8.name())+"&clcontinue="+clcontinue)), JsonNode.class);
 				}
 				if (categoryRootNode.get("continue") != null) {
 					clcontinue = categoryRootNode.get("continue").get("clcontinue").asText();
@@ -308,7 +309,7 @@ public class WikipediaUtils {
     	List<String> topicPages = new ArrayList<String>();
     	ObjectMapper objectMapper = new ObjectMapper();
 		topic = topic.replace(' ', '_');
-		JsonNode rootNode = objectMapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=query&maxlag=1&redirects&format=json&formatversion=2&titles="+(URLEncoder.encode(topic, "UTF-8"))), JsonNode.class);
+		JsonNode rootNode = objectMapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=query&maxlag=1&redirects&format=json&formatversion=2&titles="+(URLEncoder.encode(topic, StandardCharsets.UTF_8.name()))), JsonNode.class);
 		//TODO - pagination?
 		if (rootNode.get("query") != null && rootNode.get("query").get("pages") != null) {
 			JsonNode pagesNode = rootNode.get("query").get("pages");
@@ -327,7 +328,7 @@ public class WikipediaUtils {
     	List<String> topicPages = new ArrayList<String>();
     	ObjectMapper objectMapper = new ObjectMapper();
 		topic = topic.replace(' ', '_');
-		JsonNode rootNode = objectMapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=links&page="+(URLEncoder.encode(topic, "UTF-8"))), JsonNode.class);
+		JsonNode rootNode = objectMapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=links&page="+(URLEncoder.encode(topic, StandardCharsets.UTF_8.name()))), JsonNode.class);
 		//TODO - pagination?
 		if (rootNode.get("parse") != null && rootNode.get("parse").get("links") != null) {
 			JsonNode pagesNode = rootNode.get("parse").get("links");

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -89,10 +90,10 @@ public class WikimediaUtils {
 			JsonNode rootNode = null;
 	
 			if (gimcontinue.equals("init")) {
-				rootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&generator=images&prop=info&titles="+(URLEncoder.encode(title, "UTF-8"))), JsonNode.class);
+				rootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&generator=images&prop=info&titles="+(URLEncoder.encode(title, StandardCharsets.UTF_8.name()))), JsonNode.class);
 			}
 			else {
-				rootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&generator=images&prop=info&titles="+(URLEncoder.encode(title, "UTF-8")+"&gimcontinue="+gimcontinue)), JsonNode.class);
+				rootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&generator=images&prop=info&titles="+(URLEncoder.encode(title, StandardCharsets.UTF_8.name())+"&gimcontinue="+gimcontinue)), JsonNode.class);
 			}
 			if (rootNode.get("continue") != null) {
 				gimcontinue = rootNode.get("continue").get("gimcontinue").asText();
@@ -120,7 +121,7 @@ public class WikimediaUtils {
 							"https://en.wikipedia.org/w/api.php?format=json&action=query&prop=imageinfo&iiprop=timestamp|user|userid|comment|canonicaltitle|url|size|dimensions|sha1|mime|thumbmime|mediatype|bitdepth&titles="
 							+(URLEncoder.encode(
 									String.join("|", queries)
-									, "UTF-8")
+									, StandardCharsets.UTF_8.name())
 							)
 					), 
 					JsonNode.class

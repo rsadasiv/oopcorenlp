@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -98,8 +99,8 @@ public class AnalyzerIT {
 			props.setProperty("AuthorAnnotation", "Abraham Lincoln");
 			props.setProperty("DocDateAnnotation", fmt.format(new Date(System.currentTimeMillis())));
 			props.setProperty("DocIDAnnotation", "1");
-			String text = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("io/outofprintmagazine/GettysburgAddress.txt"), "utf-8");
-			List<String> annotators = IOUtils.readLines(getClass().getClassLoader().getResourceAsStream("io/outofprintmagazine/util/annotators.txt"), "utf-8");
+			String text = IOUtils.toString(getClass().getClassLoader().getResourceAsStream("io/outofprintmagazine/GettysburgAddress.txt"), StandardCharsets.UTF_8.name());
+			List<String> annotators = IOUtils.readLines(getClass().getClassLoader().getResourceAsStream("io/outofprintmagazine/util/annotators.txt"), StandardCharsets.UTF_8.name());
 			Analyzer analyzer = new Analyzer(
 					getParameterStore(), 
 					annotators

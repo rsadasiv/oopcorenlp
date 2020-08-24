@@ -19,6 +19,7 @@ package io.outofprintmagazine.nlp.utils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -167,7 +168,7 @@ public class WikipediaUtils2 {
             String url = String.join("|", queries);
             HttpGet http = new HttpGet(
             		"http://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=1&explaintext&exlimit=20&exintro&format=json&titles="
-            		+ URLEncoder.encode(url, "UTF-8")
+            		+ URLEncoder.encode(url, StandardCharsets.UTF_8.name())
             );
 
 //https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exsentences=1&explaintext&exlimit=20&exintro&format=json&titles=dawn|bank|river|shawl|rosary|hand|distance|curtain|sky|clothing|side|Sri|Ram|water|Sun|God|eye|chill|Chenab|today

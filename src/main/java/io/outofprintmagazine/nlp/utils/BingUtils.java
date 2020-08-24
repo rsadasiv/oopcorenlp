@@ -19,6 +19,7 @@ package io.outofprintmagazine.nlp.utils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -103,7 +104,7 @@ public class BingUtils {
                         .setCookieSpec(CookieSpecs.STANDARD).build())
                 .build();
         try {
-        	String queryString = "https://api.cognitive.microsoft.com/bing/v7.0/images/search?q="+ URLEncoder.encode(text, "UTF-8")+"&imageType=Photo";
+        	String queryString = "https://api.cognitive.microsoft.com/bing/v7.0/images/search?q="+ URLEncoder.encode(text, StandardCharsets.UTF_8.name())+"&imageType=Photo";
         	if (imageContent != null) {
         		queryString += ("&imageContent="+imageContent);
         	}
@@ -167,7 +168,7 @@ public class BingUtils {
                 .setRedirectStrategy(new LaxRedirectStrategy())
                 .build();
         try {
-            HttpGet http = new HttpGet("https://api.cognitive.microsoft.com/bing/v7.0/images/details?q="+ URLEncoder.encode(text, "UTF-8")+"&insightsToken="+insightsToken+"&modules=All&mkt=en-us");
+            HttpGet http = new HttpGet("https://api.cognitive.microsoft.com/bing/v7.0/images/details?q="+ URLEncoder.encode(text, StandardCharsets.UTF_8.name())+"&insightsToken="+insightsToken+"&modules=All&mkt=en-us");
             http.addHeader("Ocp-Apim-Subscription-Key", props.getProperty("apiKey"));
 
             ResponseHandler<String> responseHandler = new ResponseHandler<String>() {

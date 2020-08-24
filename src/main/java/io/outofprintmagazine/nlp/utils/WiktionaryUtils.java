@@ -19,6 +19,7 @@ package io.outofprintmagazine.nlp.utils;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -162,7 +163,7 @@ public class WiktionaryUtils {
                 .build();
         try {
 
-            HttpGet http = new HttpGet("https://en.wiktionary.org/w/api.php?format=json&maxlag=1&action=query&titles="+URLEncoder.encode(String.join("|", queries), "UTF-8"));
+            HttpGet http = new HttpGet("https://en.wiktionary.org/w/api.php?format=json&maxlag=1&action=query&titles="+URLEncoder.encode(String.join("|", queries), StandardCharsets.UTF_8.name()));
             http.addHeader("User-Agent", apiKey);
             ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
 
