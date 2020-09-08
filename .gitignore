@@ -30,5 +30,8 @@ TODO.txt
 dependency-reduced-pom.xml
 target/
 .dbeaver/
-
+AGGREGATES_GettysburgAddress.json
+OOP_GettysburgAddress.json
+PIPELINE_GettysburgAddress.json
+STANFORD_GettysburgAddress.json
 
