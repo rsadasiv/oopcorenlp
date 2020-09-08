@@ -244,7 +244,7 @@ public class Analyzer {
 		}	
 	}
 		
-	private void serializePipeline(ObjectNode json, long startTime) throws IOException {
+	private void serializePipeline(ObjectNode json, long startTime, Properties properties) throws IOException {
 		ArrayNode annotatorList = json.putArray("annotations");
 		for (IOOPAnnotator annotator : customAnnotators) {
 			annotatorList.addObject().put(annotator.getAnnotationClass().getSimpleName(), annotator.getDescription());
@@ -256,6 +256,13 @@ public class Analyzer {
 			ObjectNode property = coreNlpProperties.addObject();
 			property.put("name", propertyName);
 			property.put("value", defaultProps.getProperty(propertyName));
+		}
+		
+		ArrayNode customProperties = json.putArray("customProperties");
+		for (String propertyName : properties.stringPropertyNames()) {
+			ObjectNode property = customProperties.addObject();
+			property.put("name", propertyName);
+			property.put("value", properties.getProperty(propertyName));
 		}
 
 		ArrayNode analysisList = json.putArray("analysis");
@@ -301,7 +308,7 @@ public class Analyzer {
 			retval.put("AGGREGATES", aggregates);
 
 			ObjectNode pipeline = mapper.createObjectNode();
-			serializePipeline(pipeline, startTime);
+			serializePipeline(pipeline, startTime, metadata);
 			retval.put("PIPELINE", pipeline);
 			
 		}

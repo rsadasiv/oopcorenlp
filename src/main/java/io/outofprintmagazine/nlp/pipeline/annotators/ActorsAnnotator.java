@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,8 +68,8 @@ public class ActorsAnnotator extends AbstractContextualAnnotator implements Anno
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Set<Class<? extends CoreAnnotation>> requires() {
-		return Collections.unmodifiableSet(
-			new ArraySet<>(
+		Set<Class<? extends CoreAnnotation>> retval = super.requires();
+		Set<Class<? extends CoreAnnotation>> myrequires = new HashSet<Class<? extends CoreAnnotation>>(
 				Arrays.asList(
 					CoreAnnotations.TextAnnotation.class, 
 					CoreAnnotations.TokensAnnotation.class,
@@ -93,8 +94,10 @@ public class ActorsAnnotator extends AbstractContextualAnnotator implements Anno
 					io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPMyersBriggsAnnotation.class
 					
 				)
-			)
 		);
+		retval.addAll(myrequires);
+		return retval;
+		
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -159,7 +162,7 @@ public class ActorsAnnotator extends AbstractContextualAnnotator implements Anno
 					characterName = names[1];
 				}
 				else {
-					characterName = names[0];
+					//characterName = names[0];
 				}
 			}
 			if (getParameterStore().getProperty("azure_apiKey") != null) {
@@ -175,9 +178,10 @@ public class ActorsAnnotator extends AbstractContextualAnnotator implements Anno
 	}
 	
 	
-	protected void scoreSentence(CoreDocument document, CoreSentence sentence, ActorAnnotation characterAnnotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+	@Override
+	protected void scoreSentence(CoreDocument document, CoreSentence sentence, ContextualAnnotation characterAnnotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		super.scoreSentence(document, sentence, (ContextualAnnotation) characterAnnotation);
-		scoreMyersBriggs(sentence, characterAnnotation);
+		scoreMyersBriggs(sentence, (ActorAnnotation) characterAnnotation);
 	}
 	
 	

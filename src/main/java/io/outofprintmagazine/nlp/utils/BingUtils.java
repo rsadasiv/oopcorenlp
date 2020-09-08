@@ -17,34 +17,22 @@
 package io.outofprintmagazine.nlp.utils;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.ServiceUnavailableRetryStrategy;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
+import org.apache.http.Header;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.outofprintmagazine.util.IParameterStore;
 /**
@@ -56,14 +44,18 @@ public class BingUtils {
 	
 	private static final Logger logger = LogManager.getLogger(BingUtils.class);
 	
-	private Properties props = new Properties();
-	private ObjectMapper mapper = new ObjectMapper();
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
+		return logger;
+	}
+	
+	private IParameterStore parameterStore = null;
+
 	private static Map<IParameterStore, BingUtils> instances = new HashMap<IParameterStore, BingUtils>();
 	
 	private BingUtils(IParameterStore parameterStore) throws IOException {
 		super();
-		props = new Properties();
-		props.setProperty("apiKey", parameterStore.getProperty("azure_apiKey"));
+		this.parameterStore = parameterStore;
 	}
 	    
     public static BingUtils getInstance(IParameterStore parameterStore) throws IOException { 
@@ -81,135 +73,194 @@ public class BingUtils {
     public List<String> getImagesByTag(String text) throws IOException, URISyntaxException {
     	return getImages(text, null);
     }
-    
+
     public List<String> getImages(String text, String imageContent) throws IOException, URISyntaxException {
-    	String responseBody = null;
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setServiceUnavailableRetryStrategy(
-                		new ServiceUnavailableRetryStrategy() {
-                			@Override
-                			public boolean retryRequest(
-                					final HttpResponse response, final int executionCount, final HttpContext context) {
-                					int statusCode = response.getStatusLine().getStatusCode();
-                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
-                			}
-
-                			@Override
-                			public long getRetryInterval() {
-                				return 5;
-                			}
-                		})
-                .setRedirectStrategy(new LaxRedirectStrategy())
-                .setDefaultRequestConfig(RequestConfig.custom()
-                        .setCookieSpec(CookieSpecs.STANDARD).build())
-                .build();
-        try {
-        	String queryString = "https://api.cognitive.microsoft.com/bing/v7.0/images/search?q="+ URLEncoder.encode(text, StandardCharsets.UTF_8.name())+"&imageType=Photo";
-        	if (imageContent != null) {
-        		queryString += ("&imageContent="+imageContent);
-        	}
-            HttpGet http = new HttpGet(queryString);
-            http.addHeader("Ocp-Apim-Subscription-Key", props.getProperty("apiKey"));
-
-            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-
-                @Override
-                public String handleResponse(
-                        final HttpResponse response) throws ClientProtocolException, IOException {
-                    int status = response.getStatusLine().getStatusCode();
-                    if (status >= 200 && status < 300) {
-                        HttpEntity entity = response.getEntity();
-                        return entity != null ? EntityUtils.toString(entity) : null;
-                    } 
-                    else {
-                    	logger.error("imageUrl: " + text);
-                        throw new ClientProtocolException("Unexpected response status: " + status);
-                    }
-                }
-            };
-            responseBody = httpclient.execute(http, responseHandler);
-            //logger.debug(responseBody);
-        	JsonNode doc = mapper.readTree(responseBody);
-        	if (doc.get("value").size() > 0) {
-        		List<String> retval = new ArrayList<String>();
-            	for (JsonNode val : doc.get("value")) {
-            		retval.add(val.get("thumbnailUrl").asText()+"&w=240&h=240");
-            		//getImageTags(text, val.get("imageInsightsToken").asText());
-            	}
-            	return retval;
-        	}
-        	else {
-        		return new ArrayList<String>();
-        	}
-
-        } finally {
-            httpclient.close();
+    	URI uri = new URI("https", "api.cognitive.microsoft.com", "bing/v7.0/images/search", null);
+		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+		nvps.add(new BasicNameValuePair("q", text));
+		nvps.add(new BasicNameValuePair("imageType", "Photo"));
+        if (imageContent != null) {
+    		nvps.add(new BasicNameValuePair("imageContent", imageContent));
         }
-
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Ocp-Apim-Subscription-Key", parameterStore.getProperty("azure_apiKey")));
+        JsonNode doc = 
+        		HttpUtils.getInstance(parameterStore).httpGetJson(
+        				HttpUtils.getInstance(parameterStore).buildUri(uri, nvps), 
+        				headers
+        		);
+    	if (doc.has("value") && doc.get("value").size() > 0) {
+    		List<String> retval = new ArrayList<String>();
+        	for (JsonNode val : doc.get("value")) {
+        		retval.add(val.get("thumbnailUrl").asText()+"&w=240&h=240");
+        		//getImageTags(text, val.get("imageInsightsToken").asText());
+        	}
+        	return retval;
+    	}
+    	else {
+    		return new ArrayList<String>();
+    	}
     }
     
     public List<String> getImageTags(String text, String insightsToken) throws IOException, URISyntaxException {
-    	String responseBody = null;
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setServiceUnavailableRetryStrategy(
-                		new ServiceUnavailableRetryStrategy() {
-                			@Override
-                			public boolean retryRequest(
-                					final HttpResponse response, final int executionCount, final HttpContext context) {
-                					int statusCode = response.getStatusLine().getStatusCode();
-                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
-                			}
-
-                			@Override
-                			public long getRetryInterval() {
-                				return 5;
-                			}
-                		})
-                .setRedirectStrategy(new LaxRedirectStrategy())
-                .build();
-        try {
-            HttpGet http = new HttpGet("https://api.cognitive.microsoft.com/bing/v7.0/images/details?q="+ URLEncoder.encode(text, StandardCharsets.UTF_8.name())+"&insightsToken="+insightsToken+"&modules=All&mkt=en-us");
-            http.addHeader("Ocp-Apim-Subscription-Key", props.getProperty("apiKey"));
-
-            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-
-                @Override
-                public String handleResponse(
-                        final HttpResponse response) throws ClientProtocolException, IOException {
-                    int status = response.getStatusLine().getStatusCode();
-                    if (status >= 200 && status < 300) {
-                        HttpEntity entity = response.getEntity();
-                        return entity != null ? EntityUtils.toString(entity) : null;
-                    } 
-                    else {
-                    	logger.error("imageUrl: " + text);
-                        throw new ClientProtocolException("Unexpected response status: " + status);
-                    }
-                }
-            };
-            responseBody = httpclient.execute(http, responseHandler);
-            logger.debug(responseBody);
-        	JsonNode doc = mapper.readTree(responseBody);
-        	if (doc.get("imageTags").get("value").size() > 0) {
-        		List<String> retval = new ArrayList<String>();
-            	for (JsonNode val : doc.get("imageTags").get("value")) {
-            		Iterator<String> fieldNameIter = val.fieldNames();
-            		while (fieldNameIter.hasNext()) {
-            			String fieldName = fieldNameIter.next();
-            			logger.debug(fieldName + ": " + val.get(fieldName).asText());
-            			
-            		}
-            		
-            	}
-            	return retval;
+    	URI uri = new URI("https", "api.cognitive.microsoft.com", "bing/v7.0/images/details", null);
+		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+		nvps.add(new BasicNameValuePair("q", text));
+		nvps.add(new BasicNameValuePair("insightsToken", insightsToken));
+		nvps.add(new BasicNameValuePair("modules", "All"));
+		nvps.add(new BasicNameValuePair("mkt", "en-us"));
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Ocp-Apim-Subscription-Key", parameterStore.getProperty("azure_apiKey")));
+        JsonNode doc = 
+        		HttpUtils.getInstance(parameterStore).httpGetJson(
+        				HttpUtils.getInstance(parameterStore).buildUri(uri, nvps), 
+        				headers
+        		);
+    	if (doc.has("imageTags") && doc.get("imageTags").has("value") && doc.get("imageTags").get("value").size() > 0) {
+    		List<String> retval = new ArrayList<String>();
+        	for (JsonNode val : doc.get("imageTags").get("value")) {
+        		Iterator<String> fieldNameIter = val.fieldNames();
+        		while (fieldNameIter.hasNext()) {
+        			String fieldName = fieldNameIter.next();
+        			getLogger().debug(fieldName + ": " + val.get(fieldName).asText());
+        		}
         	}
-        	else {
-        		return new ArrayList<String>();
-        	}
-
-        } finally {
-            httpclient.close();
-        }
-
-    }
+        	return retval;
+    	}
+    	else {
+    		return new ArrayList<String>();
+    	}
+    }    
+    
+    
+//    public List<String> getImages(String text, String imageContent) throws IOException, URISyntaxException {
+//    	String responseBody = null;
+//        CloseableHttpClient httpclient = HttpClients.custom()
+//                .setServiceUnavailableRetryStrategy(
+//                		new ServiceUnavailableRetryStrategy() {
+//                			@Override
+//                			public boolean retryRequest(
+//                					final HttpResponse response, final int executionCount, final HttpContext context) {
+//                					int statusCode = response.getStatusLine().getStatusCode();
+//                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
+//                			}
+//
+//                			@Override
+//                			public long getRetryInterval() {
+//                				return 5;
+//                			}
+//                		})
+//                .setRedirectStrategy(new LaxRedirectStrategy())
+//                .setDefaultRequestConfig(RequestConfig.custom()
+//                        .setCookieSpec(CookieSpecs.STANDARD).build())
+//                .build();
+//        try {
+//        	String queryString = "https://api.cognitive.microsoft.com/bing/v7.0/images/search?q="+ URLEncoder.encode(text, StandardCharsets.UTF_8.name())+"&imageType=Photo";
+//        	if (imageContent != null) {
+//        		queryString += ("&imageContent="+imageContent);
+//        	}
+//            HttpGet http = new HttpGet(queryString);
+//            http.addHeader("Ocp-Apim-Subscription-Key", props.getProperty("apiKey"));
+//
+//            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+//
+//                @Override
+//                public String handleResponse(
+//                        final HttpResponse response) throws ClientProtocolException, IOException {
+//                    int status = response.getStatusLine().getStatusCode();
+//                    if (status >= 200 && status < 300) {
+//                        HttpEntity entity = response.getEntity();
+//                        return entity != null ? EntityUtils.toString(entity) : null;
+//                    } 
+//                    else {
+//                    	logger.error("imageUrl: " + text);
+//                        throw new ClientProtocolException("Unexpected response status: " + status);
+//                    }
+//                }
+//            };
+//            responseBody = httpclient.execute(http, responseHandler);
+//            //logger.debug(responseBody);
+//        	JsonNode doc = mapper.readTree(responseBody);
+//        	if (doc.get("value").size() > 0) {
+//        		List<String> retval = new ArrayList<String>();
+//            	for (JsonNode val : doc.get("value")) {
+//            		retval.add(val.get("thumbnailUrl").asText()+"&w=240&h=240");
+//            		//getImageTags(text, val.get("imageInsightsToken").asText());
+//            	}
+//            	return retval;
+//        	}
+//        	else {
+//        		return new ArrayList<String>();
+//        	}
+//
+//        } finally {
+//            httpclient.close();
+//        }
+//
+//    }
+    
+//    public List<String> getImageTags(String text, String insightsToken) throws IOException, URISyntaxException {
+//    	String responseBody = null;
+//        CloseableHttpClient httpclient = HttpClients.custom()
+//                .setServiceUnavailableRetryStrategy(
+//                		new ServiceUnavailableRetryStrategy() {
+//                			@Override
+//                			public boolean retryRequest(
+//                					final HttpResponse response, final int executionCount, final HttpContext context) {
+//                					int statusCode = response.getStatusLine().getStatusCode();
+//                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
+//                			}
+//
+//                			@Override
+//                			public long getRetryInterval() {
+//                				return 5;
+//                			}
+//                		})
+//                .setRedirectStrategy(new LaxRedirectStrategy())
+//                .build();
+//        try {
+//            HttpGet http = new HttpGet("https://api.cognitive.microsoft.com/bing/v7.0/images/details?q="+ URLEncoder.encode(text, StandardCharsets.UTF_8.name())+"&insightsToken="+insightsToken+"&modules=All&mkt=en-us");
+//            http.addHeader("Ocp-Apim-Subscription-Key", props.getProperty("apiKey"));
+//
+//            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+//
+//                @Override
+//                public String handleResponse(
+//                        final HttpResponse response) throws ClientProtocolException, IOException {
+//                    int status = response.getStatusLine().getStatusCode();
+//                    if (status >= 200 && status < 300) {
+//                        HttpEntity entity = response.getEntity();
+//                        return entity != null ? EntityUtils.toString(entity) : null;
+//                    } 
+//                    else {
+//                    	logger.error("imageUrl: " + text);
+//                        throw new ClientProtocolException("Unexpected response status: " + status);
+//                    }
+//                }
+//            };
+//            responseBody = httpclient.execute(http, responseHandler);
+//            logger.debug(responseBody);
+//        	JsonNode doc = mapper.readTree(responseBody);
+//        	if (doc.get("imageTags").get("value").size() > 0) {
+//        		List<String> retval = new ArrayList<String>();
+//            	for (JsonNode val : doc.get("imageTags").get("value")) {
+//            		Iterator<String> fieldNameIter = val.fieldNames();
+//            		while (fieldNameIter.hasNext()) {
+//            			String fieldName = fieldNameIter.next();
+//            			logger.debug(fieldName + ": " + val.get(fieldName).asText());
+//            			
+//            		}
+//            		
+//            	}
+//            	return retval;
+//        	}
+//        	else {
+//        		return new ArrayList<String>();
+//        	}
+//
+//        } finally {
+//            httpclient.close();
+//        }
+//
+//    }
 }

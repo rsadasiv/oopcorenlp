@@ -75,9 +75,10 @@ public class PerfecttenseAnnotator extends AbstractPosAnnotator implements Annot
 	public void annotate(Annotation annotation) {
 		CoreDocument document = new CoreDocument(annotation);
 		try {
-			String response = PerfecttenseUtils.getInstance(getParameterStore()).correct(document.text(), new ArrayList<String>());
-			ObjectMapper mapper = new ObjectMapper();
-	        JsonNode corrected = mapper.readTree(response);
+			//String response = PerfecttenseUtils.getInstance(getParameterStore()).correct(document.text(), new ArrayList<String>());
+			//ObjectMapper mapper = new ObjectMapper();
+	        //JsonNode corrected = mapper.readTree(response);
+			JsonNode corrected = PerfecttenseUtils.getInstance(getParameterStore()).correctJson(document.text(), new ArrayList<String>());
 	        ArrayNode offset = (ArrayNode) corrected.get("offset");
 	        Iterator<CoreSentence> sentenceIter = document.sentences().iterator();
 	        Iterator<JsonNode> correctedSentenceIter = offset.iterator();

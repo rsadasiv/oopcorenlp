@@ -18,6 +18,7 @@ package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -90,7 +91,7 @@ public class WikipediaPageviewTopicsAnnotator extends AbstractPosAnnotator imple
 			try {
 				addToScoreMap(scoreMap, topic, WikipediaUtils.getInstance(getParameterStore()).getWikipediaPageviewsForTopic(topic).multiply(topics.get(topic)));
 			} 
-			catch (IOException e) {
+			catch (IOException | URISyntaxException e) {
 				logger.error(e);
 			}
 		} 

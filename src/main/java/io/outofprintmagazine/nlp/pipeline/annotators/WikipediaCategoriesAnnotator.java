@@ -18,6 +18,7 @@ package io.outofprintmagazine.nlp.pipeline.annotators;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -114,6 +115,9 @@ public class WikipediaCategoriesAnnotator extends AbstractPosAnnotator implement
 				}
 			} 
 			catch (IOException e) {
+				logger.debug(e);
+			} 
+			catch (URISyntaxException e) {
 				logger.debug(e);
 			}
 		}

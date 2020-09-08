@@ -58,8 +58,6 @@ public class WordnetUtils {
 	private HashMap<String, ArrayList<String>> verbnet = new HashMap<String, ArrayList<String>>();
 	private IParameterStore parameterStore = null;
 
-	
-	
 	private WordnetUtils(IParameterStore parameterStore) throws IOException {
 		wordnet = new Dictionary(
 				new URL(
@@ -85,18 +83,32 @@ public class WordnetUtils {
         return instances.get(parameterStore); 
     }
     
-	public IDictionary getWordnet() {
+	private IDictionary getWordnet() {
 		return wordnet;
 	}
 	
-	public ArrayList<String> getVerbnetSenses(ISenseKey senseKey) throws IOException {
+	public synchronized List<String> getVerbnetSenses(CoreLabel token, List<CoreLabel> contextWords) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		List<String> retval = new ArrayList<String>(); 
+		ISenseKey senseKey = getTargetWordSenseKey(token, contextWords);
+		if (senseKey != null) {
+			List<String> senses = getVerbnetSenses(senseKey);
+			if (senses != null) {
+				for (String sense : senses) {
+					retval.add(sense.split("-")[0]);
+				}
+			}
+		}
+		return retval;
+	}
+	
+	private ArrayList<String> getVerbnetSenses(ISenseKey senseKey) throws IOException {
 		if (senseKey != null && senseKey.toString().length() > 2) {
 			return getVerbnetSenses(senseKey.toString().substring(0, senseKey.toString().length()-2));
 		}
 		return new ArrayList<String>();
 	}
 	
-	public ArrayList<String> getVerbnetSenses(String senseKey) throws IOException {
+	private ArrayList<String> getVerbnetSenses(String senseKey) throws IOException {
 		//logger.debug("checking: " + senseKey);
 		ArrayList<String> retval = getVerbnet().get(senseKey);
 		return retval;
@@ -183,7 +195,7 @@ public class WordnetUtils {
 		return score;
 	}
 	
-	public String getLexicalFileName(CoreLabel token, List<CoreLabel> contextWords) {
+	public synchronized String getLexicalFileName(CoreLabel token, List<CoreLabel> contextWords) {
 		String score = null;
 		POS pos = tagToPOS(token);
 		if (pos == null) {
@@ -211,7 +223,11 @@ public class WordnetUtils {
 		return score;
 	}
 	
-	public IIndexWord getIndexWord(CoreLabel token) {
+	public synchronized boolean isIndexWord(CoreLabel token) {
+		return getIndexWord(token) == null;
+	}
+	
+	private IIndexWord getIndexWord(CoreLabel token) {
 		IIndexWord retval = null;
 
 			if (tagToPOS(token) != null) {
@@ -240,7 +256,7 @@ public class WordnetUtils {
 		return retval;
 	}
 	
-	public Map<String,BigDecimal> scoreTokenHypernym(CoreLabel token, List<CoreLabel> contextWords, Map<String,BigDecimal> tokensToMatch) {
+	public synchronized Map<String,BigDecimal> scoreTokenHypernym(CoreLabel token, List<CoreLabel> contextWords, Map<String,BigDecimal> tokensToMatch) {
 		Map<String,BigDecimal> retval = new HashMap<String,BigDecimal>();
 		POS pos = tagToPOS(token);
 		if (pos == null) {
@@ -300,7 +316,7 @@ public class WordnetUtils {
 		return retval;
 	}
 	
-	public String getTokenGloss(CoreLabel token, List<CoreLabel> contextWords) {
+	public synchronized String getTokenGloss(CoreLabel token, List<CoreLabel> contextWords) {
 		String retval = null;
 		POS pos = tagToPOS(token);
 		if (pos == null) {
@@ -327,8 +343,7 @@ public class WordnetUtils {
 		return retval;
 	}
 	
-	
-	public ISenseKey getTargetWordSenseKey(CoreLabel targetWord, List<CoreLabel> contextWords) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	private ISenseKey getTargetWordSenseKey(CoreLabel targetWord, List<CoreLabel> contextWords) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		POS pos = tagToPOS(targetWord);
 		if (pos == null) {
 			return null;
@@ -340,7 +355,7 @@ public class WordnetUtils {
 		return retval;
 	}
 
-	public ISenseKey getTargetWordSenseKeyPOS(POS pos, CoreLabel targetWord, List<CoreLabel> contextWords) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	private ISenseKey getTargetWordSenseKeyPOS(POS pos, CoreLabel targetWord, List<CoreLabel> contextWords) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 	
 			//look up the target word
 			IIndexWord idxWord = getWordnet().getIndexWord(targetWord.lemma(), pos);	

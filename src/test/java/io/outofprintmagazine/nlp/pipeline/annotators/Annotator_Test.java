@@ -4,8 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,6 +20,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.CoreDocument;
+import edu.stanford.nlp.pipeline.JSONOutputter;
+import io.outofprintmagazine.nlp.Analyzer;
+import io.outofprintmagazine.nlp.pipeline.ActorAnnotation;
+import io.outofprintmagazine.nlp.pipeline.OOPAnnotations;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
 import io.outofprintmagazine.nlp.pipeline.annotators.conditional.BecauseAnnotator;
 import io.outofprintmagazine.nlp.pipeline.annotators.conditional.IfAnnotator;
@@ -34,6 +41,7 @@ import io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhoAnnotator;
 import io.outofprintmagazine.nlp.pipeline.annotators.interrogative.WhyAnnotator;
 import io.outofprintmagazine.nlp.pipeline.annotators.simile.AsAnnotator;
 import io.outofprintmagazine.nlp.pipeline.annotators.simile.LikeAnnotator;
+import io.outofprintmagazine.nlp.pipeline.serializers.CoreNlpSerializer;
 import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
 import io.outofprintmagazine.util.IParameterStore;
 import io.outofprintmagazine.util.ParameterStoreLocal;
@@ -43,7 +51,7 @@ public class Annotator_Test {
 	public Annotator_Test() {
 		super();
 	}
-	
+
 	/**
 	 * 	#http://wordnetcode.princeton.edu/wn3.1.dict.tar.gz
 	 *  wordNet_location=dict
@@ -61,12 +69,12 @@ public class Annotator_Test {
 			ObjectNode p = mapper.createObjectNode();
 			p.put("wordNet_location", "../data/dict");
 			p.put("verbNet_location", "../data/verbnet3.3");
-			p.put("wikipedia_apikey", "OOPCoreNlp/0.9.1 httpclient/4.5.6");
+			p.put("wikipedia_apikey", "OOPCoreNlp/1.0 httpclient/4.5.6");
 			parameterStore = new ParameterStoreLocal(p);
 		}
 		return parameterStore;
 	}
-	
+
 	private CoreDocument annotate(String text, IOOPAnnotator annotator) throws IOException {
 		CoreDocument document = new CoreDocument(text);
 		CoreNlpUtils.getInstance(getParameterStore()).getPipeline().annotate(document);
@@ -75,7 +83,7 @@ public class Annotator_Test {
 		annotator.score(document);
 		return document;
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void printContents(Map<String,BigDecimal> score) {
 		if (score != null) {
@@ -84,7 +92,7 @@ public class Annotator_Test {
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void printContents(List<CoreLabel> tokens, IOOPAnnotator annotator) {
 		if (tokens != null) {
@@ -96,7 +104,7 @@ public class Annotator_Test {
 		}
 		System.out.println("----------------------------------------");
 	}
-	
+
 	@Test
 	public void ActionlessVerbsAnnotator_Test() throws IOException {
 		String text = "These are the times that try men's souls.";
@@ -128,13 +136,161 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
+
+
+	private void runPrereqs(IOOPAnnotator annotator, CoreDocument document) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		List<String> prereqs = new ArrayList<String>();
+
+		for (Class clazz : annotator.requires()) {
+			String className = clazz.getName();
+			if (className.startsWith("io.outofprintmagazine.nlp.pipeline.OOPAnnotations$")) {
+				String annotatorClassName =
+						"io.outofprintmagazine.nlp.pipeline.annotators." +
+						className.substring(
+								"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$".length(),
+								className.length()-"Annotation".length()
+						).replaceAll("OOP", "") +
+						"Annotator";
+				prereqs.add(annotatorClassName);
+			}
+		}
+
+		for (String ac : Analyzer.customAnnotatorClassNames) {
+			if (prereqs.contains(ac)) {
+				Object prereq = Class.forName(ac).newInstance();
+				if (prereq instanceof IOOPAnnotator) {
+					IOOPAnnotator oopAnnotator = (IOOPAnnotator) prereq;
+					oopAnnotator.init(parameterStore);
+					oopAnnotator.annotate(document.annotation());
+					oopAnnotator.score(document);
+				}
+			}	
+		}
+	}
 	
-	//NOT IN OSS
-	//@Test
-	//public void ActorsAnnotator_Test() throws IOException {
-	//	assertEquals("Implemented", "todo");
-	//}
-	
+	private void serializePrereqs(IOOPAnnotator annotator, CoreDocument document, ObjectNode json) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		List<String> prereqs = new ArrayList<String>();
+
+		for (Class clazz : annotator.requires()) {
+			String className = clazz.getName();
+			if (className.startsWith("io.outofprintmagazine.nlp.pipeline.OOPAnnotations$")) {
+				String annotatorClassName =
+						"io.outofprintmagazine.nlp.pipeline.annotators." +
+						className.substring(
+								"io.outofprintmagazine.nlp.pipeline.OOPAnnotations$".length(),
+								className.length()-"Annotation".length()
+						).replaceAll("OOP", "") +
+						"Annotator";
+				prereqs.add(annotatorClassName);
+			}
+		}
+
+		for (String ac : Analyzer.customAnnotatorClassNames) {
+			if (prereqs.contains(ac)) {
+				Object prereq = Class.forName(ac).newInstance();
+				if (prereq instanceof IOOPAnnotator) {
+					IOOPAnnotator oopAnnotator = (IOOPAnnotator) prereq;
+					oopAnnotator.init(parameterStore);
+					oopAnnotator.serialize(document, json);
+				}
+			}	
+		}
+	}
+
+	@Test
+	public void ActorsAnnotator_Test() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+		try {
+			String text = "WE met next day as he had arranged, and inspected the rooms at No. 221B, 5 Baker Street, of which he had spoken at our meeting. They consisted of a couple of comfortable bed-rooms and a single large airy sitting-room, cheerfully furnished, and illuminated by two broad windows. So desirable in every way were the apartments, and so moderate did the terms seem when divided between us, that the bargain was concluded upon the spot, and we at once entered into possession. That very evening I moved my things round from the hotel, and on the following morning Sherlock Holmes followed me with several boxes and portmanteaus. For a day or two we were busily employed in unpacking and laying out our property to the best advantage. That done, we gradually began to settle down and to accommodate ourselves to our new surroundings.\n" + 
+					"\n" + 
+					"Holmes was certainly not a difficult man to live with. He was quiet in his ways, and his habits were regular. It was rare for him to be up after ten at night, and he had invariably breakfasted and gone out before I rose in the morning. Sometimes he spent his day at the chemical laboratory, sometimes in the dissecting-rooms, and occasionally in long walks, which appeared to take him into the lowest portions of the City. Nothing could exceed his energy when the working fit was upon him; but now and again a reaction would seize him, and for days on end he would lie upon the sofa in the sitting-room, hardly uttering a word or moving a muscle from morning to night. On these occasions I have noticed such a dreamy, vacant expression in his eyes, that I might have suspected him of being addicted to the use of some narcotic, had not the temperance and cleanliness of his whole life forbidden such a notion.\n" + 
+					"\n" + 
+					"As the weeks went by, my interest in him and my curiosity as to his aims in life, gradually deepened and increased. His very person and appearance were such as to strike the attention of the most casual observer. In height he was rather over six feet, and so excessively lean that he seemed to be considerably taller. His eyes were sharp and piercing, save during those intervals of torpor to which I have alluded; and his thin, hawk-like nose gave his whole expression an air of alertness and decision. His chin, too, had the prominence and squareness which mark the man of determination. His hands were invariably blotted with ink and stained with chemicals, yet he was possessed of extraordinary delicacy of touch, as I frequently had occasion to observe when I watched him manipulating his fragile philosophical instruments.\n" + 
+					"\n" + 
+					"The reader may set me down as a hopeless busybody, when I confess how much this man stimulated my curiosity, and how often I endeavoured to break through the reticence which he showed on all that concerned himself. Before pronouncing judgment, however, be it remembered, how objectless was my life, and how little there was to engage my attention. My health forbade me from venturing out unless the weather was exceptionally genial, and I had no friends who would call upon me and break the monotony of my daily existence. Under these circumstances, I eagerly hailed the little mystery which hung around my companion, and spent much of my time in endeavouring to unravel it.\n" + 
+					"\n" + 
+					"He was not studying medicine. He had himself, in reply to a question, confirmed Stamford’s opinion upon that point. Neither did he appear to have pursued any course of reading which might fit him for a degree in science or any other recognized portal which would give him an entrance into the learned world. Yet his zeal for certain studies was remarkable, and within eccentric limits his knowledge was so extraordinarily ample and minute that his observations have fairly astounded me. Surely no man would work so hard or attain such precise information unless he had some definite end in view. Desultory readers are seldom remarkable for the exactness of their learning. No man burdens his mind with small matters unless he has some very good reason for doing so.\n" + 
+					"\n" + 
+					"His ignorance was as remarkable as his knowledge. Of contemporary literature, philosophy and politics he appeared to know next to nothing. Upon my quoting Thomas Carlyle, he inquired in the naivest way who he might be and what he had done. My surprise reached a climax, however, when I found incidentally that he was ignorant of the Copernican Theory and of the composition of the Solar System. That any civilized human being in this nineteenth century should not be aware that the earth travelled round the sun appeared to be to me such an extraordinary fact that I could hardly realize it.\n" + 
+					"\n" + 
+					"\"You appear to be astonished,\" he said, smiling at my expression of surprise. \"Now that I do know it I shall do my best to forget it.\"\n" + 
+					"\n" + 
+					"\"To forget it!\"\n" + 
+					"\n" + 
+					"\"You see,\" he explained, \"I consider that a man’s brain originally is like a little empty attic, and you have to stock it with such furniture as you choose. A fool takes in all the lumber of every sort that he comes across, so that the knowledge which might be useful to him gets crowded out, or at best is jumbled up with a lot of other things so that he has a difficulty in laying his hands upon it. Now the skilful workman is very careful indeed as to what he takes into his brain-attic. He will have nothing but the tools which may help him in doing his work, but of these he has a large assortment, and all in the most perfect order. It is a mistake to think that that little room has elastic walls and can distend to any extent. Depend upon it there comes a time when for every addition of knowledge you forget something that you knew before. It is of the highest importance, therefore, not to have useless facts elbowing out the useful ones.\"\n" + 
+					"\n" + 
+					"\"But the Solar System!\" I protested.\n" + 
+					"\n" + 
+					"\"What the deuce is it to me?\" Holmes interrupted impatiently; \"you say that we go round the sun. If we went round the moon it would not make a pennyworth of difference to me or to my work.\"";
+			CoreDocument document = new CoreDocument(text);
+			CoreNlpUtils.getInstance(getParameterStore()).getPipeline().annotate(document);
+			IOOPAnnotator annotator = new ActorsAnnotator();
+			annotator.init(getParameterStore());
+			runPrereqs(annotator, document);
+			annotator.annotate(document.annotation());
+			annotator.score(document);
+			
+			assertTrue(
+					document.annotation().containsKey(annotator.getAnnotationClass()),
+					String.format("Document annotation missing")
+			);
+			
+			int targetActorIdx = 1;
+			String targetSubscoreName = "Sherlock Holmes";
+			ActorAnnotation actor = (
+					(List<ActorAnnotation>)document.annotation().get(
+							annotator.getAnnotationClass()
+							)
+					).get(targetActorIdx);			
+
+			assertEquals(
+					targetSubscoreName,
+					actor.getCanonicalName(),
+					String.format("Actor missing: %d %s %s", targetActorIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
+			);
+			
+			assertTrue(
+					actor.getThumbnails().size() > 0,
+					String.format("Actor thumbnails missing: %d %s", targetActorIdx, annotator.getAnnotationClass().getName())
+			);
+					
+			assertTrue(
+					actor.getAttribute("OOPVerbsAnnotation").containsKey("interrupt"),
+					String.format("Actor attributes missing: %s %s %s", "OOPVerbsAnnotation", "interrupt", annotator.getAnnotationClass().getName())
+			);
+			
+			assertTrue(
+					actor.getAttribute("OOPVerbGroupsAnnotation").containsKey("communication"),
+					String.format("Actor attributes missing: %s %s %s", "OOPVerbGroupsAnnotation", "communication", annotator.getAnnotationClass().getName())
+			);
+			
+			assertTrue(
+					actor.getAttribute("OOPAdverbsAnnotation").containsKey("impatiently"),
+					String.format("Actor attributes missing: %s %s %s", "OOPAdverbsAnnotation", "impatiently", annotator.getAnnotationClass().getName())
+			);
+			
+			assertTrue(
+					actor.getAttribute("OOPNounsAnnotation").containsKey("way"),
+					String.format("Actor attributes missing: %s %s %s", "OOPNounsAnnotation", "way", annotator.getAnnotationClass().getName())
+			);
+			
+			assertTrue(
+					actor.getAttribute("OOPNounGroupsAnnotation").containsKey("attribute"),
+					String.format("Actor attributes missing: %s %s %s", "OOPNounsGroupsAnnotation", "attribute", annotator.getAnnotationClass().getName())
+			);
+			
+			assertTrue(
+					actor.getAttribute("OOPAdjectivesAnnotation").containsKey("quiet"),
+					String.format("Actor attributes missing: %s %s %s", "OOPAdjectivesAnnotation", "quiet", annotator.getAnnotationClass().getName())
+			);			
+			
+			
+		}
+		catch (Throwable t) {
+			t.printStackTrace();
+			throw t;
+		}
+	}
+
 	@Test
 	public void AdjectiveCategoriesAnnotator_Test() throws IOException {
 		String text = "The hungry fox was eaten by the hungrier wolf.";
@@ -143,7 +299,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		assertTrue(
 				document.annotation().containsKey(annotator.getAnnotationClass()),
 				String.format("Document annotation missing")
@@ -152,8 +308,8 @@ public class Annotator_Test {
 				document.sentences().get(0).coreMap().containsKey(annotator.getAnnotationClass()),
 				String.format("Sentence annotation missing")
 		);
-		
-		targetTokenIdx = 1;		
+
+		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
@@ -165,7 +321,7 @@ public class Annotator_Test {
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 7;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -180,7 +336,7 @@ public class Annotator_Test {
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 
 	}
-	
+
 	@Test
 	public void AdjectivesAnnotator_Test() throws IOException {
 		String text = "The quick brown fox jumped over the lazy white dog.";
@@ -189,7 +345,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		assertTrue(
 				document.annotation().containsKey(annotator.getAnnotationClass()),
 				String.format("Document annotation missing")
@@ -198,13 +354,13 @@ public class Annotator_Test {
 				document.sentences().get(0).coreMap().containsKey(annotator.getAnnotationClass()),
 				String.format("Sentence annotation missing")
 		);
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		
+
 		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "quick";
 		assertTrue(
@@ -212,13 +368,13 @@ public class Annotator_Test {
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 2;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		
+
 		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "brown";
 		assertTrue(
@@ -232,7 +388,7 @@ public class Annotator_Test {
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		
+
 		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "lazy";
 		assertTrue(
@@ -241,13 +397,13 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 
-		
+
 		targetTokenIdx = 8;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		
+
 		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "white";
 		assertTrue(
@@ -256,7 +412,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void AdverbCategoriesAnnotator_Test() throws IOException {
 		String text = "The fox ran quickly, but the wolf ran quicker.";
@@ -265,7 +421,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		assertTrue(
 				document.annotation().containsKey(annotator.getAnnotationClass()),
 				String.format("Document annotation missing")
@@ -288,7 +444,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 
-		
+
 		targetTokenIdx = 9;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -302,7 +458,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void AdverbsAnnotator_Test() throws IOException {
 		String text = "The fox ran quickly, but the wolf ran quicker.";
@@ -311,7 +467,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		assertTrue(
 				document.annotation().containsKey(annotator.getAnnotationClass()),
 				String.format("Document annotation missing")
@@ -333,7 +489,7 @@ public class Annotator_Test {
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 9;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -347,7 +503,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void AmericanizeAnnotator_Test() throws IOException {
 		String text = "I agonised over this decision.";
@@ -356,7 +512,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		assertTrue(
 				document.annotation().containsKey(annotator.getAnnotationClass()),
 				String.format("Document annotation missing")
@@ -379,7 +535,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void AngliciseAnnotator_Test() throws IOException {
 		String text = "I agonized over this decision.";
@@ -388,7 +544,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		assertTrue(
 				document.annotation().containsKey(annotator.getAnnotationClass()),
 				String.format("Document annotation missing")
@@ -410,7 +566,7 @@ public class Annotator_Test {
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-	}	
+	}
 
 	@Test
 	public void BiberAnnotatorAMP_Test() throws IOException {
@@ -420,7 +576,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -434,7 +590,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorAWL_Test() throws IOException {
 		String text = "Four letter words are fun.";
@@ -443,7 +599,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		score = (Map<String,BigDecimal>) document.annotation().get(annotator.getAnnotationClass());
 		targetSubscoreName = "AWL";
 		assertTrue(
@@ -452,7 +608,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(4), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorBEMA_Test() throws IOException {
 		String text = "Rain is wet.";
@@ -475,7 +631,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorBYPA_Test() throws IOException {
 		String text = "The crime was committed by person or persons unknown.";
@@ -484,7 +640,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 4;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -498,7 +654,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorCAUS_Test() throws IOException {
 		String text = "Because I said so.";
@@ -507,7 +663,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -521,7 +677,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorCONC_Test() throws IOException {
 		String text = "He did it, although we'll never be able to prove it.";
@@ -530,7 +686,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 4;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -544,7 +700,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorCOND_Test() throws IOException {
 		String text = "Unless someone rats him out.";
@@ -553,7 +709,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -567,7 +723,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorCONJ_Test() throws IOException {
 		String text = "And furthermore, I don't like your trousers. Or your appalling taste in women.";
@@ -576,7 +732,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -590,7 +746,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorCONT_Test() throws IOException {
 		String text = "And futhermore, I don't like your trousers. Or your appalling taste in women.";
@@ -599,7 +755,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 5;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -613,7 +769,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorDEMO_Test() throws IOException {
 		String text = "Dis, dat, dese, and those?";
@@ -622,7 +778,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 7;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -636,7 +792,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorDPAR_Test() throws IOException {
 		String text = "That's how we feel about it around here, anyways.";
@@ -645,7 +801,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 10;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -659,7 +815,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorDWNT_Test() throws IOException {
 		String text = "Hardly seems worth it.";
@@ -668,7 +824,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -682,7 +838,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorEMPH_Test() throws IOException {
 		String text = "It's just a damn shame.";
@@ -691,7 +847,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 2;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -705,7 +861,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorEX_Test() throws IOException {
 		String text = "There is a place where I can go.";
@@ -714,7 +870,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -728,7 +884,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorFPP1_Test() throws IOException {
 		String text = "I'm the man who loves you.";
@@ -737,7 +893,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -751,7 +907,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorGER_Test() throws IOException {
 		String text = "Running away to get away ha ha ha ha you're wearing out your shoes.";
@@ -760,7 +916,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -774,7 +930,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorHDG_Test() throws IOException {
 		String text = "Maybe you're going to be the one that saves me.";
@@ -783,7 +939,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -797,7 +953,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorINPR_Test() throws IOException {
 		String text = "Anyone who tells you different is a liar.";
@@ -806,7 +962,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -820,7 +976,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorJJ_Test() throws IOException {
 		String text = "The quick brown fox jumped over the lazy white dog.";
@@ -829,7 +985,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -843,7 +999,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorNEMD_Test() throws IOException {
 		String text = "We should go.";
@@ -852,7 +1008,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -866,7 +1022,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorNN_Test() throws IOException {
 		String text = "Snow is cold.";
@@ -875,7 +1031,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -889,7 +1045,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorNOMZ_Test() throws IOException {
 		String text = "Come on baby, do the locomotion with me.";
@@ -898,7 +1054,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 6;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -912,7 +1068,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorOSUB_Test() throws IOException {
 		String text = "Since you've been gone, all I have left is this band of gold.";
@@ -921,7 +1077,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -935,7 +1091,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPASS_Test() throws IOException {
 		String text = "The crime was committed by person or persons unknown.";
@@ -944,7 +1100,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 3;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -956,10 +1112,10 @@ public class Annotator_Test {
 				score.containsKey(targetSubscoreName),
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
-		
+
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPASTP_Test() throws IOException {
 		String text = "Rome wasn't built in a day.";
@@ -982,7 +1138,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPEAS_Test() throws IOException {
 		String text = "I have heard rumours of such things.";
@@ -991,7 +1147,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1005,7 +1161,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPHC_Test() throws IOException {
 		String text = "Jack and Jill went up the hill to fetch a pail of water.";
@@ -1014,7 +1170,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1028,7 +1184,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPIN_Test() throws IOException {
 		String text = "Life flows on within you and without you.";
@@ -1037,7 +1193,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 3;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1051,7 +1207,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPIT_Test() throws IOException {
 		String text = "It's in the way that you use it.";
@@ -1060,7 +1216,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1074,7 +1230,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPLACE_Test() throws IOException {
 		String text = "Up, up, and away.";
@@ -1083,7 +1239,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 5;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1097,7 +1253,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPOMD_Test() throws IOException {
 		String text = "Winnipeg can get cold in the winter.";
@@ -1106,7 +1262,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1120,7 +1276,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPRED_Test() throws IOException {
 		String text = "The horse is big.";
@@ -1129,7 +1285,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 3;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1143,7 +1299,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPRESP_Test() throws IOException {
 		String text = "Stuffing his mouth with cookies, Joe ran out the door.";
@@ -1152,7 +1308,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1166,7 +1322,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPRIV_Test() throws IOException {
 		String text = "I accept your judgement.";
@@ -1175,7 +1331,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1189,7 +1345,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPRMD_Test() throws IOException {
 		String text = "Letting I dare not wait upon I would, like the poor cat in the adage?";
@@ -1212,7 +1368,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPROD_Test() throws IOException {
 		String text = "I do the absolute minimum to get by.";
@@ -1221,7 +1377,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1235,7 +1391,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorPUBV_Test() throws IOException {
 		String text = "I pronounce you husband and wife.";
@@ -1244,7 +1400,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1258,7 +1414,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorRB_Test() throws IOException {
 		String text = "I wrote quickly";
@@ -1267,7 +1423,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 2;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1281,7 +1437,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorSEMP_Test() throws IOException {
 		String text = "I seem to have misplaced my glasses.";
@@ -1290,7 +1446,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1304,7 +1460,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorSERE_Test() throws IOException {
 		String text = "I didn't hear the conclusion, which may have been the point.";
@@ -1313,7 +1469,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 7;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1327,7 +1483,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorSPAU_Test() throws IOException {
 		String text = "No one believes it until they are objectively shown that it is true.";
@@ -1350,7 +1506,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorSPIN_Test() throws IOException {
 		String text = "He wants to convincingly prove that he is right.";
@@ -1359,7 +1515,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 4;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1373,7 +1529,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorSPP2_Test() throws IOException {
 		String text = "You don't know what it's like.";
@@ -1382,7 +1538,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1396,7 +1552,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorSTPR_Test() throws IOException {
 		String text = "The candidate that I was thinking of.";
@@ -1405,7 +1561,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 6;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1419,7 +1575,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorSUAV_Test() throws IOException {
 		String text = "I recommend a different course.";
@@ -1428,7 +1584,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1442,7 +1598,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorSYNE_Test() throws IOException {
 		String text = "He was no true friend.";
@@ -1451,7 +1607,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 4;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1465,7 +1621,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorTHAC_Test() throws IOException {
 		String text = "She was so beautiful that it made me cry";
@@ -1488,7 +1644,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorTHVC_Test() throws IOException {
 		String text = "And that is how the cookie crumbles.";
@@ -1511,7 +1667,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorTIME_Test() throws IOException {
 		String text = "And they lived happily ever afterwards. The end.";
@@ -1520,7 +1676,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 5;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1534,7 +1690,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorTO_Test() throws IOException {
 		String text = "To be or not to be, that is the question.";
@@ -1557,7 +1713,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorTOBJ_Test() throws IOException {
 		String text = "The dog that I saw was yellow.";
@@ -1566,7 +1722,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 2;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1580,8 +1736,8 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
-	
+
+
 	@Test
 	public void BiberAnnotatorTPP3_Test() throws IOException {
 		String text = "She was the best damn woman that I'd ever seen.";
@@ -1590,7 +1746,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1604,7 +1760,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorTSUB_Test() throws IOException {
 		String text = "The dog that bit me was rabid.";
@@ -1613,7 +1769,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 2;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1627,7 +1783,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorVBD_Test() throws IOException {
 		String text = "Jesus wept.";
@@ -1636,7 +1792,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1650,7 +1806,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorVPRT_Test() throws IOException {
 		String text = "Jesus weeps.";
@@ -1659,7 +1815,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1673,7 +1829,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorWHCL_Test() throws IOException {
 		String text = "I believed what he told me.";
@@ -1682,7 +1838,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 4;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1696,7 +1852,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorWHOBJ_Test() throws IOException {
 		String text = "The man who Sally likes.";
@@ -1705,7 +1861,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 3;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1719,7 +1875,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorWHQU_Test() throws IOException {
 		String text = "Who do you love?";
@@ -1728,7 +1884,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 0;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1742,7 +1898,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorWHSUB_Test() throws IOException {
 		String text = "I'm the man who loves you.";
@@ -1751,7 +1907,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 4;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1765,7 +1921,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorWZPAST_Test() throws IOException {
 		String text = "The solution produced by this process is toxic.";
@@ -1774,7 +1930,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 2;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1788,7 +1944,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorWZPRES_Test() throws IOException {
 		String text = "The event causing this decline is unknown at this time.";
@@ -1797,7 +1953,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 2;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1811,7 +1967,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BiberAnnotatorXX0_Test() throws IOException {
 		String text = "I don't know why I didn't come.";
@@ -1820,7 +1976,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		targetTokenIdx = 2;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1834,13 +1990,13 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	//TODO
 	//@Test
 	//public void BiberDimensionsAnnotator_Test() throws IOException {
 	//	assertEquals("Implemented", "TODO");
 	//}
-	
+
 	@Test
 	public void ColorsAnnotator_Test() throws IOException {
 		String text = "The quick brown fox jumped over the lazy white dog.";
@@ -1849,7 +2005,7 @@ public class Annotator_Test {
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
-		
+
 		assertTrue(
 				document.annotation().containsKey(annotator.getAnnotationClass()),
 				String.format("Document annotation missing")
@@ -1858,7 +2014,7 @@ public class Annotator_Test {
 				document.sentences().get(0).coreMap().containsKey(annotator.getAnnotationClass()),
 				String.format("Sentence annotation missing")
 		);
-		
+
 		targetTokenIdx = 2;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1871,7 +2027,7 @@ public class Annotator_Test {
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 8;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -1885,7 +2041,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void CommonWordsAnnotator_Test() throws IOException {
 		String text = "These are the times that try men's souls.";
@@ -1917,7 +2073,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void CoreNlpGenderAnnotator_Test() throws IOException {
 		String text = "Suzanne takes you down to her place near the river.";
@@ -1949,10 +2105,10 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void CoreNlpParagraphAnnotator_Test() throws IOException {
-		String text = "Suzanne takes you down to her place near the river.\n\n" + 
+		String text = "Suzanne takes you down to her place near the river.\n\n" +
 				"You can hear the boats go by, you can spend the night forever.";
 		IOOPAnnotator annotator = new CoreNlpParagraphAnnotator();
 		CoreDocument document = annotate(text, annotator);
@@ -1961,7 +2117,7 @@ public class Annotator_Test {
 				document.sentences().get(0).coreMap().containsKey(annotator.getAnnotationClass()),
 				String.format("Sentence annotation missing")
 		);
-		
+
 		assertEquals(
 				new Integer(0),
 				(
@@ -1971,7 +2127,7 @@ public class Annotator_Test {
 						)
 				)
 		);
-		
+
 		assertEquals(
 				new Integer(1),
 				(
@@ -1982,7 +2138,7 @@ public class Annotator_Test {
 				)
 		);
 	}
-	
+
 	@Test
 	public void CoreNlpSentimentAnnotator_Test() throws IOException {
 		String text = "I love you Suzanne.";
@@ -1997,7 +2153,7 @@ public class Annotator_Test {
 				document.sentences().get(0).coreMap().containsKey(annotator.getAnnotationClass()),
 				String.format("Sentence annotation missing")
 		);
-		
+
 		assertTrue(
 				(
 						(
@@ -2009,15 +2165,15 @@ public class Annotator_Test {
 						> 0
 				),
 				String.format(
-						"Sentence annotation incorrect: %s %s", 
-						annotator.getAnnotationClass().getName(), 
+						"Sentence annotation incorrect: %s %s",
+						annotator.getAnnotationClass().getName(),
 						document.sentences().get(0).coreMap().get(
 								annotator.getAnnotationClass()
 						)
 				)
 		);
 	}
-	
+
 	@Test
 	public void DatesAnnotator_Test() throws IOException {
 		String text = "From January 4, 1966, Kawara made a long series of \"Date paintings\" (the Today series), which consist entirely of the date on which the painting was executed in simple white lettering set against a solid background.";
@@ -2050,7 +2206,7 @@ public class Annotator_Test {
 				String.format("Sentence annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 	}
-	
+
 	@Test
 	public void FlavorsAnnotator_Test() throws IOException {
 		String text = "It won't do to dream of caramel, to think of cinnamon, and long for you.";
@@ -2083,7 +2239,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void FleschKincaidAnnotator_Text() throws IOException {
 		String text = "But I had seen first one and then another of the rooms in which I had slept during my life, "
@@ -2117,7 +2273,7 @@ public class Annotator_Test {
 				+ "until custom had changed the colour of the curtains, made the clock keep quiet, brought an expression of "
 				+ "pity to the cruel, slanting face of the glass, disguised or even completely dispelled the scent of flowering grasses, "
 				+ "and distinctly reduced the apparent loftiness of the ceiling.";
-		
+
 		CoreDocument document = new CoreDocument(text);
 		CoreNlpUtils.getInstance(getParameterStore()).getPipeline().annotate(document);
 		IOOPAnnotator prereq = new SyllableCountAnnotator();
@@ -2138,7 +2294,7 @@ public class Annotator_Test {
 				String.format("Document annotation incorrect: %s", score.toPlainString())
 		);
 	}
-	
+
 	@Test
 	public void FunctionWordsAnnotator_Test() throws IOException {
 		String text = "These are the times that try men's souls.";
@@ -2170,7 +2326,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void GenderAnnotator_Test() throws IOException {
 		String text = "Anjali is a punk rocker.";
@@ -2202,7 +2358,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void LocationsAnnotator_Test() throws IOException {
 		String text = "She feeds you tea and oranges that come all the way from China.";
@@ -2226,7 +2382,7 @@ public class Annotator_Test {
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (List<PhraseAnnotation>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (List<PhraseAnnotation>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "China";
 		PhraseAnnotation foundScore = null;
 		for (PhraseAnnotation subscore : score) {
@@ -2241,7 +2397,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), foundScore.getValue());
 	}
-	
+
 	@Test
 	public void NonAffirmativeAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
@@ -2273,9 +2429,9 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
 
-	
+
+
 	@Test
 	public void NounGroupsAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
@@ -2307,7 +2463,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void NounHypernymsAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
@@ -2321,7 +2477,7 @@ public class Annotator_Test {
 		annotator.init(getParameterStore());
 		annotator.annotate(document.annotation());
 		annotator.score(document);
-		
+
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
@@ -2334,7 +2490,7 @@ public class Annotator_Test {
 				document.sentences().get(0).coreMap().containsKey(annotator.getAnnotationClass()),
 				String.format("Sentence annotation missing")
 		);
-		
+
 		targetTokenIdx = 7;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -2349,7 +2505,7 @@ public class Annotator_Test {
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 
 	}
-	
+
 	@Test
 	public void NounsAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
@@ -2375,7 +2531,7 @@ public class Annotator_Test {
 				String.format("Document annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetSubscoreName = "ham";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
@@ -2383,19 +2539,19 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 
 	@Test
 	public void PeopleAnnotator_Test() throws IOException {
 		String text = "Barack Obama was born in Hawaii. He is the president. Obama was elected in 2008.";
 		IOOPAnnotator annotator = new PeopleAnnotator();
 		CoreDocument document = annotate(text, annotator);
-		
+
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		List<PhraseAnnotation> score = null;
 		int targetSentenceIdx = 0;
-		
+
 		assertTrue(
 				document.annotation().containsKey(annotator.getAnnotationClass()),
 				String.format("Document annotation missing")
@@ -2423,7 +2579,7 @@ public class Annotator_Test {
 				targetSubscore,
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
-		
+
 		targetSentenceIdx = 1;
 		targetTokenIdx = 0;
 		assertTrue(
@@ -2442,7 +2598,7 @@ public class Annotator_Test {
 				targetSubscore,
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
-		
+
 		targetSentenceIdx = 2;
 		targetTokenIdx = 0;
 		assertTrue(
@@ -2463,13 +2619,13 @@ public class Annotator_Test {
 		);
 
 	}
-	
+
 	//NOT IN OSS VERSION
 	//@Test
 	//public void PerfecttenseAnnotator_Test() throws IOException {
 	//	assertEquals("Implemented", "todo");
 	//}
-	
+
 	@Test
 	public void PointlessAdjectivesAnnotator_Test() throws IOException {
 		String text = "I would not eat such green eggs and ham.";
@@ -2501,7 +2657,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void PointlessAdverbsAnnotator_Test() throws IOException {
 		String text = "I would rather not eat green eggs and ham.";
@@ -2533,7 +2689,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void PossessivesAnnotator_Test() throws IOException {
 		String text = "Suzanne takes you down to her place near the river.";
@@ -2557,7 +2713,7 @@ public class Annotator_Test {
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "her";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
@@ -2565,7 +2721,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void PrepositionCategoriesAnnotator_Test() throws IOException {
 		String text = "She feeds you tea and oranges that come all the way from China.";
@@ -2589,20 +2745,20 @@ public class Annotator_Test {
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "coordinating";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 11;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "subordinating";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
@@ -2610,7 +2766,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void PrepositionsAnnotator_Test() throws IOException {
 		String text = "She feeds you tea and oranges that come all the way from China.";
@@ -2634,20 +2790,20 @@ public class Annotator_Test {
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "and";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 11;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "from";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
@@ -2655,7 +2811,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void PronounAnnotator_Test() throws IOException {
 		String text = "She feeds you tea and oranges that come all the way from China.";
@@ -2679,20 +2835,20 @@ public class Annotator_Test {
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "she";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 2;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "you";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
@@ -2700,7 +2856,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void PunctuationMarkAnnotator_Test() throws IOException {
 		String text = "The panda eats, shoots, and leaves.";
@@ -2724,41 +2880,41 @@ public class Annotator_Test {
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "Comma";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 5;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "Comma";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 8;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "Period";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
-		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));		
+		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void QuotesAnnotator_Test() throws IOException {
 		String text = "She said \"I know what it's like to be dead\".";
@@ -2766,7 +2922,7 @@ public class Annotator_Test {
 		CoreDocument document = annotate(text, annotator);
 		List<PhraseAnnotation> score = null;
 		String targetSubscoreName = "";
-		score = (List<PhraseAnnotation>) document.annotation().get(annotator.getAnnotationClass());	
+		score = (List<PhraseAnnotation>) document.annotation().get(annotator.getAnnotationClass());
 		targetSubscoreName = "I know what";
 		assertTrue(
 				score.get(0).getName().startsWith(targetSubscoreName),
@@ -2774,13 +2930,13 @@ public class Annotator_Test {
 		);
 
 	}
-	
+
 	//NOT IN OSS VERSION
 	//@Test
 	//public void SettingsAnnotator_Test() throws IOException {
 	//	assertEquals("Implemented", "todo");
 	//}
-	
+
 
 	@Test
 	public void SVOAnnotator_Test() throws IOException {
@@ -2807,59 +2963,59 @@ public class Annotator_Test {
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "subject";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 1;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "auxVerb";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 2;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "verb";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 4;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "object";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
 				String.format("Token annotation subscore missing: %d %s %s", targetTokenIdx, annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
-		
+
 		targetTokenIdx = 6;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "indirectObject";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
@@ -2867,13 +3023,13 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	//NOT IN OSS VERSION
 	//@Test
 	//public void TemporalNGramsAnnotator_Test() throws IOException {
 	//	assertEquals("Implemented", "todo");
 	//}
-	
+
 	@Test
 	public void TopicsAnnotator_Test() throws IOException {
 		String text = "She feeds you tea and oranges that come all the way from China.";
@@ -2897,7 +3053,7 @@ public class Annotator_Test {
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "China";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
@@ -2905,7 +3061,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void UncommonWordsAnnotator_Test() throws IOException {
 		String text = "It thus differs from a nonce word, which may never be recorded.";
@@ -2929,7 +3085,7 @@ public class Annotator_Test {
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
 				String.format("Token annotation missing")
 		);
-		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());	
+		score = (Map<String,BigDecimal>) document.sentences().get(0).tokens().get(targetTokenIdx).get(annotator.getAnnotationClass());
 		targetSubscoreName = "nonce";
 		assertTrue(
 				score.containsKey(targetSubscoreName),
@@ -2937,8 +3093,8 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
-	
+
+
 	@Test
 	public void VaderSentimentAnnotator_Test() throws IOException {
 		String text = "I love you Suzanne.";
@@ -2953,7 +3109,7 @@ public class Annotator_Test {
 				document.sentences().get(0).coreMap().containsKey(annotator.getAnnotationClass()),
 				String.format("Sentence annotation missing")
 		);
-		
+
 		assertTrue(
 				(
 						(
@@ -2965,15 +3121,15 @@ public class Annotator_Test {
 						> 0
 				),
 				String.format(
-						"Sentence annotation incorrect: %s %s", 
-						annotator.getAnnotationClass().getName(), 
+						"Sentence annotation incorrect: %s %s",
+						annotator.getAnnotationClass().getName(),
 						document.sentences().get(0).coreMap().get(
 								annotator.getAnnotationClass()
 						)
 				)
 		);
 	}
-	
+
 	@Test
 	public void VerbGroupsAnnotator_Test() throws IOException {
 		String text = "I'm just sitting here watching the wheels go round and round.";
@@ -3006,7 +3162,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void VerbHypernymsAnnotator_Test() throws IOException {
 		String text = "I'm just sitting here watching the wheels go round and round.";
@@ -3020,7 +3176,7 @@ public class Annotator_Test {
 		annotator.init(getParameterStore());
 		annotator.annotate(document.annotation());
 		annotator.score(document);
-		
+
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
@@ -3033,7 +3189,7 @@ public class Annotator_Test {
 				document.sentences().get(0).coreMap().containsKey(annotator.getAnnotationClass()),
 				String.format("Sentence annotation missing")
 		);
-		
+
 		targetTokenIdx = 5;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -3047,7 +3203,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void VerblessSentencesAnnotator_Test() throws IOException {
 		String text = "sadasf ads asdf dsaf.";
@@ -3069,13 +3225,13 @@ public class Annotator_Test {
 		score = (BigDecimal) document.sentences().get(0).coreMap().get(annotator.getAnnotationClass());
 		assertEquals(new BigDecimal(1), score);
 	}
-	
+
 	@Test
 	public void VerbnetGroupsAnnotator_Test() throws IOException {
 		String text = "I'm just sitting here watching the wheels go round and round.";
 		IOOPAnnotator annotator = new VerbnetGroupsAnnotator();
 		CoreDocument document = annotate(text, annotator);
-		
+
 		int targetTokenIdx = 0;
 		String targetSubscoreName = "";
 		Map<String,BigDecimal> score = null;
@@ -3088,7 +3244,7 @@ public class Annotator_Test {
 				document.sentences().get(0).coreMap().containsKey(annotator.getAnnotationClass()),
 				String.format("Sentence annotation missing")
 		);
-		
+
 		targetTokenIdx = 5;
 		assertTrue(
 				document.sentences().get(0).tokens().get(targetTokenIdx).containsKey(annotator.getAnnotationClass()),
@@ -3103,7 +3259,7 @@ public class Annotator_Test {
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 
 	}
-	
+
 	@Test
 	public void VerbsAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
@@ -3130,7 +3286,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void VerbTenseAnnotator_Test() throws IOException {
 		String text = "I would not eat green eggs and ham.";
@@ -3155,11 +3311,12 @@ public class Annotator_Test {
 				score.containsKey(targetSubscoreName),
 				String.format("Document annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
-		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));	
+		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void WikipediaCategoriesAnnotator_Test() throws IOException {
+		try {
 		String text = "Visit Winnipeg in the summer.";
 		CoreDocument document = new CoreDocument(text);
 		CoreNlpUtils.getInstance(getParameterStore()).getPipeline().annotate(document);
@@ -3186,9 +3343,14 @@ public class Annotator_Test {
 		assertTrue(
 				foundSubscore,
 				String.format("Document annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
-		);		
+		);
+		}
+		catch (Throwable t) {
+			t.printStackTrace();
+			throw t;
+		}
 	}
-	
+
 	@Test
 	public void WikipediaGlossAnnotator_Test() throws IOException {
 		String text = "Visit Winnipeg in the summer.";
@@ -3202,10 +3364,11 @@ public class Annotator_Test {
 				String.format("Token annotation missing")
 		);
 	}
-	
+
 
 	@Test
 	public void WikipediaPageviewTopicsAnnotator_Test() throws IOException {
+		try {
 		String text = "Visit Winnipeg in the summer.";
 		CoreDocument document = new CoreDocument(text);
 		CoreNlpUtils.getInstance(getParameterStore()).getPipeline().annotate(document);
@@ -3232,8 +3395,13 @@ public class Annotator_Test {
 				foundSubscore,
 				String.format("Document annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
+		}
+		catch (Throwable t) {
+			t.printStackTrace();
+			throw t;
+		}
 	}
-	
+
 	@Test
 	public void WordlessWordsAnnotator_Test() throws IOException {
 		String text = "asdfa sadf asdf sadf.";
@@ -3258,7 +3426,7 @@ public class Annotator_Test {
 				String.format("Token annotation missing")
 		);
 	}
-	
+
 	@Test
 	public void WordnetGlossAnnotator_Test() throws IOException {
 		String text = "Visit Winnipeg in the summer.";
@@ -3272,7 +3440,7 @@ public class Annotator_Test {
 				String.format("Token annotation missing")
 		);
 	}
-	
+
 	@Test
 	public void WordsAnnotator_Test() throws IOException {
 		String text = "These are the times that try men's souls.";
@@ -3304,7 +3472,7 @@ public class Annotator_Test {
 		);
 		assertEquals(new BigDecimal(1), score.get(targetSubscoreName));
 	}
-	
+
 	@Test
 	public void BecauseAnnotator_Test() throws IOException {
 		String text = "Because the world is round it turns me on.";
@@ -3337,7 +3505,7 @@ public class Annotator_Test {
 				String.format("Sentence annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 	}
-	
+
 	@Test
 	public void IfAnnotator_Test() throws IOException {
 		String text = "If a picture paints a thousand words, then why can't I paint you?";
@@ -3370,7 +3538,7 @@ public class Annotator_Test {
 				String.format("Sentence annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 	}
-	
+
 	@Test
 	public void CharCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party.";
@@ -3392,7 +3560,7 @@ public class Annotator_Test {
 				score
 		);
 	}
-	
+
 	@Test
 	public void ParagraphCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party.";
@@ -3414,7 +3582,7 @@ public class Annotator_Test {
 				score
 		);
 	}
-	
+
 	@Test
 	public void SentenceCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party. Donate now.";
@@ -3436,7 +3604,7 @@ public class Annotator_Test {
 				score
 		);
 	}
-	
+
 	@Test
 	public void SyllableCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party.";
@@ -3458,7 +3626,7 @@ public class Annotator_Test {
 				score
 		);
 	}
-	
+
 	@Test
 	public void TokenCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party.";
@@ -3480,7 +3648,7 @@ public class Annotator_Test {
 				score
 		);
 	}
-	
+
 	@Test
 	public void WordCountAnnotator_Test() throws IOException {
 		String text = "Now is the time for all good men to come to the aid of their party.";
@@ -3502,7 +3670,7 @@ public class Annotator_Test {
 				score
 		);
 	}
-	
+
 	@Test
 	public void HowAnnotator_Test() throws IOException {
 		String text = "How can I go forward when I don't know which way I'm facing?";
@@ -3535,7 +3703,7 @@ public class Annotator_Test {
 				String.format("Sentence annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 	}
-	
+
 	@Test
 	public void WhatAnnotator_Test() throws IOException {
 		String text = "What do you want me to do, to do for you, to see you through?";
@@ -3568,7 +3736,7 @@ public class Annotator_Test {
 				String.format("Sentence annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 	}
-	
+
 	@Test
 	public void WhenAnnotator_Test() throws IOException {
 		String text = "When can I see you again?";
@@ -3601,7 +3769,7 @@ public class Annotator_Test {
 				String.format("Sentence annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 	}
-	
+
 	@Test
 	public void WhereAnnotator_Test() throws IOException {
 		String text = "Where are you going?";
@@ -3634,7 +3802,7 @@ public class Annotator_Test {
 				String.format("Sentence annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 	}
-	
+
 	@Test
 	public void WhoAnnotator_Test() throws IOException {
 		String text = "Who let the dogs out?";
@@ -3667,7 +3835,7 @@ public class Annotator_Test {
 				String.format("Sentence annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 	}
-	
+
 	@Test
 	public void WhyAnnotator_Test() throws IOException {
 		String text = "Why you wanna treat me so bad?";
@@ -3700,7 +3868,7 @@ public class Annotator_Test {
 				String.format("Sentence annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 	}
-	
+
 	@Test
 	public void AsAnnotator_Test() throws IOException {
 		String text = "We are such stuff as dreams are made on, and our little life is rounded with a sleep.";
@@ -3733,7 +3901,7 @@ public class Annotator_Test {
 				String.format("Sentence annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 	}
-	
+
 	@Test
 	public void LikeAnnotator_Test() throws IOException {
 		String text = "Happy like a cabbie in a rainstorm.";
@@ -3766,7 +3934,7 @@ public class Annotator_Test {
 				String.format("Sentence annotation subscore missing: %s %s", annotator.getAnnotationClass().getName(), targetSubscoreName)
 		);
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		Annotator_Test t = new Annotator_Test();
 		t.ActionlessVerbsAnnotator_Test();

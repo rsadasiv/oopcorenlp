@@ -17,10 +17,10 @@
 package io.outofprintmagazine.nlp.utils;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -33,28 +33,32 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 
+import org.apache.http.Header;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import edu.stanford.nlp.pipeline.CoreDocument;
-import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import io.outofprintmagazine.util.IParameterStore;
 
 public class WikipediaUtils {
-
-	@SuppressWarnings("unused")
-	private static final Logger logger = LogManager.getLogger(WikipediaUtils.class);
-	private static final int CACHE_SIZE = 5000;
 	
+	private static final Logger logger = LogManager.getLogger(WikipediaUtils.class);
+	
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
+		return logger;
+	}
+
+	private static final int WORD_BATCH_SIZE = 20;
+	private static final int WORD_CACHE_SIZE = 10000;
+	private static final int CACHE_SIZE = 5000;
+	private IParameterStore parameterStore = null;	
 	
 //	private Deque mruPageList = new LinkedList<String>();
 //	private Map<String, String> pageCache = new HashMap<String, String>();
@@ -63,7 +67,8 @@ public class WikipediaUtils {
 	private Map<String, BigDecimal> pageviewCache = new HashMap<String, BigDecimal>();
 	private Deque mruCategoriesList = new LinkedList<String>();
 	private Map<String, Map<String,BigDecimal>> categoriesCache = new HashMap<String, Map<String,BigDecimal>>();
-
+	private Deque mruWordList = new LinkedList<String>();
+	private Map<String, String> wordCache = new HashMap<String, String>();
 	
 /*    public String getPageCache(String topic) {
     	String retval = pageCache.get(topic);
@@ -129,15 +134,15 @@ public class WikipediaUtils {
     	}
     }
 	
-	private StanfordCoreNLP wikiPipeline = null;
+//	private StanfordCoreNLP wikiPipeline = null;
 	
-	public static Properties getWikiProps() {
-		Properties props = new Properties();
-	    props.put("customAnnotatorClass.oop_nouns",
-	            "io.outofprintmagazine.nlp.pipeline.annotators.NounsAnnotator");
-		props.setProperty("annotators","tokenize,ssplit,pos,lemma,oop_nouns");
-		return props;
-	}
+//	public static Properties getWikiProps() {
+//		Properties props = new Properties();
+//	    props.put("customAnnotatorClass.oop_nouns",
+//	            "io.outofprintmagazine.nlp.pipeline.annotators.NounsAnnotator");
+//		props.setProperty("annotators","tokenize,ssplit,pos,lemma,oop_nouns");
+//		return props;
+//	}
 
 //	public class TopicPage {
 //		public String title;
@@ -150,7 +155,7 @@ public class WikipediaUtils {
 	
 	private WikipediaUtils(IParameterStore parameterStore) throws IOException {
 		super();
-
+		this.parameterStore = parameterStore;
 	}
 	
 	private static Map<IParameterStore, WikipediaUtils> instances = new HashMap<IParameterStore, WikipediaUtils>();
@@ -163,18 +168,18 @@ public class WikipediaUtils {
         return instances.get(parameterStore); 
     }
     
-    public StanfordCoreNLP getWikiPipeline() {
-    	if (wikiPipeline == null) {
-    		wikiPipeline = new StanfordCoreNLP(WikipediaUtils.getWikiProps());
-    	}
-    	return wikiPipeline;
-    }
-    
-	public CoreDocument annotate(String text) {
-		CoreDocument document = new CoreDocument(text);
-		getWikiPipeline().annotate(document);
-		return document;
-	}
+//    public StanfordCoreNLP getWikiPipeline() {
+//    	if (wikiPipeline == null) {
+//    		wikiPipeline = new StanfordCoreNLP(WikipediaUtils.getWikiProps());
+//    	}
+//    	return wikiPipeline;
+//    }
+//    
+//	public CoreDocument annotate(String text) {
+//		CoreDocument document = new CoreDocument(text);
+//		getWikiPipeline().annotate(document);
+//		return document;
+//	}
 	
 /*	public Class getTopicsAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPTopicsAnnotation.class;
@@ -184,7 +189,7 @@ public class WikipediaUtils {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPNounsAnnotation.class;
 	}*/
     
-	public BigDecimal getWikipediaPageviewsForTopic(String topic) throws MalformedURLException, UnsupportedEncodingException, IOException {
+	public BigDecimal getWikipediaPageviewsForTopic(String topic) throws MalformedURLException, UnsupportedEncodingException, IOException, URISyntaxException {
 		BigDecimal retval = getPageviewCache(topic);
 		if (retval != null) {
 			return retval;
@@ -214,35 +219,22 @@ public class WikipediaUtils {
 		return retval;
 	
 	}
-	//https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia.org/all-access/all-agents/Hair/monthly/20190601/20190701
-
-	public Map<String,BigDecimal> getWikipediaCategoriesForTopic(String topic) throws MalformedURLException, UnsupportedEncodingException, IOException {
-		Map<String,BigDecimal> retval = getCategoriesCache(topic);
-		if (retval != null) {
-			return retval;
-		}
-		ObjectMapper mapper = new ObjectMapper();
+	
+    protected class CategoriesForTopicPageHandler implements IJsonResponseHandler {
     	Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-		for (String title : getWikipediaPagesForTopic(topic)) {
-			title = title.replace(' ', '_');
-			String clcontinue = "init";
-			while (clcontinue != null) {
-				JsonNode categoryRootNode = null;
-		
-				if (clcontinue.equals("init")) {
-					categoryRootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=categories&utf8=1&titles="+(URLEncoder.encode(title, StandardCharsets.UTF_8.name()))), JsonNode.class);
-				}
-				else {
-					categoryRootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=categories&utf8=1&titles="+(URLEncoder.encode(title, StandardCharsets.UTF_8.name())+"&clcontinue="+clcontinue)), JsonNode.class);
-				}
-				if (categoryRootNode.get("continue") != null) {
-					clcontinue = categoryRootNode.get("continue").get("clcontinue").asText();
-				}
-				else {
-					clcontinue = null;
-				}
-				//System.out.println(categoryRootNode);
-				JsonNode pageCategoriesNode = categoryRootNode.get("query").get("pages");
+    	
+    	public CategoriesForTopicPageHandler() {
+    		super();
+    	}
+    	
+    	public Map<String,BigDecimal> getValues() {
+    		return scoreMap;
+    	}
+    	
+    	@Override
+		public void onPage(JsonNode page) {
+    		if (page.has("query") && page.get("query").has("pages")) {
+	    		JsonNode pageCategoriesNode = page.get("query").get("pages");
 				Iterator<Entry<String, JsonNode>> fieldsIter = pageCategoriesNode.fields();
 				while (fieldsIter.hasNext()) {
 					JsonNode categoriesNode = fieldsIter.next().getValue().get("categories");
@@ -288,6 +280,7 @@ public class WikipediaUtils {
 									&& !categoryName.startsWith("Names")
 									&& !categoryName.startsWith("Harv and Sfn")
 									&& !categoryName.startsWith("Engvar")
+									&& !categoryName.startsWith("Short description is different from Wikidata")
 									&& !categoryName.contains(" ISO ")) {
 								//System.out.println(categoryName);
 								BigDecimal existingScore = scoreMap.get(categoryName);
@@ -299,67 +292,308 @@ public class WikipediaUtils {
 						}
 					}
 				}
-			}
+	    	}
+	    }
+    }
+	
+	
+	//https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia.org/all-access/all-agents/Hair/monthly/20190601/20190701
+	public Map<String,BigDecimal> getWikipediaCategoriesForTopic(String topic) throws IOException, URISyntaxException {
+		Map<String,BigDecimal> retval = getCategoriesCache(topic);
+		if (retval != null) {
+			return retval;
 		}
-		putCategoryCache(topic, scoreMap);
-		return scoreMap;
+		CategoriesForTopicPageHandler handler = new CategoriesForTopicPageHandler();
+		for (String title : getWikipediaPagesForTopic(topic)) {
+			title = title.replace(' ', '_');
+	    	
+			List<NameValuePair> params = HttpUtils.getInstance(parameterStore).getWikipediaCategoriesParameters();
+			params.add(new BasicNameValuePair("titles", title));
+			List<Header> headers = new ArrayList<Header>();
+			headers.add(new BasicHeader("User-Agent", parameterStore.getProperty("wikipedia_apikey")));
+			HttpUtils.getInstance(parameterStore).httpGetJsonPaginated(
+					HttpUtils.getInstance(parameterStore).getWikipediaApi(), 
+					params, 
+					headers, 
+					"clcontinue",
+					handler
+			);
+		}
+		putCategoryCache(topic, handler.getValues());
+		return handler.getValues();
+	
 	}
 	
-    public List<String> getWikipediaPagesForTopic(String topic) throws IOException {
-    	List<String> topicPages = new ArrayList<String>();
-    	ObjectMapper objectMapper = new ObjectMapper();
-		topic = topic.replace(' ', '_');
-		JsonNode rootNode = objectMapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=query&maxlag=1&redirects&format=json&formatversion=2&titles="+(URLEncoder.encode(topic, StandardCharsets.UTF_8.name()))), JsonNode.class);
-		//TODO - pagination?
-		if (rootNode.get("query") != null && rootNode.get("query").get("pages") != null) {
-			JsonNode pagesNode = rootNode.get("query").get("pages");
-			if (pagesNode != null && pagesNode.isArray()) {
-				for (final JsonNode pageNode : pagesNode) {
-					if (pageNode.get("missing") == null || !pageNode.get("missing").asBoolean()) {
-						topicPages.add(pageNode.get("title").asText());
+
+//	public Map<String,BigDecimal> getWikipediaCategoriesForTopic(String topic) throws MalformedURLException, UnsupportedEncodingException, IOException {
+//		Map<String,BigDecimal> retval = getCategoriesCache(topic);
+//		if (retval != null) {
+//			return retval;
+//		}
+//		ObjectMapper mapper = new ObjectMapper();
+//    	Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
+//		for (String title : getWikipediaPagesForTopic(topic)) {
+//			title = title.replace(' ', '_');
+//			String clcontinue = "init";
+//			while (clcontinue != null) {
+//				JsonNode categoryRootNode = null;
+//		
+//				if (clcontinue.equals("init")) {
+//					categoryRootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=categories&utf8=1&titles="+(URLEncoder.encode(title, StandardCharsets.UTF_8.name()))), JsonNode.class);
+//				}
+//				else {
+//					categoryRootNode = mapper.readValue(new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=categories&utf8=1&titles="+(URLEncoder.encode(title, StandardCharsets.UTF_8.name())+"&clcontinue="+clcontinue)), JsonNode.class);
+//				}
+//				if (categoryRootNode.get("continue") != null) {
+//					clcontinue = categoryRootNode.get("continue").get("clcontinue").asText();
+//				}
+//				else {
+//					clcontinue = null;
+//				}
+//				//System.out.println(categoryRootNode);
+//				JsonNode pageCategoriesNode = categoryRootNode.get("query").get("pages");
+//				Iterator<Entry<String, JsonNode>> fieldsIter = pageCategoriesNode.fields();
+//				while (fieldsIter.hasNext()) {
+//					JsonNode categoriesNode = fieldsIter.next().getValue().get("categories");
+//					if (categoriesNode != null && categoriesNode.isArray()) {
+//						for (final JsonNode categoryNode : categoriesNode) {
+//							String categoryName = categoryNode.get("title").asText().substring("Category:".length());
+//							if (!categoryName.startsWith("All") 
+//									&& !categoryName.startsWith("Articles")
+//									&& !categoryName.startsWith("Wikipedia") 
+//									&& !categoryName.startsWith("CS1") 
+//									&& !categoryName.startsWith("Pages") 
+//									&& !categoryName.startsWith("Commons") 
+//									&& !categoryName.startsWith("Disambiguation")
+//									&& !categoryName.contains("disambiguation")
+//									&& !categoryName.contains("wayback")
+//									&& !categoryName.contains("dates")
+//									&& !categoryName.contains("articles")
+//									&& !categoryName.contains("inventions")
+//									&& !categoryName.contains("time")									
+//									&& !categoryName.contains("Orders of magnitude")
+//									&& !categoryName.startsWith("Cleanup")
+//									&& !categoryName.startsWith("Lists")
+//									&& !categoryName.startsWith("Vague")
+//									&& !categoryName.startsWith("Interlanguage")
+//									&& !categoryName.startsWith("Webarchive")
+//									&& !categoryName.startsWith("SI")
+//									&& !categoryName.startsWith("Use")
+//									&& !categoryName.startsWith("Portal")
+//									&& !categoryName.startsWith("Coordinates")
+//									&& !categoryName.startsWith("Redirects")
+//									&& !categoryName.startsWith("Unprintworthy")
+//									&& !categoryName.startsWith("Printworthy")
+//									&& !categoryName.startsWith("Days")
+//									&& !categoryName.startsWith("Months")
+//									&& !categoryName.startsWith("Dynamic lists")
+//									&& !categoryName.startsWith("Given names")
+//									&& !categoryName.startsWith("Surnames")
+//									&& !categoryName.startsWith("Year")
+//									&& !categoryName.startsWith("Languages")
+//									&& !categoryName.startsWith("ISO")
+//									&& !categoryName.startsWith("Types")
+//									&& !categoryName.startsWith("Concepts")
+//									&& !categoryName.startsWith("Names")
+//									&& !categoryName.startsWith("Harv and Sfn")
+//									&& !categoryName.startsWith("Engvar")
+//									&& !categoryName.contains(" ISO ")) {
+//								//System.out.println(categoryName);
+//								BigDecimal existingScore = scoreMap.get(categoryName);
+//								if (existingScore == null) {
+//									existingScore = new BigDecimal(0);
+//								}
+//								scoreMap.put(categoryName, existingScore.add(new BigDecimal(1)));
+//							}
+//						}
+//					}
+//				}
+//			}
+//		}
+//		putCategoryCache(topic, scoreMap);
+//		return scoreMap;
+//	}
+	
+    protected class PagesForTopicPageHandler implements IJsonResponseHandler {
+    	List<String> retval = new ArrayList<String>();
+    	
+    	public PagesForTopicPageHandler() {
+    		super();
+    	}
+    	
+    	public List<String> getValues() {
+    		return retval;
+    	}
+    	
+    	@Override
+		public void onPage(JsonNode page) {
+    		if (page != null && page.has("query") && page.get("query").has("pages")) {
+				JsonNode pagesNode = page.get("query").get("pages");
+				if (pagesNode != null && pagesNode.isArray()) {
+					for (final JsonNode pageNode : pagesNode) {
+						if (!pageNode.has("missing") || !pageNode.get("missing").asBoolean()) {
+							retval.add(pageNode.get("title").asText());
+						}
 					}
 				}
-			}
-		}
-		return topicPages;
+			}   		
+    	}
     }
 	
-    public List<String> getWikipediaPagesForList(String topic) throws IOException {
-    	List<String> topicPages = new ArrayList<String>();
-    	ObjectMapper objectMapper = new ObjectMapper();
-		topic = topic.replace(' ', '_');
-		JsonNode rootNode = objectMapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=parse&format=json&prop=links&page="+(URLEncoder.encode(topic, StandardCharsets.UTF_8.name()))), JsonNode.class);
-		//TODO - pagination?
-		if (rootNode.get("parse") != null && rootNode.get("parse").get("links") != null) {
-			JsonNode pagesNode = rootNode.get("parse").get("links");
-			if (pagesNode != null && pagesNode.isArray()) {
-				for (final JsonNode pageNode : pagesNode) {
-					if (pageNode.get("*") != null ) {
-						topicPages.add(pageNode.get("*").asText().replace(' ', '_'));
+    private List<String> getWikipediaPagesForTopic(String title) throws IOException, URISyntaxException {
+    	title = title.replace(' ', '_');
+    	PagesForTopicPageHandler handler = new PagesForTopicPageHandler();
+		List<NameValuePair> params = HttpUtils.getInstance(parameterStore).getWikipediaPagesParameters();
+		params.add(new BasicNameValuePair("titles", title));
+		List<Header> headers = new ArrayList<Header>();
+		headers.add(new BasicHeader("User-Agent", parameterStore.getProperty("wikipedia_apikey")));
+		HttpUtils.getInstance(parameterStore).httpGetJsonPaginated(
+				HttpUtils.getInstance(parameterStore).getWikipediaApi(), 
+				params, 
+				headers, 
+				"clcontinue",
+				handler
+		);
+    	
+		return handler.getValues();
+	}
+	
+//    private List<String> getWikipediaPagesForTopic(String topic) throws IOException {
+//    	List<String> topicPages = new ArrayList<String>();
+//    	ObjectMapper objectMapper = new ObjectMapper();
+//		topic = topic.replace(' ', '_');
+//		JsonNode rootNode = objectMapper.readValue(new URL("https://en.wikipedia.org/w/api.php?action=query&maxlag=1&redirects&format=json&formatversion=2&titles="+(URLEncoder.encode(topic, StandardCharsets.UTF_8.name()))), JsonNode.class);
+//		//TODO - pagination?
+//		if (rootNode.get("query") != null && rootNode.get("query").get("pages") != null) {
+//			JsonNode pagesNode = rootNode.get("query").get("pages");
+//			if (pagesNode != null && pagesNode.isArray()) {
+//				for (final JsonNode pageNode : pagesNode) {
+//					if (pageNode.get("missing") == null || !pageNode.get("missing").asBoolean()) {
+//						topicPages.add(pageNode.get("title").asText());
+//					}
+//				}
+//			}
+//		}
+//		return topicPages;
+//    }
+
+    public String getWordCache(String token) {
+    	String retval = wordCache.get(token);
+    	return retval;
+    }
+    
+    public boolean checkWordCache(String token) {
+    	String retval = wordCache.get(token);
+    	if (retval != null) {
+    		mruWordList.remove(token);
+    		mruWordList.push(token);
+    		return true;
+    	}
+    	return false;
+    }
+    
+    public void pruneWordCache() {
+    	for (int i=WORD_CACHE_SIZE;i<mruWordList.size();i++) {
+    		String token = (String)mruWordList.pollLast();
+    		if (token != null) {
+    			wordCache.remove(token);
+    		}
+    	}
+    }
+    
+    public void addToWordCache(List<String> tokens) {
+		List<String> queries = new ArrayList<String>();
+		for (int i=0;i<tokens.size();i++) {
+			String token = tokens.get(i);
+			if (!checkWordCache(token) && !queries.contains(token)) {
+				queries.add(token);
+			}
+			if (queries.size() == WORD_BATCH_SIZE) {
+				try {
+					Map<String, String> scores = getSearchResultsBatch(queries);
+					for (String key : scores.keySet()) {
+						mruWordList.push(key);
+						wordCache.put(key, scores.get(key));
 					}
 				}
+				catch (Exception e) {
+					logger.error("wikipedia error", e);
+				}
+				queries.clear();
 			}
 		}
-		return topicPages;
+		if (queries.size() > 0) {
+			try {
+				Map<String, String> scores = getSearchResultsBatch(queries);
+				for (String key : scores.keySet()) {
+					mruWordList.push(key);
+					wordCache.put(key, scores.get(key));
+				}
+			}
+			catch (Exception e) {
+				logger.error("wikipedia error", e);
+			}
+		}
+		logger.debug("wordCache length: " + wordCache.size());
     }
     
+    private Map<String, String> getSearchResultsBatch(List<String> queries) throws IOException, URISyntaxException {
+    	ExtractsPageHandler handler = new ExtractsPageHandler();
+		List<NameValuePair> params = HttpUtils.getInstance(parameterStore).getWikipediaExtractsParameters();
+		params.add(new BasicNameValuePair("titles", String.join("|", queries)));
+		List<Header> headers = new ArrayList<Header>();
+		headers.add(new BasicHeader("User-Agent", parameterStore.getProperty("wikipedia_apikey")));
+		HttpUtils.getInstance(parameterStore).httpGetJsonPaginated(
+				HttpUtils.getInstance(parameterStore).getWikipediaApi(), 
+				params, 
+				headers, 
+				"clcontinue",
+				handler
+		);
+    	
+		return handler.getValues();
+	}
     
-    public String getWikipediaPageText(String topic) {
-		topic = topic.replace(' ', '_');
-		try {
-			StringWriter buf = new StringWriter();
-			Document homepage = Jsoup.connect("https://en.wikipedia.org/wiki/" + topic).get();
-			Elements authorParas = homepage.select("#mw-content-text > div > p");
-			for (Element para : authorParas) {
-				buf.write(para.wholeText());
-				buf.write('\n');
-				buf.write('\n');
-			}
+    protected class ExtractsPageHandler implements IJsonResponseHandler {
+    	Map<String, String> retval = new HashMap<String, String>();
+    	
+    	public ExtractsPageHandler() {
+    		super();
+    	}
+    	
+    	public Map<String, String> getValues() {
+    		return retval;
+    	}
+    	
+    	
+    	@Override
+		public void onPage(JsonNode page) {
+    		if (page != null && page.has("query") && page.get("query").has("pages")) {
+				JsonNode pagesNode = page.get("query").get("pages");
+				Iterator<Entry<String, JsonNode>> pagesIter = pagesNode.fields();
+				while (pagesIter.hasNext()) {
+					Entry<String, JsonNode> x = pagesIter.next();
+					if (
+							x.getValue().has("pageid") 
+							&& x.getValue().has("extract") 
+							&& !(
+									x.getValue().get("extract").asText().endsWith("may refer to:") 
+									|| x.getValue().get("extract").asText().endsWith("commonly refers to:")
+							)
+					) {
+						retval.put(
+								x.getValue().get("title").asText(),
+								edu.stanford.nlp.util.StringUtils.toAscii(
+										edu.stanford.nlp.util.StringUtils.normalize(
+												x.getValue().get("extract").asText()
+										)
+								).trim()
+						);
+					}
+				}
+			}   		
+    	}
+    }    
+    
 
-			return buf.toString();
-		}
-		catch (IOException e) {
-			return null;
-		}
-    }
 }

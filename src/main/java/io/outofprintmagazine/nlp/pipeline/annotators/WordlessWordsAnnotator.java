@@ -67,7 +67,7 @@ public class WordlessWordsAnnotator extends AbstractPosAnnotator implements Anno
 				if (isDictionaryWord(token)) {
 					if (!getTags().contains(token.lemma())) {
 						try {
-							if (WordnetUtils.getInstance(getParameterStore()).getIndexWord(token) == null) {
+							if (!WordnetUtils.getInstance(getParameterStore()).isIndexWord(token)) {
 								queries.add(token.originalText().toLowerCase());
 							}
 						}
@@ -85,7 +85,7 @@ public class WordlessWordsAnnotator extends AbstractPosAnnotator implements Anno
 				try {
 					if (isDictionaryWord(token)) {
 						if (!getTags().contains(token.lemma())) {
-							if (WordnetUtils.getInstance(getParameterStore()).getIndexWord(token) == null) {
+							if (WordnetUtils.getInstance(getParameterStore()).isIndexWord(token)) {
 								String wordCache = WiktionaryUtils.getInstance(getParameterStore()).getWordCache(token.originalText().toLowerCase());
 								if (wordCache == null) {
 									Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();

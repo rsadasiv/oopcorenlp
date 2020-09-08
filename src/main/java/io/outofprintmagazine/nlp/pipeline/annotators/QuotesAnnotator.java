@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,8 +82,11 @@ public class QuotesAnnotator extends AbstractAnnotator implements Annotator, IOO
 		for (CoreQuote quote : document.quotes()) {
 			CoreSentence sentence = document.sentences().get(quote.coreMap().get(CoreAnnotations.SentenceBeginAnnotation.class));
 			List<PhraseAnnotation> scoreMap = new ArrayList<PhraseAnnotation>();
-			addToScoreList(scoreMap, new PhraseAnnotation(quote.text().replaceAll("\"", ""), new BigDecimal(1)));
-			sentence.coreMap().set(getAnnotationClass(), scoreMap);
+			String q = quote.text().replaceAll("\"", "").trim();
+			if (!q.equals("")) {
+				addToScoreList(scoreMap, new PhraseAnnotation(q, new BigDecimal(1)));
+				sentence.coreMap().set(getAnnotationClass(), scoreMap);
+			}
 		}
 	}
 

@@ -22,29 +22,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.ServiceUnavailableRetryStrategy;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.outofprintmagazine.util.IParameterStore;
 /**
@@ -56,14 +42,15 @@ public class FacePlusPlusUtils {
 	
 	private static final Logger logger = LogManager.getLogger(FacePlusPlusUtils.class);
 	
-	private Properties props = null;
-	private ObjectMapper mapper = new ObjectMapper();
-
+	@SuppressWarnings("unused")
+	private Logger getLogger() {
+		return logger;
+	}
 	
+	private IParameterStore parameterStore = null;
+
 	private FacePlusPlusUtils(IParameterStore parameterStore) throws IOException {
-		props = new Properties();
-		props.setProperty("apiKey", parameterStore.getProperty("faceplusplus_apiKey"));
-		props.setProperty("secret", parameterStore.getProperty("faceplusplus_secret"));
+		this.parameterStore = parameterStore;
 	}
 	
 	private static Map<IParameterStore, FacePlusPlusUtils> instances = new HashMap<IParameterStore, FacePlusPlusUtils>();
@@ -77,64 +64,81 @@ public class FacePlusPlusUtils {
     }
     
     public JsonNode imageHasOneFace(String imageUrl) throws IOException, URISyntaxException {
-    	String responseBody = null;
-    	
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setServiceUnavailableRetryStrategy(
-                		new ServiceUnavailableRetryStrategy() {
-                			@Override
-                			public boolean retryRequest(
-                					final HttpResponse response, final int executionCount, final HttpContext context) {
-                					int statusCode = response.getStatusLine().getStatusCode();
-                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
-                			}
+        HttpPost http = new HttpPost("https://api-us.faceplusplus.com/facepp/v3/detect");
+        List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+        nvps.add(new BasicNameValuePair("api_key", parameterStore.getProperty("faceplusplus_apiKey")));
+        nvps.add(new BasicNameValuePair("api_secret", parameterStore.getProperty("faceplusplus_secret")));
+        nvps.add(new BasicNameValuePair("image_url", imageUrl));
+        http.setEntity(new UrlEncodedFormEntity(nvps));
 
-                			@Override
-                			public long getRetryInterval() {
-                				return 5;
-                			}
-                		})
-                .setRedirectStrategy(new LaxRedirectStrategy())
-                .setDefaultRequestConfig(RequestConfig.custom()
-                        .setCookieSpec(CookieSpecs.STANDARD).build())
-                .build();
-        try {
-            HttpPost http = new HttpPost("https://api-us.faceplusplus.com/facepp/v3/detect");
-            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-            nvps.add(new BasicNameValuePair("api_key", props.getProperty("apiKey")));
-            nvps.add(new BasicNameValuePair("api_secret", props.getProperty("secret")));
-            nvps.add(new BasicNameValuePair("image_url", imageUrl));
-            http.setEntity(new UrlEncodedFormEntity(nvps));
-
-            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-
-                @Override
-                public String handleResponse(
-                        final HttpResponse response) throws ClientProtocolException, IOException {
-                    int status = response.getStatusLine().getStatusCode();
-                    if (status >= 200 && status < 300) {
-                        HttpEntity entity = response.getEntity();
-                        return entity != null ? EntityUtils.toString(entity) : null;
-                    } 
-                    else {
-                    	logger.error("imageUrl: " + imageUrl);
-                        throw new ClientProtocolException("Unexpected response status: " + status);
-                    }
-                }
-            };
-            responseBody = httpclient.execute(http, responseHandler);
-            //logger.debug(responseBody);
-        	JsonNode doc = mapper.readTree(responseBody);
-        	if (doc.get("face_num").asInt() == 1) {
-        		return doc.get("faces").get(0).get("face_rectangle");
-        	}
-        	else {
-        		return null;
-        	}
-
-        } finally {
-            httpclient.close();
-        }
-
+    	JsonNode doc = HttpUtils.getInstance(parameterStore).httpPostJson(http);
+    	if (doc.get("face_num").asInt() == 1) {
+    		return doc.get("faces").get(0).get("face_rectangle");
+    	}
+    	else {
+    		return null;
+    	}
     }    
+    
+//    public JsonNode imageHasOneFace(String imageUrl) throws IOException, URISyntaxException {
+//    	String responseBody = null;
+//    	
+//        CloseableHttpClient httpclient = HttpClients.custom()
+//                .setServiceUnavailableRetryStrategy(
+//                		new ServiceUnavailableRetryStrategy() {
+//                			@Override
+//                			public boolean retryRequest(
+//                					final HttpResponse response, final int executionCount, final HttpContext context) {
+//                					int statusCode = response.getStatusLine().getStatusCode();
+//                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
+//                			}
+//
+//                			@Override
+//                			public long getRetryInterval() {
+//                				return 5;
+//                			}
+//                		})
+//                .setRedirectStrategy(new LaxRedirectStrategy())
+//                .setDefaultRequestConfig(RequestConfig.custom()
+//                        .setCookieSpec(CookieSpecs.STANDARD).build())
+//                .build();
+//        try {
+//            HttpPost http = new HttpPost("https://api-us.faceplusplus.com/facepp/v3/detect");
+//            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+//            nvps.add(new BasicNameValuePair("api_key", props.getProperty("apiKey")));
+//            nvps.add(new BasicNameValuePair("api_secret", props.getProperty("secret")));
+//            nvps.add(new BasicNameValuePair("image_url", imageUrl));
+//            http.setEntity(new UrlEncodedFormEntity(nvps));
+//
+//            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+//
+//                @Override
+//                public String handleResponse(
+//                        final HttpResponse response) throws ClientProtocolException, IOException {
+//                    int status = response.getStatusLine().getStatusCode();
+//                    if (status >= 200 && status < 300) {
+//                        HttpEntity entity = response.getEntity();
+//                        return entity != null ? EntityUtils.toString(entity) : null;
+//                    } 
+//                    else {
+//                    	logger.error("imageUrl: " + imageUrl);
+//                        throw new ClientProtocolException("Unexpected response status: " + status);
+//                    }
+//                }
+//            };
+//            responseBody = httpclient.execute(http, responseHandler);
+//            //logger.debug(responseBody);
+//        	JsonNode doc = mapper.readTree(responseBody);
+//        	if (doc.get("face_num").asInt() == 1) {
+//        		return doc.get("faces").get(0).get("face_rectangle");
+//        	}
+//        	else {
+//        		return null;
+//        	}
+//
+//        } finally {
+//            httpclient.close();
+//        }
+//
+//    }    
 }

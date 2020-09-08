@@ -28,20 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.ServiceUnavailableRetryStrategy;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,6 +51,7 @@ public class NGramUtils {
 	private static final Logger logger = LogManager.getLogger(NGramUtils.class);
 	private static final int BATCH_SIZE = 100;
 	private static final int CACHE_SIZE = 10000;
+	private IParameterStore parameterStore = null;
 	
 	public class NGramScore {
 		public NGramPhraseScore totals = null;
@@ -77,7 +67,6 @@ public class NGramUtils {
 		public int lastYear = 0;
 	}
 	
-	private String apiKey = null;
 	private Deque mruWordList = new LinkedList<String>();
 	private Map<String, List<NGramPhraseScore>> wordCache = new HashMap<String, List<NGramPhraseScore>>();
 	
@@ -89,7 +78,8 @@ public class NGramUtils {
         //props.load(input);
 		//Properties props = IParameterStore.getInstance().getProperties("data", "phrasefinder_credentials.properties");
         //this.apiKey = props.getProperty("phrasefinderApiKey");
-		this.apiKey = parameterStore.getProperty("phrasefinder_ApiKey");
+		//this.apiKey = parameterStore.getProperty("phrasefinder_ApiKey");
+		this.parameterStore = parameterStore;
 
 	}
 	
@@ -169,7 +159,6 @@ public class NGramUtils {
     
     
     private String runSearchResultsBatch(List<String> queries) throws IOException, URISyntaxException {
-    	String responseBody = null;
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectNode json = mapper.createObjectNode();
 		json.put("corpus", "eng-us");
@@ -182,52 +171,11 @@ public class NGramUtils {
 			jsonQueries.add(js);
 		}
 		
-
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setServiceUnavailableRetryStrategy(
-                		new ServiceUnavailableRetryStrategy() {
-                			@Override
-                			public boolean retryRequest(
-                					final HttpResponse response, final int executionCount, final HttpContext context) {
-                					int statusCode = response.getStatusLine().getStatusCode();
-                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
-                			}
-
-                			@Override
-                			public long getRetryInterval() {
-                				return 5;
-                			}
-                		})
-                .setRedirectStrategy(new LaxRedirectStrategy())
-                .setDefaultRequestConfig(RequestConfig.custom()
-                        .setCookieSpec(CookieSpecs.STANDARD).build())
-                .build();
-        try {
-            HttpPost http = new HttpPost("https://api.phrasefinder.io/batch");
-            http.addHeader("X-API-Key", apiKey);
-            HttpEntity stringEntity = new StringEntity(mapper.writeValueAsString(json),ContentType.APPLICATION_JSON);
-            http.setEntity(stringEntity);
-            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-
-                @Override
-                public String handleResponse(
-                        final HttpResponse response) throws ClientProtocolException, IOException {
-                    int status = response.getStatusLine().getStatusCode();
-                    if (status >= 200 && status < 300) {
-                        HttpEntity entity = response.getEntity();
-                        return entity != null ? EntityUtils.toString(entity) : null;
-                    } 
-                    else {
-                        throw new ClientProtocolException("Unexpected response status: " + status);
-                    }
-                }
-            };
-            responseBody = httpclient.execute(http, responseHandler);
-
-        } finally {
-            httpclient.close();
-        }
-        return responseBody;
+        HttpPost http = new HttpPost("https://api.phrasefinder.io/batch");
+        HttpEntity stringEntity = new StringEntity(mapper.writeValueAsString(json),ContentType.APPLICATION_JSON);
+        http.setEntity(stringEntity);
+        http.addHeader("X-API-Key", parameterStore.getProperty("phrasefinder_ApiKey"));           
+        return HttpUtils.getInstance(parameterStore).httpPostString(http);
     }
  
     private List<List<NGramPhraseScore>> processSearchResultsBatch(String responseBody) {

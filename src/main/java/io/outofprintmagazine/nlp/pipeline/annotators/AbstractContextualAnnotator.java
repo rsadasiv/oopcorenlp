@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,8 +80,8 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Set<Class<? extends CoreAnnotation>> requires() {
-		return Collections.unmodifiableSet(
-			new ArraySet<>(
+		Set<Class<? extends CoreAnnotation>> retval = new HashSet<Class<? extends CoreAnnotation>>();
+		retval.addAll(
 				Arrays.asList(
 					CoreAnnotations.TextAnnotation.class, 
 					CoreAnnotations.TokensAnnotation.class,
@@ -105,8 +106,9 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 					io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPAdverbsAnnotation.class
 					
 				)
-			)
+
 		);
+		return retval;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -283,6 +285,45 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 	}	
 	
 	protected void scoreDependencies(CoreDocument document, CoreLabel token, ContextualAnnotation annotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+		scoreDependenciesGov(document, token, annotation);
+		scoreDependenciesDep(document, token, annotation);
+	}
+
+	
+	protected void scoreDependenciesGov(CoreDocument document, CoreLabel token, ContextualAnnotation annotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+		List<TypedDependency> deps = CoreNlpUtils.getInstance(getParameterStore()).getTypedDependencyGovFromToken(document, token);
+		for (TypedDependency dependency : deps) {
+			GrammaticalRelation rn = dependency.reln();
+			if (dependency.dep().backingLabel().containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPNounsAnnotation.class)) {
+				annotation.getAttributes().put(
+					"OOPNounsAnnotation",
+					scoreNouns(
+							dependency.dep().backingLabel(),
+							annotation.getAttribute("OOPNounsAnnotation")
+					)
+				);
+				annotation.getAttributes().put(
+						"OOPNounGroupsAnnotation",
+						scoreNounGroups(
+								dependency.dep().backingLabel(),
+								annotation.getAttribute("OOPNounGroupsAnnotation")
+						)
+					);
+			}
+			if (dependency.dep().backingLabel().containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPAdjectivesAnnotation.class)) {
+				annotation.getAttributes().put(
+					"OOPAdjectivesAnnotation",
+					scoreAdjectives(
+							dependency.dep().backingLabel(),
+							annotation.getAttribute("OOPAdjectivesAnnotation")
+					)
+				);
+			}
+		}
+	}
+	
+	
+	protected void scoreDependenciesDep(CoreDocument document, CoreLabel token, ContextualAnnotation annotation) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		List<TypedDependency> deps = CoreNlpUtils.getInstance(getParameterStore()).getTypedDependencyDepFromToken(document, token);
 		for (TypedDependency dependency : deps) {
 			GrammaticalRelation rn = dependency.reln();
@@ -297,7 +338,7 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 									annotation.getAttribute("OOPVerbsAnnotation")
 							)
 						);
-					};
+					}
 					if (dependency.gov().backingLabel().containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPVerbGroupsAnnotation.class)) {
 						annotation.getAttributes().put(
 							"OOPVerbGroupsAnnotation",
@@ -306,23 +347,23 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 									annotation.getAttribute("OOPVerbGroupsAnnotation")
 							)
 						);
-					};
+					}
 
 					
-					List<TypedDependency> transitiveDeps = CoreNlpUtils.getInstance(getParameterStore()).getTypedDependencyDepFromToken(document, CoreNlpUtils.getInstance(getParameterStore()).getTokenFromIndexedWord(document, dependency.gov()));
+					List<TypedDependency> transitiveDeps = CoreNlpUtils.getInstance(getParameterStore()).getTypedDependencyGovFromToken(document, CoreNlpUtils.getInstance(getParameterStore()).getTokenFromIndexedWord(document, dependency.gov()));
     				for (TypedDependency transitiveDependency : transitiveDeps) {
     					GrammaticalRelation transitiveRelation = transitiveDependency.reln();
     					if (transitiveRelation.getShortName().equals("advmod")) {
     						//Adverbial description. John walks quickly -> John : quickly
-    						if (dependency.gov().backingLabel().containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPAdverbsAnnotation.class)) {
+    						if (transitiveDependency.dep().backingLabel().containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPAdverbsAnnotation.class)) {
     							annotation.getAttributes().put(
     								"OOPAdverbsAnnotation",
     								scoreAdverbs(
-    										dependency.gov().backingLabel(),
+    										transitiveDependency.dep().backingLabel(),
     										annotation.getAttribute("OOPAdverbsAnnotation")
     								)
     							);
-    						};
+    						}
     					}
     				}
 				}
@@ -343,9 +384,20 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 										annotation.getAttribute("OOPNounGroupsAnnotation")
 								)
 							);
-					};
+					}
+					//Subject of intransitive verb. John was angry -> John : angry
+					if (dependency.gov().backingLabel().containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPAdjectivesAnnotation.class)) {
+						annotation.getAttributes().put(
+							"OOPAdjectivesAnnotation",
+							scoreAdjectives(
+									dependency.gov().backingLabel(),
+									annotation.getAttribute("OOPAdjectivesAnnotation")
+							)
+						);
+					}
 				}
 			}
+			
 			if (rn.getShortName().equals("nmod:poss")) {
 				//Possessive. John's hair -> John : hair.
 				if (dependency.gov().backingLabel().containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPNounsAnnotation.class)) {
@@ -377,7 +429,7 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 										annotation.getAttribute("OOPAdjectivesAnnotation")
 								)
 							);
-						};
+						}
 					}
 				}
 			}

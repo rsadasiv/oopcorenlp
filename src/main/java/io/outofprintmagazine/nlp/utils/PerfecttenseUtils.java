@@ -22,30 +22,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.ServiceUnavailableRetryStrategy;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.LaxRedirectStrategy;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import io.outofprintmagazine.nlp.pipeline.annotators.IOOPAnnotator;
-import io.outofprintmagazine.nlp.pipeline.serializers.CoreNlpSerializer;
 import io.outofprintmagazine.util.IParameterStore;
 
 /**
@@ -57,14 +44,10 @@ public class PerfecttenseUtils {
 	
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(PerfecttenseUtils.class);
-	
-	private String apiKey = null;
-	private String appKey = null;
+	private IParameterStore parameterStore = null;
 
-	
 	private PerfecttenseUtils(IParameterStore parameterStore) throws IOException {
-		this.apiKey = parameterStore.getProperty("perfecttense_apikey");
-		this.appKey = parameterStore.getProperty("perfecttense_appkey");
+		this.parameterStore = parameterStore;
 	}
 	
 	private static Map<IParameterStore, PerfecttenseUtils> instances = new HashMap<IParameterStore, PerfecttenseUtils>();
@@ -77,68 +60,91 @@ public class PerfecttenseUtils {
         return instances.get(parameterStore); 
     }
     
-    public String correct(String text, List<String> nnp) throws UnsupportedCharsetException, ClientProtocolException, IOException {
-    	String responseBody = null;
-        CloseableHttpClient httpclient = HttpClients.custom()
-                .setServiceUnavailableRetryStrategy(
-                		new ServiceUnavailableRetryStrategy() {
-                			@Override
-                			public boolean retryRequest(
-                					final HttpResponse response, final int executionCount, final HttpContext context) {
-                					int statusCode = response.getStatusLine().getStatusCode();
-                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
-                			}
-
-                			@Override
-                			public long getRetryInterval() {
-                				return 5;
-                			}
-                		})
-                .setRedirectStrategy(new LaxRedirectStrategy())
-                .setDefaultRequestConfig(RequestConfig.custom()
-                        .setCookieSpec(CookieSpecs.STANDARD).build())
-                .build();
-        try {
-
-            HttpPost http = new HttpPost("https://api.perfecttense.com/correct");
-            http.addHeader("Authorization", apiKey);
-            http.addHeader("AppAuthorization", appKey);
-            http.addHeader("Content-Type", "application/json");
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode params = mapper.createObjectNode();
-            ObjectNode options = params.putObject("options");
-            options.put("dialect", "british");
-            ArrayNode dictionary = options.putArray("dictionary");
-            for (String word : nnp) {
-            	dictionary.add(word);
-            }
-            ArrayNode responseType = params.putArray("responseType");
-            responseType.add("offset");
- //           responseType.add("grammarScore");
- //           responseType.add("summary");
-            params.put("text", text);
-            StringEntity requestEntity = new StringEntity(mapper.writeValueAsString(params), ContentType.APPLICATION_JSON);
-            http.setEntity(requestEntity);
-            //'{"text": "This articl have some errors", "responseType": ["corrected", "grammarScore", "rulesApplied", "offset", "summary"]}'
-            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-
-                @Override
-                public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
-                    int status = response.getStatusLine().getStatusCode();
-                    if (status >= 200 && status < 300) {
-                        HttpEntity entity = response.getEntity();
-                        return entity != null ? EntityUtils.toString(entity) : null;
-                    } 
-                    else {
-                        throw new ClientProtocolException("Unexpected response status: " + status);
-                    }
-                }
-            };
-            responseBody = httpclient.execute(http, responseHandler);
-
-        } finally {
-            httpclient.close();
+    public JsonNode correctJson(String text, List<String> nnp) throws UnsupportedCharsetException, IOException {
+        HttpPost http = new HttpPost("https://api.perfecttense.com/correct");
+        http.addHeader("Authorization", parameterStore.getProperty("perfecttense_apikey"));
+        http.addHeader("AppAuthorization", parameterStore.getProperty("perfecttense_appkey"));
+        http.addHeader("Content-Type", "application/json");
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode params = mapper.createObjectNode();
+        ObjectNode options = params.putObject("options");
+        options.put("dialect", "british");
+        ArrayNode dictionary = options.putArray("dictionary");
+        for (String word : nnp) {
+        	dictionary.add(word);
         }
-        return responseBody;
-    }    
+        ArrayNode responseType = params.putArray("responseType");
+        responseType.add("offset");
+//           responseType.add("grammarScore");
+//           responseType.add("summary");
+        params.put("text", text);
+        StringEntity requestEntity = new StringEntity(mapper.writeValueAsString(params), ContentType.APPLICATION_JSON);
+        http.setEntity(requestEntity);
+        return HttpUtils.getInstance(parameterStore).httpPostJson(http);
+    }
+    
+//    public String correct(String text, List<String> nnp) throws UnsupportedCharsetException, ClientProtocolException, IOException {
+//    	String responseBody = null;
+//        CloseableHttpClient httpclient = HttpClients.custom()
+//                .setServiceUnavailableRetryStrategy(
+//                		new ServiceUnavailableRetryStrategy() {
+//                			@Override
+//                			public boolean retryRequest(
+//                					final HttpResponse response, final int executionCount, final HttpContext context) {
+//                					int statusCode = response.getStatusLine().getStatusCode();
+//                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
+//                			}
+//
+//                			@Override
+//                			public long getRetryInterval() {
+//                				return 5;
+//                			}
+//                		})
+//                .setRedirectStrategy(new LaxRedirectStrategy())
+//                .setDefaultRequestConfig(RequestConfig.custom()
+//                        .setCookieSpec(CookieSpecs.STANDARD).build())
+//                .build();
+//        try {
+//
+//            HttpPost http = new HttpPost("https://api.perfecttense.com/correct");
+//            http.addHeader("Authorization", apiKey);
+//            http.addHeader("AppAuthorization", appKey);
+//            http.addHeader("Content-Type", "application/json");
+//            ObjectMapper mapper = new ObjectMapper();
+//            ObjectNode params = mapper.createObjectNode();
+//            ObjectNode options = params.putObject("options");
+//            options.put("dialect", "british");
+//            ArrayNode dictionary = options.putArray("dictionary");
+//            for (String word : nnp) {
+//            	dictionary.add(word);
+//            }
+//            ArrayNode responseType = params.putArray("responseType");
+//            responseType.add("offset");
+// //           responseType.add("grammarScore");
+// //           responseType.add("summary");
+//            params.put("text", text);
+//            StringEntity requestEntity = new StringEntity(mapper.writeValueAsString(params), ContentType.APPLICATION_JSON);
+//            http.setEntity(requestEntity);
+//            //'{"text": "This articl have some errors", "responseType": ["corrected", "grammarScore", "rulesApplied", "offset", "summary"]}'
+//            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+//
+//                @Override
+//                public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
+//                    int status = response.getStatusLine().getStatusCode();
+//                    if (status >= 200 && status < 300) {
+//                        HttpEntity entity = response.getEntity();
+//                        return entity != null ? EntityUtils.toString(entity) : null;
+//                    } 
+//                    else {
+//                        throw new ClientProtocolException("Unexpected response status: " + status);
+//                    }
+//                }
+//            };
+//            responseBody = httpclient.execute(http, responseHandler);
+//
+//        } finally {
+//            httpclient.close();
+//        }
+//        return responseBody;
+//    }    
 }

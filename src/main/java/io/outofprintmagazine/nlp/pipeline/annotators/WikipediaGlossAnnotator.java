@@ -32,6 +32,7 @@ import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.scorers.StringScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.StringSerializer;
+import io.outofprintmagazine.nlp.utils.WikipediaUtils;
 import io.outofprintmagazine.nlp.utils.WikipediaUtils2;
 
 public class WikipediaGlossAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator {
@@ -69,13 +70,15 @@ public class WikipediaGlossAnnotator extends AbstractPosAnnotator implements Ann
 			}
 		}
 		try {
-			WikipediaUtils2.getInstance(getParameterStore()).addToWordCache(queries);
+			//WikipediaUtils2.getInstance(getParameterStore()).addToWordCache(queries);
+			WikipediaUtils.getInstance(getParameterStore()).addToWordCache(queries);
 			for (int i=0;i<document.tokens().size();i++) {
 				CoreLabel token = document.tokens().get(i);
 				try {
 					String topic = scoreLemma(token);
 					if (topic != null) {
-						String wordCache = WikipediaUtils2.getInstance(getParameterStore()).getWordCache(token.lemma());
+						//String wordCache = WikipediaUtils2.getInstance(getParameterStore()).getWordCache(token.lemma());
+						String wordCache = WikipediaUtils.getInstance(getParameterStore()).getWordCache(token.lemma());
 						if (wordCache != null && !wordCache.equals("")) {
 							//Map<String, List<String>> scoreMap = new HashMap<String, List<String>>();
 							//scoreMap.put(toAlphaNumeric(token.lemma()), Arrays.asList(wordCache));
@@ -87,7 +90,7 @@ public class WikipediaGlossAnnotator extends AbstractPosAnnotator implements Ann
 					logger.error("wtf?", t);
 				}
 			}
-			WikipediaUtils2.getInstance(getParameterStore()).pruneWordCache();
+			WikipediaUtils.getInstance(getParameterStore()).pruneWordCache();
 		}
 		catch (Exception e) {
 			logger.error(e);

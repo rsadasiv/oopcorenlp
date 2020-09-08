@@ -72,19 +72,12 @@ public class VerbnetGroupsAnnotator extends AbstractPosAnnotator implements Anno
 					if (!getTags().contains(token.lemma().toLowerCase())) {
 						if (!token.lemma().startsWith("'")) {
 							try {
-								ISenseKey senseKey = WordnetUtils.getInstance(getParameterStore()).getTargetWordSenseKey(token, getContextWords(document, token));
-								if (senseKey != null) {
-									//logger.debug("getting verbnet senses: " + senseKey);
-									List<String> senses = WordnetUtils.getInstance(getParameterStore()).getVerbnetSenses(senseKey);
-									if (senses != null) {
-										//logger.debug("senses length: " + senses.size());
-										Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
-										for (String sense : senses) {
-											addToScoreMap(scoreMap, sense.split("-")[0], new BigDecimal(1));
-										}
-										token.set(getAnnotationClass(), scoreMap);
-									}
+								Map<String,BigDecimal> scoreMap = new HashMap<String,BigDecimal>();
+								for (String sense : WordnetUtils.getInstance(getParameterStore()).getVerbnetSenses(token, getContextWords(document, token))) {
+									addToScoreMap(scoreMap, sense.split("-")[0], new BigDecimal(1));
 								}
+								token.set(getAnnotationClass(), scoreMap);
+
 							} 
 							catch (IOException | InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 								logger.error(e);
