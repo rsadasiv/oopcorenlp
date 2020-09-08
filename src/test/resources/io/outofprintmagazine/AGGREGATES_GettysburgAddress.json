@@ -5,7 +5,7 @@
     "DocSourceTypeAnnotation" : "IT",
     "DocTypeAnnotation" : "OOP",
     "AuthorAnnotation" : "Abraham Lincoln",
-    "DocDateAnnotation" : "186-41-2020",
+    "DocDateAnnotation" : "252-09-2020",
     "OOPThumbnailAnnotation" : "blank.png"
   },
   "OOPBiberAnnotation" : {
@@ -9872,6 +9872,19 @@
   "OOPAdverbsAnnotation" : {
     "name" : "OOPAdverbsAnnotation",
     "aggregatedScores" : [ {
+      "name" : "not",
+      "score" : {
+        "raw" : 3,
+        "normalized" : 0.0096463023,
+        "count" : 3
+      },
+      "aggregateScore" : {
+        "rank" : 0,
+        "percentage" : 0.5000000026,
+        "percentile" : 1,
+        "z" : 1.5000000156
+      }
+    }, {
       "name" : "little",
       "score" : {
         "raw" : 1,
@@ -9879,10 +9892,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 0,
-        "percentage" : 0.3333333333,
-        "percentile" : 1,
-        "z" : 0
+        "rank" : 1,
+        "percentage" : 0.1666666675,
+        "percentile" : 0.75,
+        "z" : -0.4999999845
       }
     }, {
       "name" : "long",
@@ -9892,10 +9905,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 1,
-        "percentage" : 0.3333333333,
-        "percentile" : 0.6666666667,
-        "z" : 0
+        "rank" : 2,
+        "percentage" : 0.1666666675,
+        "percentile" : 0.5,
+        "z" : -0.4999999845
       }
     }, {
       "name" : "nobly",
@@ -9905,24 +9918,24 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 2,
-        "percentage" : 0.3333333333,
-        "percentile" : 0.3333333333,
-        "z" : 0
+        "rank" : 3,
+        "percentage" : 0.1666666675,
+        "percentile" : 0.25,
+        "z" : -0.4999999845
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 3,
-        "normalized" : 0.0096463023,
-        "count" : 3
+        "raw" : 6,
+        "normalized" : 0.0192926045,
+        "count" : 4
       },
       "stats" : {
         "min" : 0.0032154341,
-        "max" : 0.0032154341,
-        "mean" : 0.0032154341,
+        "max" : 0.0096463023,
+        "mean" : 0.0048231511,
         "median" : 0.0032154341,
-        "stddev" : 0
+        "stddev" : 0.0032154340999999996876523855604546042741276323795318603515625
       }
     }
   },
@@ -9937,22 +9950,9 @@
       },
       "aggregateScore" : {
         "rank" : 0,
-        "percentage" : 0.2999999998,
+        "percentage" : 0.3529411766,
         "percentile" : 1,
-        "z" : 2.4494897364
-      }
-    }, {
-      "name" : "not",
-      "score" : {
-        "raw" : 3,
-        "normalized" : 0.0096463023,
-        "count" : 3
-      },
-      "aggregateScore" : {
-        "rank" : 1,
-        "percentage" : 0.1500000007,
-        "percentile" : 0.9,
-        "z" : 0.6123724389
+        "z" : 2.4304788895
       }
     }, {
       "name" : "so",
@@ -9962,10 +9962,10 @@
         "count" : 3
       },
       "aggregateScore" : {
-        "rank" : 2,
-        "percentage" : 0.1500000007,
-        "percentile" : 0.8,
-        "z" : 0.6123724389
+        "rank" : 1,
+        "percentage" : 0.1764705892,
+        "percentile" : 0.8888888889,
+        "z" : 0.6568861973
       }
     }, {
       "name" : "far",
@@ -9975,10 +9975,10 @@
         "count" : 2
       },
       "aggregateScore" : {
-        "rank" : 3,
-        "percentage" : 0.1000000005,
-        "percentile" : 0.7,
-        "z" : 0
+        "rank" : 2,
+        "percentage" : 0.1176470595,
+        "percentile" : 0.7777777778,
+        "z" : 0.0656886271
       }
     }, {
       "name" : "altogether",
@@ -9988,10 +9988,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 4,
-        "percentage" : 0.0500000002,
-        "percentile" : 0.6,
-        "z" : -0.6123724389
+        "rank" : 3,
+        "percentage" : 0.0588235297,
+        "percentile" : 0.6666666667,
+        "z" : -0.5255089431
       }
     }, {
       "name" : "forth",
@@ -10001,10 +10001,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 5,
-        "percentage" : 0.0500000002,
-        "percentile" : 0.5,
-        "z" : -0.6123724389
+        "rank" : 4,
+        "percentage" : 0.0588235297,
+        "percentile" : 0.5555555556,
+        "z" : -0.5255089431
       }
     }, {
       "name" : "never",
@@ -10014,10 +10014,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 6,
-        "percentage" : 0.0500000002,
-        "percentile" : 0.4,
-        "z" : -0.6123724389
+        "rank" : 5,
+        "percentage" : 0.0588235297,
+        "percentile" : 0.4444444444,
+        "z" : -0.5255089431
       }
     }, {
       "name" : "now",
@@ -10027,10 +10027,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 7,
-        "percentage" : 0.0500000002,
-        "percentile" : 0.3,
-        "z" : -0.6123724389
+        "rank" : 6,
+        "percentage" : 0.0588235297,
+        "percentile" : 0.3333333333,
+        "z" : -0.5255089431
       }
     }, {
       "name" : "rather",
@@ -10040,10 +10040,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 8,
-        "percentage" : 0.0500000002,
-        "percentile" : 0.2,
-        "z" : -0.6123724389
+        "rank" : 7,
+        "percentage" : 0.0588235297,
+        "percentile" : 0.2222222222,
+        "z" : -0.5255089431
       }
     }, {
       "name" : "thus",
@@ -10053,24 +10053,24 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 9,
-        "percentage" : 0.0500000002,
-        "percentile" : 0.1,
-        "z" : -0.6123724389
+        "rank" : 8,
+        "percentage" : 0.0588235297,
+        "percentile" : 0.1111111111,
+        "z" : -0.5255089431
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 20,
-        "normalized" : 0.0643086817,
-        "count" : 10
+        "raw" : 17,
+        "normalized" : 0.0546623794,
+        "count" : 9
       },
       "stats" : {
         "min" : 0.0032154341,
         "max" : 0.0192926045,
-        "mean" : 0.0064308682,
+        "mean" : 0.0060735977,
         "median" : 0.0032154341,
-        "stddev" : 0.005250781870480288049396477845220942981541156768798828125
+        "stddev" : 0.005438848638885663590303298775552320876158773899078369140625
       }
     }
   },
@@ -10079,9 +10079,9 @@
     "aggregatedScores" : [ {
       "name" : "descriptive",
       "score" : {
-        "raw" : 3,
-        "normalized" : 0.0096463023,
-        "count" : 3
+        "raw" : 6,
+        "normalized" : 0.0192926045,
+        "count" : 6
       },
       "aggregateScore" : {
         "rank" : 0,
@@ -10092,14 +10092,14 @@
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 3,
-        "normalized" : 0.0096463023,
+        "raw" : 6,
+        "normalized" : 0.0192926045,
         "count" : 1
       },
       "stats" : {
-        "min" : 0.0096463023,
-        "max" : 0.0096463023,
-        "mean" : 0.0096463023,
+        "min" : 0.0192926045,
+        "max" : 0.0192926045,
+        "mean" : 0.0192926045,
         "median" : 0,
         "stddev" : 0
       }
@@ -11308,18 +11308,70 @@
   },
   "OOPWordlessWordsAnnotation" : {
     "name" : "OOPWordlessWordsAnnotation",
-    "aggregatedScores" : [ ],
+    "aggregatedScores" : [ {
+      "name" : "nor",
+      "score" : {
+        "raw" : 1,
+        "normalized" : 0.0032154341,
+        "count" : 1
+      },
+      "aggregateScore" : {
+        "rank" : 0,
+        "percentage" : 0.2500000019,
+        "percentile" : 1,
+        "z" : 0
+      }
+    }, {
+      "name" : "resting",
+      "score" : {
+        "raw" : 1,
+        "normalized" : 0.0032154341,
+        "count" : 1
+      },
+      "aggregateScore" : {
+        "rank" : 1,
+        "percentage" : 0.2500000019,
+        "percentile" : 0.75,
+        "z" : 0
+      }
+    }, {
+      "name" : "should",
+      "score" : {
+        "raw" : 1,
+        "normalized" : 0.0032154341,
+        "count" : 1
+      },
+      "aggregateScore" : {
+        "rank" : 2,
+        "percentage" : 0.2500000019,
+        "percentile" : 0.5,
+        "z" : 0
+      }
+    }, {
+      "name" : "whether",
+      "score" : {
+        "raw" : 1,
+        "normalized" : 0.0032154341,
+        "count" : 1
+      },
+      "aggregateScore" : {
+        "rank" : 3,
+        "percentage" : 0.2500000019,
+        "percentile" : 0.25,
+        "z" : 0
+      }
+    } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 0,
-        "normalized" : 0,
-        "count" : 0
+        "raw" : 4,
+        "normalized" : 0.0128617363,
+        "count" : 4
       },
       "stats" : {
-        "min" : 0,
-        "max" : 0,
-        "mean" : 0,
-        "median" : 0,
+        "min" : 0.0032154341,
+        "max" : 0.0032154341,
+        "mean" : 0.0032154341,
+        "median" : 0.0032154341,
         "stddev" : 0
       }
     }
@@ -14964,9 +15016,9 @@
     "aggregatedScores" : [ {
       "name" : "Liberty",
       "score" : {
-        "raw" : 30107,
-        "normalized" : 96.807073955,
-        "count" : 30107
+        "raw" : 29564,
+        "normalized" : 95.0610932476,
+        "count" : 29564
       },
       "aggregateScore" : {
         "rank" : 0,
@@ -14977,14 +15029,14 @@
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 30107,
-        "normalized" : 96.807073955,
+        "raw" : 29564,
+        "normalized" : 95.0610932476,
         "count" : 1
       },
       "stats" : {
-        "min" : 96.807073955,
-        "max" : 96.807073955,
-        "mean" : 96.807073955,
+        "min" : 95.0610932476,
+        "max" : 95.0610932476,
+        "mean" : 95.0610932476,
         "median" : 0,
         "stddev" : 0
       }
@@ -15007,6 +15059,9 @@
     "value" : 1
   }, {
     "name" : "Social concepts",
+    "value" : 1
+  }, {
+    "name" : "Short description matches Wikidata",
     "value" : 1
   }, {
     "name" : "Libertarian theory",

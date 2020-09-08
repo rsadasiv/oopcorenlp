@@ -56,7 +56,7 @@
   }, {
     "OOPTopicsAnnotation" : "NNP, NNPS"
   }, {
-    "OOPSVOAnnotation" : "CoreNLP dependency parse subject-verb-object-indirectObject-auxVerb: nsubj, root, dobj, iobj. http://universaldependencies.org/docsv1/en/dep/index.html"
+    "OOPSVOAnnotation" : "CoreNLP dependency parse subject-verb-object-indirectObject-auxVerb: nsubj, root, obj, iobj. https://universaldependencies.org/en/dep/"
   }, {
     "OOPLikeAnnotation" : "Constituency Parse: PP, like. https://gist.github.com/nlothian/9240750"
   }, {
@@ -129,6 +129,10 @@
     "OOPWikipediaCategoriesAnnotation" : "Wikipedia page categories (https://en.wikipedia.org/w/api.php?format=json&action=query&prop=categories&utf8=1&titles=Shakespeare) for Topics (NNP,NNPS)."
   }, {
     "OOPBiberDimensionsAnnotation" : "Biber: Variation across speech and writing, Dimensions 1-6. https://sites.google.com/site/multidimensionaltagger/MAT%20v%201.2%20-%20Manual.pdf."
+  }, {
+    "OOPActorsAnnotation" : "OOPPeopleAnnotation with sentiment, quotes, coref, and universal dependencies nsubj, nmod:poss, advmod, amod (http://universaldependencies.org/docsv1/en/dep/index.html)."
+  }, {
+    "OOPSettingsAnnotation" : "OOPLocationAnnotation with sentiment, quotes, coref, and universal dependencies nsubj, nmod:poss, advmod, amod (http://universaldependencies.org/docsv1/en/dep/index.html)."
   } ],
   "coreNlpProperties" : [ {
     "name" : "pos.maxlen",
@@ -188,13 +192,32 @@
     "name" : "coref.statisical.pairwiseScoreThresholds",
     "value" : ".15"
   } ],
+  "customProperties" : [ {
+    "name" : "DocDateAnnotation",
+    "value" : "252-09-2020"
+  }, {
+    "name" : "DocIDAnnotation",
+    "value" : "1"
+  }, {
+    "name" : "DocSourceTypeAnnotation",
+    "value" : "IT"
+  }, {
+    "name" : "AuthorAnnotation",
+    "value" : "Abraham Lincoln"
+  }, {
+    "name" : "DocTitleAnnotation",
+    "value" : "GettysburgAddress"
+  }, {
+    "name" : "DocTypeAnnotation",
+    "value" : "OOP"
+  } ],
   "analysis" : [ {
-    "startTime" : "2020-07-04 15:41:45.153-0400"
+    "startTime" : "2020-09-08 10:09:10.814-0400"
   }, {
-    "endTime" : "2020-07-04 15:42:44.574-0400"
+    "endTime" : "2020-09-08 10:10:09.465-0400"
   }, {
-    "elapsedMS" : "59421"
+    "elapsedMS" : "58651"
   }, {
-    "host" : "Harrison/192.168.1.11"
+    "host" : "Harrison/192.168.56.1"
   } ]
 }

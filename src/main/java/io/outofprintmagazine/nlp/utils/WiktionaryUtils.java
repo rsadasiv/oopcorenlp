@@ -25,9 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicHeader;
@@ -144,50 +142,7 @@ public class WiktionaryUtils {
 						handler
 				);
 		return handler.getValues();
-//    	String responseBody = null;
-//        CloseableHttpClient httpclient = HttpClients.custom()
-//                .setServiceUnavailableRetryStrategy(
-//                		new ServiceUnavailableRetryStrategy() {
-//                			@Override
-//                			public boolean retryRequest(
-//                					final HttpResponse response, final int executionCount, final HttpContext context) {
-//                					int statusCode = response.getStatusLine().getStatusCode();
-//                					return (statusCode == 503 || statusCode == 500) && executionCount < 5;
-//                			}
-//
-//                			@Override
-//                			public long getRetryInterval() {
-//                				return 5;
-//                			}
-//                		})
-//                .setRedirectStrategy(new LaxRedirectStrategy())
-//                .setDefaultRequestConfig(RequestConfig.custom()
-//                        .setCookieSpec(CookieSpecs.STANDARD).build())
-//                .build();
-//        try {
-//
-//            HttpGet http = new HttpGet("https://en.wiktionary.org/w/api.php?format=json&maxlag=1&action=query&titles="+URLEncoder.encode(String.join("|", queries), StandardCharsets.UTF_8.name()));
-//            http.addHeader("User-Agent", apiKey);
-//            ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
-//
-//                @Override
-//                public String handleResponse(final HttpResponse response) throws ClientProtocolException, IOException {
-//                    int status = response.getStatusLine().getStatusCode();
-//                    if (status >= 200 && status < 300) {
-//                        HttpEntity entity = response.getEntity();
-//                        return entity != null ? EntityUtils.toString(entity) : null;
-//                    } 
-//                    else {
-//                        throw new ClientProtocolException("Unexpected response status: " + status);
-//                    }
-//                }
-//            };
-//            responseBody = httpclient.execute(http, responseHandler);
-//
-//        } finally {
-//            httpclient.close();
-//        }
-//        return responseBody;
+
     }
     
     protected class PageHandler implements IJsonResponseHandler {
@@ -216,20 +171,5 @@ public class WiktionaryUtils {
 			}   		
     	}
     }
- 
-//    private Map<String, String> processSearchResultsBatch(JsonNode doc) {
-//    	Map<String, String> retval = new HashMap<String, String>();
-//    	if (doc.get("query") != null && doc.get("query").get("pages") != null) {
-//			JsonNode pages = doc.get("query").get("pages");
-//			Iterator<String> resultIter = pages.fieldNames();
-//			while (resultIter.hasNext()) {
-//				String resultName = resultIter.next();
-//				JsonNode result = pages.get(resultName);
-//				if (result.has("pageid")) {
-//					retval.put(result.get("title").asText(),result.get("pageid").asText() );
-//				}
-//	    	}
-//		}
-//    	return retval;
-//    }    
+   
 }

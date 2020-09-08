@@ -33,7 +33,7 @@ import io.outofprintmagazine.nlp.pipeline.scorers.StringScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.StringSerializer;
 import io.outofprintmagazine.nlp.utils.WikipediaUtils;
-import io.outofprintmagazine.nlp.utils.WikipediaUtils2;
+
 
 public class WikipediaGlossAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator {
 	

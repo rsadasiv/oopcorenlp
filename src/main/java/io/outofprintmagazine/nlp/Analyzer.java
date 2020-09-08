@@ -64,6 +64,10 @@ public class Analyzer {
 	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(Analyzer.class);
 	
+	private Logger getLogger() {
+		return logger;
+	}
+	
 	private ArrayList<IOOPAnnotator> customAnnotators = new ArrayList<IOOPAnnotator>();
 	private IParameterStore parameterStore;
 	
@@ -227,8 +231,10 @@ public class Analyzer {
 	
 	private void annotate(CoreDocument document) {
 		for (IOOPAnnotator annotator : customAnnotators) {
+			long startTime = System.currentTimeMillis();
 			annotator.annotate(document.annotation());
 			annotator.score(document);
+			getLogger().info(String.format("%s %d ms", annotator.getClass().getSimpleName(), System.currentTimeMillis()-startTime));
 		}
 	}
 	

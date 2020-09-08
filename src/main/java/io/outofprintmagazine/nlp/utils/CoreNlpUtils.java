@@ -40,8 +40,6 @@ import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.trees.TypedDependency;
-import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
-import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
 import io.outofprintmagazine.util.IParameterStore;
 
 /**

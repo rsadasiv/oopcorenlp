@@ -26,7 +26,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -35,10 +34,10 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.Annotator;
 import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.CoreSentence;
-import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
 import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
-import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
+import io.outofprintmagazine.nlp.pipeline.scorers.MapSum;
 import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
+import io.outofprintmagazine.nlp.pipeline.serializers.MapSerializer;
 import io.outofprintmagazine.nlp.utils.PerfecttenseUtils;
 
 public class PerfecttenseAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator{

@@ -64,20 +64,12 @@ public class WikimediaUtils {
     }
     
     public List<String> getImagesByText(String text) throws IOException, URISyntaxException {
-    	//logger.info("byText: " + text);
     	List<String> retval = getImages(text);
-    	for (String imgurl : retval) {
-    		//logger.info(imgurl);
-    	}
     	return retval;
     }
     
     public List<String> getImagesByTag(String text) throws IOException, URISyntaxException {
-    	//logger.debug("byTag: " + text);
     	List<String> retval = getImages(text);
-    	for (String imgurl : retval) {
-    		//logger.debug(imgurl);
-    	}
     	return retval;
     }
     

@@ -5,7 +5,7 @@
     "DocSourceTypeAnnotation" : "IT",
     "DocTypeAnnotation" : "OOP",
     "AuthorAnnotation" : "Abraham Lincoln",
-    "DocDateAnnotation" : "186-41-2020",
+    "DocDateAnnotation" : "252-09-2020",
     "OOPThumbnailAnnotation" : "blank.png"
   },
   "corefs" : [ {
@@ -380,7 +380,11 @@
       },
       "OOPCharCountAnnotation" : "4",
       "OOPSyllableCountAnnotation" : "1",
-      "OOPTokenCountAnnotation" : "1"
+      "OOPTokenCountAnnotation" : "1",
+      "OOPDatesAnnotation" : [ {
+        "name" : "four score and seven years ago",
+        "value" : 1
+      } ]
     }, {
       "tokenIndex" : 2,
       "TokensAnnotation" : {
@@ -934,6 +938,7 @@
       "OOPVerbGroupsAnnotation" : {
         "creation" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "conceive" : "1"
       },
@@ -1005,6 +1010,10 @@
       "OOPSVOAnnotation" : {
         "indirectObject" : "1"
       },
+      "OOPPeopleAnnotation" : [ {
+        "name" : "Liberty",
+        "value" : 1
+      } ],
       "OOPWikipediaGlossAnnotation" : "Broadly speaking, liberty is the ability to do as one pleases.",
       "OOPBiberDimensionsAnnotation" : {
         "DimensionOneNegative" : "1"
@@ -1638,6 +1647,10 @@
       "OOPFunctionWordsAnnotation" : {
         "now" : "1"
       },
+      "OOPDatesAnnotation" : [ {
+        "name" : "now",
+        "value" : 1
+      } ],
       "OOPWordsAnnotation" : {
         "now" : "1"
       },
@@ -1749,6 +1762,7 @@
       "OOPVerbGroupsAnnotation" : {
         "social" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "engage" : "1"
       },
@@ -2002,6 +2016,9 @@
       "OOPPrepositionsAnnotation" : {
         "whether" : "1"
       },
+      "OOPWordlessWordsAnnotation" : {
+        "whether" : "1"
+      },
       "OOPWordnetGlossAnnotation" : "iWordless word",
       "OOPFunctionWordsAnnotation" : {
         "whether" : "1"
@@ -2249,6 +2266,7 @@
       "OOPVerbGroupsAnnotation" : {
         "creation" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "conceive" : "1"
       },
@@ -2473,6 +2491,7 @@
       "OOPVerbGroupsAnnotation" : {
         "stative" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "endure" : "1"
       },
@@ -2576,6 +2595,9 @@
     "OOPNounsAnnotation" : {
       "nation" : "2",
       "war" : "1"
+    },
+    "OOPWordlessWordsAnnotation" : {
+      "whether" : "1"
     },
     "OOPCommonWordsAnnotation" : {
       "a" : "1",
@@ -2775,6 +2797,7 @@
       "OOPVerbGroupsAnnotation" : {
         "social" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "meet" : "1"
       },
@@ -3159,6 +3182,7 @@
       "social" : "1",
       "stative" : "1"
     },
+    "OOPVerbnetGroupsAnnotation" : { },
     "OOPNounGroupsAnnotation" : {
       "act" : "2",
       "location" : "1"
@@ -3686,6 +3710,9 @@
       "OOPAdjectiveCategoriesAnnotation" : {
         "descriptive" : "1"
       },
+      "OOPWordlessWordsAnnotation" : {
+        "resting" : "1"
+      },
       "OOPWordnetGlossAnnotation" : "iWordless word",
       "OOPWordsAnnotation" : {
         "resting" : "1"
@@ -3890,6 +3917,7 @@
       "OOPVerbGroupsAnnotation" : {
         "possession" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "give" : "1"
       },
@@ -4241,6 +4269,9 @@
       "verb" : "1",
       "indirectObject" : "1",
       "object" : "1"
+    },
+    "OOPWordlessWordsAnnotation" : {
+      "resting" : "1"
     },
     "OOPCommonWordsAnnotation" : {
       "here" : "1",
@@ -4658,6 +4689,9 @@
       "OOPVerbTenseAnnotation" : {
         "future" : "1"
       },
+      "OOPWordlessWordsAnnotation" : {
+        "should" : "1"
+      },
       "OOPWordnetGlossAnnotation" : "iWordless word",
       "OOPFunctionWordsAnnotation" : {
         "should" : "1"
@@ -4818,6 +4852,9 @@
       "auxVerb" : "1",
       "subject" : "1",
       "verb" : "1"
+    },
+    "OOPWordlessWordsAnnotation" : {
+      "should" : "1"
     },
     "OOPCommonWordsAnnotation" : {
       "that" : "1",
@@ -5168,8 +5205,11 @@
       "OOPCharCountAnnotation" : "3",
       "OOPSyllableCountAnnotation" : "1",
       "OOPTokenCountAnnotation" : "1",
-      "OOPPointlessAdverbsAnnotation" : {
+      "OOPAdverbsAnnotation" : {
         "not" : "1"
+      },
+      "OOPAdverbCategoriesAnnotation" : {
+        "descriptive" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "not" : "1"
@@ -5335,8 +5375,11 @@
       "OOPCharCountAnnotation" : "3",
       "OOPSyllableCountAnnotation" : "1",
       "OOPTokenCountAnnotation" : "1",
-      "OOPPointlessAdverbsAnnotation" : {
+      "OOPAdverbsAnnotation" : {
         "not" : "1"
+      },
+      "OOPAdverbCategoriesAnnotation" : {
+        "descriptive" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "not" : "1"
@@ -5383,6 +5426,7 @@
       "OOPVerbGroupsAnnotation" : {
         "communication" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "consecrate" : "1"
       },
@@ -5499,8 +5543,11 @@
       "OOPCharCountAnnotation" : "3",
       "OOPSyllableCountAnnotation" : "1",
       "OOPTokenCountAnnotation" : "1",
-      "OOPPointlessAdverbsAnnotation" : {
+      "OOPAdverbsAnnotation" : {
         "not" : "1"
+      },
+      "OOPAdverbCategoriesAnnotation" : {
+        "descriptive" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "not" : "1"
@@ -5547,6 +5594,7 @@
       "OOPVerbGroupsAnnotation" : {
         "communication" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "hallow" : "1"
       },
@@ -5677,8 +5725,11 @@
     "OOPAdjectiveCategoriesAnnotation" : {
       "comparative" : "1"
     },
-    "OOPPointlessAdverbsAnnotation" : {
+    "OOPAdverbsAnnotation" : {
       "not" : "3"
+    },
+    "OOPAdverbCategoriesAnnotation" : {
+      "descriptive" : "3"
     },
     "OOPPrepositionCategoriesAnnotation" : {
       "coordinating" : "1",
@@ -6512,6 +6563,7 @@
       "OOPVerbGroupsAnnotation" : {
         "change" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "add" : "1"
       },
@@ -6582,6 +6634,7 @@
       "OOPVerbGroupsAnnotation" : {
         "change" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "detract" : "1"
       },
@@ -6953,6 +7006,7 @@
       "OOPVerbGroupsAnnotation" : {
         "communication" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "note" : "1"
       },
@@ -7002,6 +7056,9 @@
         "coordinating" : "1"
       },
       "OOPPrepositionsAnnotation" : {
+        "nor" : "1"
+      },
+      "OOPWordlessWordsAnnotation" : {
         "nor" : "1"
       },
       "OOPWordnetGlossAnnotation" : "iWordless word",
@@ -7642,6 +7699,9 @@
       "subject" : "1",
       "verb" : "1"
     },
+    "OOPWordlessWordsAnnotation" : {
+      "nor" : "1"
+    },
     "OOPCommonWordsAnnotation" : {
       "here" : "2",
       "but" : "1",
@@ -7677,6 +7737,7 @@
       "social" : "1",
       "communication" : "2"
     },
+    "OOPVerbnetGroupsAnnotation" : { },
     "OOPNounGroupsAnnotation" : {
       "object" : "1"
     },
@@ -8407,6 +8468,7 @@
       "OOPVerbGroupsAnnotation" : {
         "competition" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "fight" : "1"
       },
@@ -10724,6 +10786,7 @@
     "descriptive" : "16"
   },
   "OOPAdverbsAnnotation" : {
+    "not" : "3",
     "nobly" : "1",
     "long" : "1",
     "little" : "1"
@@ -10732,7 +10795,6 @@
     "here" : "6",
     "never" : "1",
     "altogether" : "1",
-    "not" : "3",
     "thus" : "1",
     "rather" : "1",
     "far" : "2",
@@ -10741,7 +10803,7 @@
     "so" : "3"
   },
   "OOPAdverbCategoriesAnnotation" : {
-    "descriptive" : "3"
+    "descriptive" : "6"
   },
   "OOPPossessivesAnnotation" : {
     "their" : "1",
@@ -10831,7 +10893,12 @@
   "OOPColorsAnnotation" : { },
   "OOPFlavorsAnnotation" : { },
   "OOPVerblessSentencesAnnotation" : "1",
-  "OOPWordlessWordsAnnotation" : { },
+  "OOPWordlessWordsAnnotation" : {
+    "nor" : "1",
+    "resting" : "1",
+    "whether" : "1",
+    "should" : "1"
+  },
   "OOPUncommonWordsAnnotation" : {
     "hallow" : "1",
     "detract" : "1",
@@ -11128,7 +11195,7 @@
     "natural_object" : "1"
   },
   "OOPWikipediaPageviewTopicsAnnotation" : {
-    "Liberty" : "30107"
+    "Liberty" : "29564"
   },
   "OOPWikipediaCategoriesAnnotation" : [ {
     "name" : "Happiness",
@@ -11149,6 +11216,9 @@
     "name" : "Social concepts",
     "value" : 1
   }, {
+    "name" : "Short description matches Wikidata",
+    "value" : 1
+  }, {
     "name" : "Libertarian theory",
     "value" : 1
   }, {
@@ -11164,5 +11234,7 @@
     "DimensionThreeNegative" : "27",
     "DimensionTwoPositive" : "16",
     "DimensionThreePositive" : "9"
-  }
+  },
+  "OOPActorsAnnotation" : [ ],
+  "OOPSettingsAnnotation" : [ ]
 }
