@@ -36,8 +36,7 @@
 		<!-- MERGED https://github.com/rsadasiv/Flickr4Java.git -->
 		<flickr4java.version>3.0.4</flickr4java.version>
 		
-		<!-- https://mvnrepository.com/artifact/io.burt/jmespath-jackson -->
-		<jmespath-jackson.version>0.5.0</jmespath-jackson.version>
+
 	</properties>
 	
 	<dependencies>
@@ -216,9 +215,8 @@
 					<exclude>**/simplelogger.properties</exclude>
 				  </excludes>
 				</configuration>
-			</plugin>
+			</plugin>	
 		</plugins>
-
 	</build>
 
 </project>

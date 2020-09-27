@@ -69,6 +69,8 @@ public class TextUtils {
 		Pattern endLine = Pattern.compile("\\u2019$");
 		Pattern endWord = Pattern.compile("(\\S)\\u2019\\s");
 		Pattern endSentence = Pattern.compile("\\u2019(\\.)");
+		Pattern britishQuoteQuestion = Pattern.compile("\\?\"");
+		Pattern britishQuotePeriod = Pattern.compile("\\.\"");			
 		StringBuffer output = new StringBuffer();
 		for (String line : IOUtils.readLines(new StringReader(input))) {
 			line = line.replaceAll("[\\u00A0\\u2007\\u202F]+", " ").trim();
@@ -79,6 +81,8 @@ public class TextUtils {
 				line = endLine.matcher(line).replaceAll("\"");
 				line = endWord.matcher(line).replaceAll("$1\" ");
 				line = endSentence.matcher(line).replaceAll("\"$1");
+				line = britishQuoteQuestion.matcher(line).replaceAll("\"?");
+				line = britishQuotePeriod.matcher(line).replaceAll("\".");				
 				line = StringUtils.toAscii(StringUtils.normalize(line));
 				output.append(line);
 				output.append('\n');
