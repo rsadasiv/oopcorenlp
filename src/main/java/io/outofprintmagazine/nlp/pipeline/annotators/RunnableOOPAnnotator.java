@@ -18,4 +18,20 @@ public class RunnableOOPAnnotator extends Thread {
 		annotator.annotate(document.annotation());
 	}
 
+	public CoreDocument getDocument() {
+		return document;
+	}
+
+	public void setDocument(CoreDocument document) {
+		this.document = document;
+	}
+
+	public IOOPAnnotator getAnnotator() {
+		return annotator;
+	}
+
+	public void setAnnotator(IOOPAnnotator annotator) {
+		this.annotator = annotator;
+	}
+
 }

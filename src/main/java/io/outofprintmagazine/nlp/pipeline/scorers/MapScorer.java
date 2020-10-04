@@ -36,9 +36,12 @@ import io.outofprintmagazine.util.DocumentAggregateScore;
 
 public abstract class MapScorer implements IScorer {
 
-	@SuppressWarnings("unused")
 	private static final Logger logger = LogManager.getLogger(MapScorer.class);
 
+	private Logger getLogger() {
+		return logger;
+	}
+	
 	protected Class annotationClass = null;
 
 	public MapScorer() {
@@ -111,6 +114,10 @@ public abstract class MapScorer implements IScorer {
 		Map<String, BigDecimal> rawScores = (Map<String, BigDecimal>) document.annotation().get(getAnnotationClass());
 		BigDecimal normalizer = new BigDecimal(document.tokens().size());
 		DocumentAggregateScore retval = new DocumentAggregateScore(getAnnotationClass().getSimpleName());
+		if (rawScores == null) {
+			getLogger().debug(String.format("No document scores: %s", getAnnotationClass()));
+			return retval;
+		}
 		if (rawScores.size() == 0) {
 			return retval;
 		}

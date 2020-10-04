@@ -51,15 +51,15 @@ public class WikimediaUtils_Test {
 				"https://upload.wikimedia.org/wikipedia/commons/a/a2/Yalta_Kanatka.JPG"
 		);
 		String title = "Crimea";
-		try {
+		//try {
 			List<String> imgLinks = wikimediaUtils.getImages(title);
 			for (String target : targets) {
 				assertTrue(imgLinks.contains(target),String.format("%s missing imageLink %s", title, target));
 			}
-		}
-		catch (Throwable t) {
-			t.printStackTrace();
-		}
+		//}
+		//catch (Throwable t) {
+		//	t.printStackTrace();
+		//}
 
 	}
 

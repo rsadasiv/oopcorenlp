@@ -5,7 +5,7 @@
     "DocSourceTypeAnnotation" : "IT",
     "DocTypeAnnotation" : "OOP",
     "AuthorAnnotation" : "Abraham Lincoln",
-    "DocDateAnnotation" : "252-09-2020",
+    "DocDateAnnotation" : "277-15-2020",
     "OOPThumbnailAnnotation" : "blank.png"
   },
   "corefs" : [ {
@@ -2596,9 +2596,6 @@
       "nation" : "2",
       "war" : "1"
     },
-    "OOPWordlessWordsAnnotation" : {
-      "whether" : "1"
-    },
     "OOPCommonWordsAnnotation" : {
       "a" : "1",
       "that" : "1",
@@ -4270,9 +4267,6 @@
       "indirectObject" : "1",
       "object" : "1"
     },
-    "OOPWordlessWordsAnnotation" : {
-      "resting" : "1"
-    },
     "OOPCommonWordsAnnotation" : {
       "here" : "1",
       "a" : "2",
@@ -4852,9 +4846,6 @@
       "auxVerb" : "1",
       "subject" : "1",
       "verb" : "1"
-    },
-    "OOPWordlessWordsAnnotation" : {
-      "should" : "1"
     },
     "OOPCommonWordsAnnotation" : {
       "that" : "1",
@@ -7698,9 +7689,6 @@
       "auxVerb" : "1",
       "subject" : "1",
       "verb" : "1"
-    },
-    "OOPWordlessWordsAnnotation" : {
-      "nor" : "1"
     },
     "OOPCommonWordsAnnotation" : {
       "here" : "2",
@@ -10893,12 +10881,6 @@
   "OOPColorsAnnotation" : { },
   "OOPFlavorsAnnotation" : { },
   "OOPVerblessSentencesAnnotation" : "1",
-  "OOPWordlessWordsAnnotation" : {
-    "nor" : "1",
-    "resting" : "1",
-    "whether" : "1",
-    "should" : "1"
-  },
   "OOPUncommonWordsAnnotation" : {
     "hallow" : "1",
     "detract" : "1",
@@ -11195,7 +11177,7 @@
     "natural_object" : "1"
   },
   "OOPWikipediaPageviewTopicsAnnotation" : {
-    "Liberty" : "29564"
+    "Liberty" : "35584"
   },
   "OOPWikipediaCategoriesAnnotation" : [ {
     "name" : "Happiness",

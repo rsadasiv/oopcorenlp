@@ -39,6 +39,7 @@ import edu.stanford.nlp.pipeline.CoreDocument;
 import edu.stanford.nlp.pipeline.JSONOutputter;
 import io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPThumbnailAnnotation;
 import io.outofprintmagazine.nlp.pipeline.annotators.IOOPAnnotator;
+import io.outofprintmagazine.nlp.pipeline.annotators.RunnableOOPAnnotator;
 import io.outofprintmagazine.nlp.pipeline.serializers.CoreNlpSerializer;
 import io.outofprintmagazine.nlp.utils.CoreNlpUtils;
 import io.outofprintmagazine.util.IParameterStore;
@@ -230,12 +231,37 @@ public class Analyzer {
 	}
 	
 	private void annotate(CoreDocument document) {
+		List<RunnableOOPAnnotator> threadedAnnotators = new ArrayList<RunnableOOPAnnotator>();
+		List<String> threadableAnnotators = Arrays.asList(
+				"WordlessWordsAnnotator", "WikipediaGlossAnnotator", "WikipediaPageviewTopicsAnnotator", "WikipediaCategoriesAnnotator", "ActorsAnnotator", "SettingsAnnotator"
+		);
 		for (IOOPAnnotator annotator : customAnnotators) {
 			long startTime = System.currentTimeMillis();
-			annotator.annotate(document.annotation());
-			annotator.score(document);
-			getLogger().info(String.format("%s %d ms", annotator.getClass().getSimpleName(), System.currentTimeMillis()-startTime));
+			if (threadableAnnotators.contains(annotator.getClass().getSimpleName())) {
+				RunnableOOPAnnotator threadedAnnotator = new RunnableOOPAnnotator(annotator, document);
+				threadedAnnotators.add(threadedAnnotator);
+			}
+			else {
+				annotator.annotate(document.annotation());
+				annotator.score(document);
+				getLogger().info(String.format("%s %d ms", annotator.getClass().getSimpleName(), System.currentTimeMillis()-startTime));
+			}
 		}
+		for (RunnableOOPAnnotator threadedAnnotator : threadedAnnotators) {
+			threadedAnnotator.run();
+		}
+		long startTime = System.currentTimeMillis();
+		try {
+			for (RunnableOOPAnnotator threadedAnnotator : threadedAnnotators) {
+				threadedAnnotator.join();
+				getLogger().info(String.format("%s %d ms", threadedAnnotator.getAnnotator().getClass().getSimpleName(), System.currentTimeMillis()-startTime));
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			getLogger().error(e);
+		}
+		
 	}
 	
 	private void serialize(CoreDocument document, ObjectNode json)  {
