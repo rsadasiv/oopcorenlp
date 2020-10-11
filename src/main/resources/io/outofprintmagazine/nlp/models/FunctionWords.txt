@@ -14,7 +14,6 @@ already
 also
 although
 always
-am
 among
 amongst
 amoungst
@@ -27,12 +26,9 @@ anyone
 anything
 anyway
 anywhere
-are
 around
 as
 at
-be
-became
 because
 been
 before
@@ -52,10 +48,6 @@ cannot
 could
 dare
 despite
-did
-do
-does
-done
 down
 during
 each
@@ -80,9 +72,6 @@ formerly
 from
 further
 furthermore
-had
-has
-have
 he
 hence
 her
@@ -179,7 +168,6 @@ re
 same
 second
 several
-shall
 she
 should
 since
@@ -236,10 +224,8 @@ us
 used
 very
 via
-was
 we
 well
-were
 what
 whatever
 when
