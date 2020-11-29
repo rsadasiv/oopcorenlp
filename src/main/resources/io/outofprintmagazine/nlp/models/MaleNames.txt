@@ -355,7 +355,6 @@ isha
 ishana
 ismail
 izhar
-jackie
 jagadish
 jagannath
 jagapati
@@ -726,7 +725,6 @@ ravinder
 ravindra
 ravish
 raza
-richard
 rinjish
 rishi
 riteish
@@ -1022,4 +1020,3 @@ zeishan
 zia
 zuhab
 zulfi
-sebastian

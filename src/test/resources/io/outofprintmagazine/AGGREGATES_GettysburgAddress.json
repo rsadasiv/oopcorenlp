@@ -5,7 +5,7 @@
     "DocSourceTypeAnnotation" : "IT",
     "DocTypeAnnotation" : "OOP",
     "AuthorAnnotation" : "Abraham Lincoln",
-    "DocDateAnnotation" : "277-15-2020",
+    "DocDateAnnotation" : "334-46-2020",
     "OOPThumbnailAnnotation" : "blank.png"
   },
   "OOPBiberAnnotation" : {
@@ -21,20 +21,20 @@
         "rank" : 0,
         "percentage" : 0.1200000001,
         "percentile" : 1,
-        "z" : 3.1878730802
+        "z" : 3.1734267919
       }
     }, {
       "name" : "NN",
       "score" : {
-        "raw" : 24,
-        "normalized" : 0.077170418,
-        "count" : 24
+        "raw" : 25,
+        "normalized" : 0.0803858521,
+        "count" : 25
       },
       "aggregateScore" : {
         "rank" : 1,
-        "percentage" : 0.1066666667,
+        "percentage" : 0.1111111111,
         "percentile" : 0.975,
-        "z" : 2.7404522951
+        "z" : 2.8764979681
       }
     }, {
       "name" : "RB",
@@ -47,20 +47,20 @@
         "rank" : 2,
         "percentage" : 0.1022222222,
         "percentile" : 0.95,
-        "z" : 2.5913120334
+        "z" : 2.5795691442
       }
     }, {
       "name" : "JJ",
       "score" : {
-        "raw" : 17,
-        "normalized" : 0.0546623794,
-        "count" : 17
+        "raw" : 16,
+        "normalized" : 0.0514469453,
+        "count" : 16
       },
       "aggregateScore" : {
         "rank" : 3,
-        "percentage" : 0.0755555555,
+        "percentage" : 0.0711111111,
         "percentile" : 0.925,
-        "z" : 1.696470468
+        "z" : 1.5403182652
       }
     }, {
       "name" : "FPP1",
@@ -73,7 +73,7 @@
         "rank" : 4,
         "percentage" : 0.0666666667,
         "percentile" : 0.9,
-        "z" : 1.3981899492
+        "z" : 1.3918538579
       }
     }, {
       "name" : "DEMO",
@@ -86,7 +86,7 @@
         "rank" : 5,
         "percentage" : 0.0622222223,
         "percentile" : 0.875,
-        "z" : 1.2490496875
+        "z" : 1.243389446
       }
     }, {
       "name" : "PASTP",
@@ -99,7 +99,7 @@
         "rank" : 6,
         "percentage" : 0.0355555556,
         "percentile" : 0.85,
-        "z" : 0.3542081221
+        "z" : 0.3526029789
       }
     }, {
       "name" : "VPRT",
@@ -112,7 +112,7 @@
         "rank" : 7,
         "percentage" : 0.0355555556,
         "percentile" : 0.825,
-        "z" : 0.3542081221
+        "z" : 0.3526029789
       }
     }, {
       "name" : "POMD",
@@ -125,7 +125,7 @@
         "rank" : 8,
         "percentage" : 0.0266666667,
         "percentile" : 0.8,
-        "z" : 0.0559275987
+        "z" : 0.0556741551
       }
     }, {
       "name" : "SPAU",
@@ -138,7 +138,7 @@
         "rank" : 9,
         "percentage" : 0.0266666667,
         "percentile" : 0.775,
-        "z" : 0.0559275987
+        "z" : 0.0556741551
       }
     }, {
       "name" : "VBD",
@@ -151,7 +151,7 @@
         "rank" : 10,
         "percentage" : 0.0266666667,
         "percentile" : 0.75,
-        "z" : 0.0559275987
+        "z" : 0.0556741551
       }
     }, {
       "name" : "NOMZ",
@@ -164,7 +164,7 @@
         "rank" : 11,
         "percentage" : 0.0222222222,
         "percentile" : 0.725,
-        "z" : -0.093212663
+        "z" : -0.0927902569
       }
     }, {
       "name" : "PIT",
@@ -177,7 +177,7 @@
         "rank" : 12,
         "percentage" : 0.0222222222,
         "percentile" : 0.7,
-        "z" : -0.093212663
+        "z" : -0.0927902569
       }
     }, {
       "name" : "TOBJ",
@@ -190,7 +190,7 @@
         "rank" : 13,
         "percentage" : 0.0222222222,
         "percentile" : 0.675,
-        "z" : -0.093212663
+        "z" : -0.0927902569
       }
     }, {
       "name" : "XX0",
@@ -203,7 +203,7 @@
         "rank" : 14,
         "percentage" : 0.0222222222,
         "percentile" : 0.65,
-        "z" : -0.093212663
+        "z" : -0.0927902569
       }
     }, {
       "name" : "AWL",
@@ -216,7 +216,7 @@
         "rank" : 15,
         "percentage" : 0.0177777777,
         "percentile" : 0.625,
-        "z" : -0.2423529247
+        "z" : -0.2412546688
       }
     }, {
       "name" : "CONJ",
@@ -229,7 +229,7 @@
         "rank" : 16,
         "percentage" : 0.0177777777,
         "percentile" : 0.6,
-        "z" : -0.2423529247
+        "z" : -0.2412546688
       }
     }, {
       "name" : "PASS",
@@ -242,7 +242,7 @@
         "rank" : 17,
         "percentage" : 0.0177777777,
         "percentile" : 0.575,
-        "z" : -0.2423529247
+        "z" : -0.2412546688
       }
     }, {
       "name" : "PRMD",
@@ -255,7 +255,7 @@
         "rank" : 18,
         "percentage" : 0.0177777777,
         "percentile" : 0.55,
-        "z" : -0.2423529247
+        "z" : -0.2412546688
       }
     }, {
       "name" : "TPP3",
@@ -268,7 +268,7 @@
         "rank" : 19,
         "percentage" : 0.0177777777,
         "percentile" : 0.525,
-        "z" : -0.2423529247
+        "z" : -0.2412546688
       }
     }, {
       "name" : "PLACE",
@@ -281,7 +281,7 @@
         "rank" : 20,
         "percentage" : 0.0133333334,
         "percentile" : 0.5,
-        "z" : -0.3914931817
+        "z" : -0.3897190761
       }
     }, {
       "name" : "PRIV",
@@ -294,7 +294,7 @@
         "rank" : 21,
         "percentage" : 0.0133333334,
         "percentile" : 0.475,
-        "z" : -0.3914931817
+        "z" : -0.3897190761
       }
     }, {
       "name" : "AMP",
@@ -307,7 +307,7 @@
         "rank" : 22,
         "percentage" : 0.0088888889,
         "percentile" : 0.45,
-        "z" : -0.5406334434
+        "z" : -0.5381834881
       }
     }, {
       "name" : "GER",
@@ -320,7 +320,7 @@
         "rank" : 23,
         "percentage" : 0.0088888889,
         "percentile" : 0.425,
-        "z" : -0.5406334434
+        "z" : -0.5381834881
       }
     }, {
       "name" : "PEAS",
@@ -333,7 +333,7 @@
         "rank" : 24,
         "percentage" : 0.0088888889,
         "percentile" : 0.4,
-        "z" : -0.5406334434
+        "z" : -0.5381834881
       }
     }, {
       "name" : "PRESP",
@@ -346,7 +346,7 @@
         "rank" : 25,
         "percentage" : 0.0088888889,
         "percentile" : 0.375,
-        "z" : -0.5406334434
+        "z" : -0.5381834881
       }
     }, {
       "name" : "PUBV",
@@ -359,7 +359,7 @@
         "rank" : 26,
         "percentage" : 0.0088888889,
         "percentile" : 0.35,
-        "z" : -0.5406334434
+        "z" : -0.5381834881
       }
     }, {
       "name" : "TO",
@@ -372,7 +372,7 @@
         "rank" : 27,
         "percentage" : 0.0088888889,
         "percentile" : 0.325,
-        "z" : -0.5406334434
+        "z" : -0.5381834881
       }
     }, {
       "name" : "WHCL",
@@ -385,7 +385,7 @@
         "rank" : 28,
         "percentage" : 0.0088888889,
         "percentile" : 0.3,
-        "z" : -0.5406334434
+        "z" : -0.5381834881
       }
     }, {
       "name" : "WHOBJ",
@@ -398,7 +398,7 @@
         "rank" : 29,
         "percentage" : 0.0088888889,
         "percentile" : 0.275,
-        "z" : -0.5406334434
+        "z" : -0.5381834881
       }
     }, {
       "name" : "BEMA",
@@ -411,7 +411,7 @@
         "rank" : 30,
         "percentage" : 0.0044444445,
         "percentile" : 0.25,
-        "z" : -0.6897737051
+        "z" : -0.6866479
       }
     }, {
       "name" : "NEMD",
@@ -424,7 +424,7 @@
         "rank" : 31,
         "percentage" : 0.0044444445,
         "percentile" : 0.225,
-        "z" : -0.6897737051
+        "z" : -0.6866479
       }
     }, {
       "name" : "PHC",
@@ -437,7 +437,7 @@
         "rank" : 32,
         "percentage" : 0.0044444445,
         "percentile" : 0.2,
-        "z" : -0.6897737051
+        "z" : -0.6866479
       }
     }, {
       "name" : "PIRE",
@@ -450,7 +450,7 @@
         "rank" : 33,
         "percentage" : 0.0044444445,
         "percentile" : 0.175,
-        "z" : -0.6897737051
+        "z" : -0.6866479
       }
     }, {
       "name" : "PROD",
@@ -463,7 +463,7 @@
         "rank" : 34,
         "percentage" : 0.0044444445,
         "percentile" : 0.15,
-        "z" : -0.6897737051
+        "z" : -0.6866479
       }
     }, {
       "name" : "THAC",
@@ -476,7 +476,7 @@
         "rank" : 35,
         "percentage" : 0.0044444445,
         "percentile" : 0.125,
-        "z" : -0.6897737051
+        "z" : -0.6866479
       }
     }, {
       "name" : "THVC",
@@ -489,7 +489,7 @@
         "rank" : 36,
         "percentage" : 0.0044444445,
         "percentile" : 0.1,
-        "z" : -0.6897737051
+        "z" : -0.6866479
       }
     }, {
       "name" : "TIME",
@@ -502,7 +502,7 @@
         "rank" : 37,
         "percentage" : 0.0044444445,
         "percentile" : 0.075,
-        "z" : -0.6897737051
+        "z" : -0.6866479
       }
     }, {
       "name" : "WZPAST",
@@ -515,7 +515,7 @@
         "rank" : 38,
         "percentage" : 0.0044444445,
         "percentile" : 0.05,
-        "z" : -0.6897737051
+        "z" : -0.6866479
       }
     }, {
       "name" : "TTR",
@@ -528,7 +528,7 @@
         "rank" : 39,
         "percentage" : 0,
         "percentile" : 0.025,
-        "z" : -0.8389139668
+        "z" : -0.835112312
       }
     } ],
     "scoreStats" : {
@@ -542,7 +542,7 @@
         "max" : 0.0868167203,
         "mean" : 0.0180868167,
         "median" : 0.0096463023,
-        "stddev" : 0.0215597992366627459748240625003745662979781627655029296875
+        "stddev" : 0.0216579452137931373345569596722270944155752658843994140625
       }
     }
   },
@@ -9592,9 +9592,9 @@
       },
       "aggregateScore" : {
         "rank" : 0,
-        "percentage" : 0.1250000007,
+        "percentage" : 0.1333333339,
         "percentile" : 1,
-        "z" : 3.6147844243
+        "z" : 3.4743961033
       }
     }, {
       "name" : "advanced",
@@ -9605,9 +9605,9 @@
       },
       "aggregateScore" : {
         "rank" : 1,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.9333333333,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.9285714286,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "brave",
@@ -9618,9 +9618,9 @@
       },
       "aggregateScore" : {
         "rank" : 2,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.8666666667,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.8571428571,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "civil",
@@ -9631,9 +9631,9 @@
       },
       "aggregateScore" : {
         "rank" : 3,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.8,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.7857142857,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "dead",
@@ -9644,9 +9644,9 @@
       },
       "aggregateScore" : {
         "rank" : 4,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.7333333333,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.7142857143,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "dedicated",
@@ -9657,9 +9657,9 @@
       },
       "aggregateScore" : {
         "rank" : 5,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.6666666667,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.6428571429,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "equal",
@@ -9670,9 +9670,9 @@
       },
       "aggregateScore" : {
         "rank" : 6,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.6,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.5714285714,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "final",
@@ -9683,9 +9683,9 @@
       },
       "aggregateScore" : {
         "rank" : 7,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.5333333333,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.5,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "fitting",
@@ -9696,9 +9696,9 @@
       },
       "aggregateScore" : {
         "rank" : 8,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.4666666667,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.4285714286,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "larger",
@@ -9709,9 +9709,9 @@
       },
       "aggregateScore" : {
         "rank" : 9,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.4,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.3571428571,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "new",
@@ -9722,9 +9722,9 @@
       },
       "aggregateScore" : {
         "rank" : 10,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.3333333333,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.2857142857,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "poor",
@@ -9735,9 +9735,9 @@
       },
       "aggregateScore" : {
         "rank" : 11,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.2666666667,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.2142857143,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "proper",
@@ -9748,22 +9748,9 @@
       },
       "aggregateScore" : {
         "rank" : 12,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.2,
-        "z" : -0.2581989219
-      }
-    }, {
-      "name" : "resting",
-      "score" : {
-        "raw" : 1,
-        "normalized" : 0.0032154341,
-        "count" : 1
-      },
-      "aggregateScore" : {
-        "rank" : 13,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.1333333333,
-        "z" : -0.2581989219
+        "percentage" : 0.0666666669,
+        "percentile" : 0.1428571429,
+        "z" : -0.2672612835
       }
     }, {
       "name" : "unfinished",
@@ -9773,24 +9760,24 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 14,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.0666666667,
-        "z" : -0.2581989219
+        "rank" : 13,
+        "percentage" : 0.0666666669,
+        "percentile" : 0.0714285714,
+        "z" : -0.2672612835
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 16,
-        "normalized" : 0.0514469453,
-        "count" : 15
+        "raw" : 15,
+        "normalized" : 0.0482315113,
+        "count" : 14
       },
       "stats" : {
         "min" : 0.0032154341,
         "max" : 0.0064308682,
-        "mean" : 0.0034297964,
+        "mean" : 0.003445108,
         "median" : 0.0032154341,
-        "stddev" : 0.0008302215146751622081022770061053961399011313915252685546875
+        "stddev" : 0.00085936091085355857839556126265279090148396790027618408203125
       }
     }
   },
@@ -9830,13 +9817,13 @@
     "aggregatedScores" : [ {
       "name" : "descriptive",
       "score" : {
-        "raw" : 16,
-        "normalized" : 0.0514469453,
-        "count" : 16
+        "raw" : 15,
+        "normalized" : 0.0482315113,
+        "count" : 15
       },
       "aggregateScore" : {
         "rank" : 0,
-        "percentage" : 0.9411764703,
+        "percentage" : 0.9375000016,
         "percentile" : 1,
         "z" : 0.7071067812
       }
@@ -9849,42 +9836,29 @@
       },
       "aggregateScore" : {
         "rank" : 1,
-        "percentage" : 0.0588235297,
+        "percentage" : 0.0625000004,
         "percentile" : 0.5,
         "z" : -0.7071067812
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 17,
-        "normalized" : 0.0546623794,
+        "raw" : 16,
+        "normalized" : 0.0514469453,
         "count" : 2
       },
       "stats" : {
         "min" : 0.0032154341,
-        "max" : 0.0514469453,
-        "mean" : 0.0273311897,
+        "max" : 0.0482315113,
+        "mean" : 0.0257234727,
         "median" : 0,
-        "stddev" : 0.034104828636394912688700742364744655787944793701171875
+        "stddev" : 0.031831173450537132707527376851430744864046573638916015625
       }
     }
   },
   "OOPAdverbsAnnotation" : {
     "name" : "OOPAdverbsAnnotation",
     "aggregatedScores" : [ {
-      "name" : "not",
-      "score" : {
-        "raw" : 3,
-        "normalized" : 0.0096463023,
-        "count" : 3
-      },
-      "aggregateScore" : {
-        "rank" : 0,
-        "percentage" : 0.5000000026,
-        "percentile" : 1,
-        "z" : 1.5000000156
-      }
-    }, {
       "name" : "little",
       "score" : {
         "raw" : 1,
@@ -9892,10 +9866,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 1,
-        "percentage" : 0.1666666675,
-        "percentile" : 0.75,
-        "z" : -0.4999999845
+        "rank" : 0,
+        "percentage" : 0.3333333333,
+        "percentile" : 1,
+        "z" : 0
       }
     }, {
       "name" : "long",
@@ -9905,10 +9879,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 2,
-        "percentage" : 0.1666666675,
-        "percentile" : 0.5,
-        "z" : -0.4999999845
+        "rank" : 1,
+        "percentage" : 0.3333333333,
+        "percentile" : 0.6666666667,
+        "z" : 0
       }
     }, {
       "name" : "nobly",
@@ -9918,24 +9892,24 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 3,
-        "percentage" : 0.1666666675,
-        "percentile" : 0.25,
-        "z" : -0.4999999845
+        "rank" : 2,
+        "percentage" : 0.3333333333,
+        "percentile" : 0.3333333333,
+        "z" : 0
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 6,
-        "normalized" : 0.0192926045,
-        "count" : 4
+        "raw" : 3,
+        "normalized" : 0.0096463023,
+        "count" : 3
       },
       "stats" : {
         "min" : 0.0032154341,
-        "max" : 0.0096463023,
-        "mean" : 0.0048231511,
+        "max" : 0.0032154341,
+        "mean" : 0.0032154341,
         "median" : 0.0032154341,
-        "stddev" : 0.0032154340999999996876523855604546042741276323795318603515625
+        "stddev" : 0
       }
     }
   },
@@ -9950,9 +9924,22 @@
       },
       "aggregateScore" : {
         "rank" : 0,
-        "percentage" : 0.3529411766,
+        "percentage" : 0.2999999998,
         "percentile" : 1,
-        "z" : 2.4304788895
+        "z" : 2.4494897364
+      }
+    }, {
+      "name" : "not",
+      "score" : {
+        "raw" : 3,
+        "normalized" : 0.0096463023,
+        "count" : 3
+      },
+      "aggregateScore" : {
+        "rank" : 1,
+        "percentage" : 0.1500000007,
+        "percentile" : 0.9,
+        "z" : 0.6123724389
       }
     }, {
       "name" : "so",
@@ -9962,10 +9949,10 @@
         "count" : 3
       },
       "aggregateScore" : {
-        "rank" : 1,
-        "percentage" : 0.1764705892,
-        "percentile" : 0.8888888889,
-        "z" : 0.6568861973
+        "rank" : 2,
+        "percentage" : 0.1500000007,
+        "percentile" : 0.8,
+        "z" : 0.6123724389
       }
     }, {
       "name" : "far",
@@ -9975,10 +9962,10 @@
         "count" : 2
       },
       "aggregateScore" : {
-        "rank" : 2,
-        "percentage" : 0.1176470595,
-        "percentile" : 0.7777777778,
-        "z" : 0.0656886271
+        "rank" : 3,
+        "percentage" : 0.1000000005,
+        "percentile" : 0.7,
+        "z" : 0
       }
     }, {
       "name" : "altogether",
@@ -9988,10 +9975,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 3,
-        "percentage" : 0.0588235297,
-        "percentile" : 0.6666666667,
-        "z" : -0.5255089431
+        "rank" : 4,
+        "percentage" : 0.0500000002,
+        "percentile" : 0.6,
+        "z" : -0.6123724389
       }
     }, {
       "name" : "forth",
@@ -10001,10 +9988,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 4,
-        "percentage" : 0.0588235297,
-        "percentile" : 0.5555555556,
-        "z" : -0.5255089431
+        "rank" : 5,
+        "percentage" : 0.0500000002,
+        "percentile" : 0.5,
+        "z" : -0.6123724389
       }
     }, {
       "name" : "never",
@@ -10014,10 +10001,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 5,
-        "percentage" : 0.0588235297,
-        "percentile" : 0.4444444444,
-        "z" : -0.5255089431
+        "rank" : 6,
+        "percentage" : 0.0500000002,
+        "percentile" : 0.4,
+        "z" : -0.6123724389
       }
     }, {
       "name" : "now",
@@ -10027,10 +10014,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 6,
-        "percentage" : 0.0588235297,
-        "percentile" : 0.3333333333,
-        "z" : -0.5255089431
+        "rank" : 7,
+        "percentage" : 0.0500000002,
+        "percentile" : 0.3,
+        "z" : -0.6123724389
       }
     }, {
       "name" : "rather",
@@ -10040,10 +10027,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 7,
-        "percentage" : 0.0588235297,
-        "percentile" : 0.2222222222,
-        "z" : -0.5255089431
+        "rank" : 8,
+        "percentage" : 0.0500000002,
+        "percentile" : 0.2,
+        "z" : -0.6123724389
       }
     }, {
       "name" : "thus",
@@ -10053,24 +10040,24 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 8,
-        "percentage" : 0.0588235297,
-        "percentile" : 0.1111111111,
-        "z" : -0.5255089431
+        "rank" : 9,
+        "percentage" : 0.0500000002,
+        "percentile" : 0.1,
+        "z" : -0.6123724389
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 17,
-        "normalized" : 0.0546623794,
-        "count" : 9
+        "raw" : 20,
+        "normalized" : 0.0643086817,
+        "count" : 10
       },
       "stats" : {
         "min" : 0.0032154341,
         "max" : 0.0192926045,
-        "mean" : 0.0060735977,
+        "mean" : 0.0064308682,
         "median" : 0.0032154341,
-        "stddev" : 0.005438848638885663590303298775552320876158773899078369140625
+        "stddev" : 0.005250781870480288049396477845220942981541156768798828125
       }
     }
   },
@@ -10079,9 +10066,9 @@
     "aggregatedScores" : [ {
       "name" : "descriptive",
       "score" : {
-        "raw" : 6,
-        "normalized" : 0.0192926045,
-        "count" : 6
+        "raw" : 3,
+        "normalized" : 0.0096463023,
+        "count" : 3
       },
       "aggregateScore" : {
         "rank" : 0,
@@ -10092,14 +10079,14 @@
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 6,
-        "normalized" : 0.0192926045,
+        "raw" : 3,
+        "normalized" : 0.0096463023,
         "count" : 1
       },
       "stats" : {
-        "min" : 0.0192926045,
-        "max" : 0.0192926045,
-        "mean" : 0.0192926045,
+        "min" : 0.0096463023,
+        "max" : 0.0096463023,
+        "mean" : 0.0096463023,
         "median" : 0,
         "stddev" : 0
       }
@@ -10404,9 +10391,9 @@
       },
       "aggregateScore" : {
         "rank" : 0,
-        "percentage" : 0.1818181814,
+        "percentage" : 0.1739130431,
         "percentile" : 1,
-        "z" : 3.2559117668
+        "z" : 3.3681653347
       }
     }, {
       "name" : "conceive",
@@ -10417,9 +10404,9 @@
       },
       "aggregateScore" : {
         "rank" : 1,
-        "percentage" : 0.0909090914,
-        "percentile" : 0.9375,
-        "z" : 0.7752170929
+        "percentage" : 0.0869565222,
+        "percentile" : 0.9411764706,
+        "z" : 0.823329312
       }
     }, {
       "name" : "consecrate",
@@ -10430,9 +10417,9 @@
       },
       "aggregateScore" : {
         "rank" : 2,
-        "percentage" : 0.0909090914,
-        "percentile" : 0.875,
-        "z" : 0.7752170929
+        "percentage" : 0.0869565222,
+        "percentile" : 0.8823529412,
+        "z" : 0.823329312
       }
     }, {
       "name" : "live",
@@ -10443,9 +10430,9 @@
       },
       "aggregateScore" : {
         "rank" : 3,
-        "percentage" : 0.0909090914,
-        "percentile" : 0.8125,
-        "z" : 0.7752170929
+        "percentage" : 0.0869565222,
+        "percentile" : 0.8235294118,
+        "z" : 0.823329312
       }
     }, {
       "name" : "add",
@@ -10456,9 +10443,22 @@
       },
       "aggregateScore" : {
         "rank" : 4,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.75,
-        "z" : -0.4651302634
+        "percentage" : 0.0434782611,
+        "percentile" : 0.7647058824,
+        "z" : -0.4490887192
+      }
+    }, {
+      "name" : "come",
+      "score" : {
+        "raw" : 1,
+        "normalized" : 0.0032154341,
+        "count" : 1
+      },
+      "aggregateScore" : {
+        "rank" : 5,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.7058823529,
+        "z" : -0.4490887192
       }
     }, {
       "name" : "create",
@@ -10468,10 +10468,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 5,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.6875,
-        "z" : -0.4651302634
+        "rank" : 6,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.6470588235,
+        "z" : -0.4490887192
       }
     }, {
       "name" : "detract",
@@ -10481,10 +10481,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 6,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.625,
-        "z" : -0.4651302634
+        "rank" : 7,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.5882352941,
+        "z" : -0.4490887192
       }
     }, {
       "name" : "endure",
@@ -10494,10 +10494,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 7,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.5625,
-        "z" : -0.4651302634
+        "rank" : 8,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.5294117647,
+        "z" : -0.4490887192
       }
     }, {
       "name" : "engage",
@@ -10507,10 +10507,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 8,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.5,
-        "z" : -0.4651302634
+        "rank" : 9,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.4705882353,
+        "z" : -0.4490887192
       }
     }, {
       "name" : "fight",
@@ -10520,10 +10520,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 9,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.4375,
-        "z" : -0.4651302634
+        "rank" : 10,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.4117647059,
+        "z" : -0.4490887192
       }
     }, {
       "name" : "give",
@@ -10533,10 +10533,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 10,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.375,
-        "z" : -0.4651302634
+        "rank" : 11,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.3529411765,
+        "z" : -0.4490887192
       }
     }, {
       "name" : "hallow",
@@ -10546,10 +10546,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 11,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.3125,
-        "z" : -0.4651302634
+        "rank" : 12,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.2941176471,
+        "z" : -0.4490887192
       }
     }, {
       "name" : "meet",
@@ -10559,10 +10559,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 12,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.25,
-        "z" : -0.4651302634
+        "rank" : 13,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.2352941176,
+        "z" : -0.4490887192
       }
     }, {
       "name" : "note",
@@ -10572,10 +10572,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 13,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.1875,
-        "z" : -0.4651302634
+        "rank" : 14,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.1764705882,
+        "z" : -0.4490887192
       }
     }, {
       "name" : "struggle",
@@ -10585,10 +10585,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 14,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.125,
-        "z" : -0.4651302634
+        "rank" : 15,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.1176470588,
+        "z" : -0.4490887192
       }
     }, {
       "name" : "test",
@@ -10598,24 +10598,24 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 15,
-        "percentage" : 0.0454545457,
-        "percentile" : 0.0625,
-        "z" : -0.4651302634
+        "rank" : 16,
+        "percentage" : 0.0434782611,
+        "percentile" : 0.0588235294,
+        "z" : -0.4490887192
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 22,
-        "normalized" : 0.0707395498,
-        "count" : 16
+        "raw" : 23,
+        "normalized" : 0.0739549839,
+        "count" : 17
       },
       "stats" : {
         "min" : 0.0032154341,
         "max" : 0.0128617363,
-        "mean" : 0.0044212219,
+        "mean" : 0.0043502932,
         "median" : 0.0032154341,
-        "stddev" : 0.00259236582698075916642022065161654609255492687225341796875
+        "stddev" : 0.0025270265127158232816573235623991422471590340137481689453125
       }
     }
   },
@@ -10630,9 +10630,9 @@
       },
       "aggregateScore" : {
         "rank" : 0,
-        "percentage" : 0.3750000002,
+        "percentage" : 0.3999999996,
         "percentile" : 1,
-        "z" : 2.2563042945
+        "z" : 2.0687782492
       }
     }, {
       "name" : "have",
@@ -10643,9 +10643,9 @@
       },
       "aggregateScore" : {
         "rank" : 1,
-        "percentage" : 0.1875000011,
-        "percentile" : 0.875,
-        "z" : 0.564076078
+        "percentage" : 0.2000000008,
+        "percentile" : 0.8571428571,
+        "z" : 0.4597285072
       }
     }, {
       "name" : "do",
@@ -10656,9 +10656,9 @@
       },
       "aggregateScore" : {
         "rank" : 2,
-        "percentage" : 0.1250000007,
-        "percentile" : 0.75,
-        "z" : 0
+        "percentage" : 0.1333333339,
+        "percentile" : 0.7142857143,
+        "z" : -0.0766214123
       }
     }, {
       "name" : "bring",
@@ -10669,22 +10669,9 @@
       },
       "aggregateScore" : {
         "rank" : 3,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.625,
-        "z" : -0.564076078
-      }
-    }, {
-      "name" : "come",
-      "score" : {
-        "raw" : 1,
-        "normalized" : 0.0032154341,
-        "count" : 1
-      },
-      "aggregateScore" : {
-        "rank" : 4,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.5,
-        "z" : -0.564076078
+        "percentage" : 0.0666666669,
+        "percentile" : 0.5714285714,
+        "z" : -0.6129713318
       }
     }, {
       "name" : "forget",
@@ -10694,10 +10681,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 5,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.375,
-        "z" : -0.564076078
+        "rank" : 4,
+        "percentage" : 0.0666666669,
+        "percentile" : 0.4285714286,
+        "z" : -0.6129713318
       }
     }, {
       "name" : "remember",
@@ -10707,10 +10694,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 6,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.25,
-        "z" : -0.564076078
+        "rank" : 5,
+        "percentage" : 0.0666666669,
+        "percentile" : 0.2857142857,
+        "z" : -0.6129713318
       }
     }, {
       "name" : "say",
@@ -10720,24 +10707,24 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 7,
-        "percentage" : 0.0625000004,
-        "percentile" : 0.125,
-        "z" : -0.564076078
+        "rank" : 6,
+        "percentage" : 0.0666666669,
+        "percentile" : 0.1428571429,
+        "z" : -0.6129713318
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 16,
-        "normalized" : 0.0514469453,
-        "count" : 8
+        "raw" : 15,
+        "normalized" : 0.0482315113,
+        "count" : 7
       },
       "stats" : {
         "min" : 0.0032154341,
         "max" : 0.0192926045,
-        "mean" : 0.0064308682,
+        "mean" : 0.0068902159,
         "median" : 0.0032154341,
-        "stddev" : 0.005700355369365699316486217895771915209479629993438720703125
+        "stddev" : 0.005995030450987651020333668583361941273324191570281982421875
       }
     }
   },
@@ -10752,9 +10739,9 @@
       },
       "aggregateScore" : {
         "rank" : 0,
-        "percentage" : 0.1599999996,
+        "percentage" : 0.1538461534,
         "percentile" : 1,
-        "z" : 3.5824407349
+        "z" : 3.6850253417
       }
     }, {
       "name" : "field",
@@ -10765,9 +10752,9 @@
       },
       "aggregateScore" : {
         "rank" : 1,
-        "percentage" : 0.0800000004,
-        "percentile" : 0.9473684211,
-        "z" : 0.9131711913
+        "percentage" : 0.0769230773,
+        "percentile" : 0.95,
+        "z" : 0.9553769609
       }
     }, {
       "name" : "man",
@@ -10778,9 +10765,9 @@
       },
       "aggregateScore" : {
         "rank" : 2,
-        "percentage" : 0.0800000004,
-        "percentile" : 0.8947368421,
-        "z" : 0.9131711913
+        "percentage" : 0.0769230773,
+        "percentile" : 0.9,
+        "z" : 0.9553769609
       }
     }, {
       "name" : "war",
@@ -10791,9 +10778,9 @@
       },
       "aggregateScore" : {
         "rank" : 3,
-        "percentage" : 0.0800000004,
-        "percentile" : 0.8421052632,
-        "z" : 0.9131711913
+        "percentage" : 0.0769230773,
+        "percentile" : 0.85,
+        "z" : 0.9553769609
       }
     }, {
       "name" : "battle",
@@ -10804,9 +10791,9 @@
       },
       "aggregateScore" : {
         "rank" : 4,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.7894736842,
-        "z" : -0.4214636012
+        "percentage" : 0.0384615386,
+        "percentile" : 0.8,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "continent",
@@ -10817,9 +10804,9 @@
       },
       "aggregateScore" : {
         "rank" : 5,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.7368421053,
-        "z" : -0.4214636012
+        "percentage" : 0.0384615386,
+        "percentile" : 0.75,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "father",
@@ -10830,9 +10817,9 @@
       },
       "aggregateScore" : {
         "rank" : 6,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.6842105263,
-        "z" : -0.4214636012
+        "percentage" : 0.0384615386,
+        "percentile" : 0.7,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "ground",
@@ -10843,9 +10830,9 @@
       },
       "aggregateScore" : {
         "rank" : 7,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.6315789474,
-        "z" : -0.4214636012
+        "percentage" : 0.0384615386,
+        "percentile" : 0.65,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "life",
@@ -10856,9 +10843,9 @@
       },
       "aggregateScore" : {
         "rank" : 8,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.5789473684,
-        "z" : -0.4214636012
+        "percentage" : 0.0384615386,
+        "percentile" : 0.6,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "living",
@@ -10869,9 +10856,9 @@
       },
       "aggregateScore" : {
         "rank" : 9,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.5263157895,
-        "z" : -0.4214636012
+        "percentage" : 0.0384615386,
+        "percentile" : 0.55,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "place",
@@ -10882,9 +10869,9 @@
       },
       "aggregateScore" : {
         "rank" : 10,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.4736842105,
-        "z" : -0.4214636012
+        "percentage" : 0.0384615386,
+        "percentile" : 0.5,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "portion",
@@ -10895,9 +10882,9 @@
       },
       "aggregateScore" : {
         "rank" : 11,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.4210526316,
-        "z" : -0.4214636012
+        "percentage" : 0.0384615386,
+        "percentile" : 0.45,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "power",
@@ -10908,9 +10895,9 @@
       },
       "aggregateScore" : {
         "rank" : 12,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.3684210526,
-        "z" : -0.4214636012
+        "percentage" : 0.0384615386,
+        "percentile" : 0.4,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "proposition",
@@ -10921,9 +10908,22 @@
       },
       "aggregateScore" : {
         "rank" : 13,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.3157894737,
-        "z" : -0.4214636012
+        "percentage" : 0.0384615386,
+        "percentile" : 0.35,
+        "z" : -0.4094472508
+      }
+    }, {
+      "name" : "resting",
+      "score" : {
+        "raw" : 1,
+        "normalized" : 0.0032154341,
+        "count" : 1
+      },
+      "aggregateScore" : {
+        "rank" : 14,
+        "percentage" : 0.0384615386,
+        "percentile" : 0.3,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "score",
@@ -10933,10 +10933,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 14,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.2631578947,
-        "z" : -0.4214636012
+        "rank" : 15,
+        "percentage" : 0.0384615386,
+        "percentile" : 0.25,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "sense",
@@ -10946,10 +10946,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 15,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.2105263158,
-        "z" : -0.4214636012
+        "rank" : 16,
+        "percentage" : 0.0384615386,
+        "percentile" : 0.2,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "work",
@@ -10959,10 +10959,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 16,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.1578947368,
-        "z" : -0.4214636012
+        "rank" : 17,
+        "percentage" : 0.0384615386,
+        "percentile" : 0.15,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "world",
@@ -10972,10 +10972,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 17,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.1052631579,
-        "z" : -0.4214636012
+        "rank" : 18,
+        "percentage" : 0.0384615386,
+        "percentile" : 0.1,
+        "z" : -0.4094472508
       }
     }, {
       "name" : "year",
@@ -10985,24 +10985,24 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 18,
-        "percentage" : 0.0400000002,
-        "percentile" : 0.0526315789,
-        "z" : -0.4214636012
+        "rank" : 19,
+        "percentage" : 0.0384615386,
+        "percentile" : 0.05,
+        "z" : -0.4094472508
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 25,
-        "normalized" : 0.0803858521,
-        "count" : 19
+        "raw" : 26,
+        "normalized" : 0.0836012862,
+        "count" : 20
       },
       "stats" : {
         "min" : 0.0032154341,
         "max" : 0.0128617363,
-        "mean" : 0.0042308343,
+        "mean" : 0.0041800643,
         "median" : 0.0032154341,
-        "stddev" : 0.0024092239450063147876424096693881438113749027252197265625
+        "stddev" : 0.0023559327806108895479730858113498470629565417766571044921875
       }
     }
   },
@@ -11042,15 +11042,15 @@
     "aggregatedScores" : [ {
       "name" : "subject",
       "score" : {
-        "raw" : 8,
-        "normalized" : 0.0257234727,
-        "count" : 8
+        "raw" : 7,
+        "normalized" : 0.0225080386,
+        "count" : 7
       },
       "aggregateScore" : {
         "rank" : 0,
-        "percentage" : 0.2857142862,
+        "percentage" : 0.2916666669,
         "percentile" : 1,
-        "z" : 1.1573827727
+        "z" : 0.8198915944
       }
     }, {
       "name" : "verb",
@@ -11061,9 +11061,9 @@
       },
       "aggregateScore" : {
         "rank" : 1,
-        "percentage" : 0.2500000003,
+        "percentage" : 0.2916666669,
         "percentile" : 0.8,
-        "z" : 0.6751399482
+        "z" : 0.8198915944
       }
     }, {
       "name" : "auxVerb",
@@ -11074,49 +11074,49 @@
       },
       "aggregateScore" : {
         "rank" : 2,
-        "percentage" : 0.2142857144,
+        "percentage" : 0.25,
         "percentile" : 0.6,
-        "z" : 0.1928971238
+        "z" : 0.4472135959
       }
     }, {
       "name" : "indirectObject",
-      "score" : {
-        "raw" : 4,
-        "normalized" : 0.0128617363,
-        "count" : 4
-      },
-      "aggregateScore" : {
-        "rank" : 3,
-        "percentage" : 0.1428571425,
-        "percentile" : 0.4,
-        "z" : -0.7715885251
-      }
-    }, {
-      "name" : "object",
       "score" : {
         "raw" : 3,
         "normalized" : 0.0096463023,
         "count" : 3
       },
       "aggregateScore" : {
+        "rank" : 3,
+        "percentage" : 0.1250000006,
+        "percentile" : 0.4,
+        "z" : -0.670820388
+      }
+    }, {
+      "name" : "object",
+      "score" : {
+        "raw" : 1,
+        "normalized" : 0.0032154341,
+        "count" : 1
+      },
+      "aggregateScore" : {
         "rank" : 4,
-        "percentage" : 0.1071428577,
+        "percentage" : 0.0416666669,
         "percentile" : 0.2,
-        "z" : -1.2538313345
+        "z" : -1.416176385
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 28,
-        "normalized" : 0.0900321543,
+        "raw" : 24,
+        "normalized" : 0.077170418,
         "count" : 5
       },
       "stats" : {
-        "min" : 0.0096463023,
-        "max" : 0.0257234727,
-        "mean" : 0.0180064309,
-        "median" : 0.0128617363,
-        "stddev" : 0.00666766603266822667495095089407186605967581272125244140625
+        "min" : 0.0032154341,
+        "max" : 0.0225080386,
+        "mean" : 0.0154340836,
+        "median" : 0.0096463023,
+        "stddev" : 0.00862791501755010882546148565097610116936266422271728515625
       }
     }
   },
@@ -11969,9 +11969,9 @@
       },
       "aggregateScore" : {
         "rank" : 0,
-        "percentage" : 0.0999999999,
+        "percentage" : 0.111111111,
         "percentile" : 1,
-        "z" : 3.6604486396
+        "z" : 3.6506058573
       }
     }, {
       "name" : "that",
@@ -11982,9 +11982,9 @@
       },
       "aggregateScore" : {
         "rank" : 1,
-        "percentage" : 0.0636363637,
-        "percentile" : 0.9743589744,
-        "z" : 1.8703859825
+        "percentage" : 0.0707070707,
+        "percentile" : 0.9722222222,
+        "z" : 1.880615144
       }
     }, {
       "name" : "a",
@@ -11995,22 +11995,9 @@
       },
       "aggregateScore" : {
         "rank" : 2,
-        "percentage" : 0.0545454545,
-        "percentile" : 0.9487179487,
-        "z" : 1.4228703147
-      }
-    }, {
-      "name" : "be",
-      "score" : {
-        "raw" : 6,
-        "normalized" : 0.0192926045,
-        "count" : 6
-      },
-      "aggregateScore" : {
-        "rank" : 3,
-        "percentage" : 0.0545454545,
-        "percentile" : 0.9230769231,
-        "z" : 1.4228703147
+        "percentage" : 0.0606060606,
+        "percentile" : 0.9444444444,
+        "z" : 1.4381174623
       }
     }, {
       "name" : "here",
@@ -12020,10 +12007,10 @@
         "count" : 6
       },
       "aggregateScore" : {
-        "rank" : 4,
-        "percentage" : 0.0545454545,
-        "percentile" : 0.8974358974,
-        "z" : 1.4228703147
+        "rank" : 3,
+        "percentage" : 0.0606060606,
+        "percentile" : 0.9166666667,
+        "z" : 1.4381174623
       }
     }, {
       "name" : "and",
@@ -12033,10 +12020,10 @@
         "count" : 5
       },
       "aggregateScore" : {
-        "rank" : 5,
-        "percentage" : 0.0454545454,
-        "percentile" : 0.8717948718,
-        "z" : 0.975354647
+        "rank" : 4,
+        "percentage" : 0.0505050504,
+        "percentile" : 0.8888888889,
+        "z" : 0.9956197805
       }
     }, {
       "name" : "can",
@@ -12046,10 +12033,10 @@
         "count" : 5
       },
       "aggregateScore" : {
-        "rank" : 6,
-        "percentage" : 0.0454545454,
-        "percentile" : 0.8461538462,
-        "z" : 0.975354647
+        "rank" : 5,
+        "percentage" : 0.0505050504,
+        "percentile" : 0.8611111111,
+        "z" : 0.9956197805
       }
     }, {
       "name" : "the",
@@ -12059,10 +12046,10 @@
         "count" : 5
       },
       "aggregateScore" : {
-        "rank" : 7,
-        "percentage" : 0.0454545454,
-        "percentile" : 0.8205128205,
-        "z" : 0.975354647
+        "rank" : 6,
+        "percentage" : 0.0505050504,
+        "percentile" : 0.8333333333,
+        "z" : 0.9956197805
       }
     }, {
       "name" : "to",
@@ -12072,10 +12059,10 @@
         "count" : 5
       },
       "aggregateScore" : {
-        "rank" : 8,
-        "percentage" : 0.0454545454,
-        "percentile" : 0.7948717949,
-        "z" : 0.975354647
+        "rank" : 7,
+        "percentage" : 0.0505050504,
+        "percentile" : 0.8055555556,
+        "z" : 0.9956197805
       }
     }, {
       "name" : "it",
@@ -12085,23 +12072,10 @@
         "count" : 4
       },
       "aggregateScore" : {
-        "rank" : 9,
-        "percentage" : 0.0363636363,
-        "percentile" : 0.7692307692,
-        "z" : 0.5278389792
-      }
-    }, {
-      "name" : "have",
-      "score" : {
-        "raw" : 3,
-        "normalized" : 0.0096463023,
-        "count" : 3
-      },
-      "aggregateScore" : {
-        "rank" : 10,
-        "percentage" : 0.0272727274,
-        "percentile" : 0.7435897436,
-        "z" : 0.0803233253
+        "rank" : 8,
+        "percentage" : 0.0404040403,
+        "percentile" : 0.7777777778,
+        "z" : 0.5531220988
       }
     }, {
       "name" : "in",
@@ -12111,10 +12085,10 @@
         "count" : 3
       },
       "aggregateScore" : {
-        "rank" : 11,
-        "percentage" : 0.0272727274,
-        "percentile" : 0.7179487179,
-        "z" : 0.0803233253
+        "rank" : 9,
+        "percentage" : 0.0303030305,
+        "percentile" : 0.75,
+        "z" : 0.1106244308
       }
     }, {
       "name" : "not",
@@ -12124,10 +12098,10 @@
         "count" : 3
       },
       "aggregateScore" : {
-        "rank" : 12,
-        "percentage" : 0.0272727274,
-        "percentile" : 0.6923076923,
-        "z" : 0.0803233253
+        "rank" : 10,
+        "percentage" : 0.0303030305,
+        "percentile" : 0.7222222222,
+        "z" : 0.1106244308
       }
     }, {
       "name" : "so",
@@ -12137,10 +12111,10 @@
         "count" : 3
       },
       "aggregateScore" : {
-        "rank" : 13,
-        "percentage" : 0.0272727274,
-        "percentile" : 0.6666666667,
-        "z" : 0.0803233253
+        "rank" : 11,
+        "percentage" : 0.0303030305,
+        "percentile" : 0.6944444444,
+        "z" : 0.1106244308
       }
     }, {
       "name" : "they",
@@ -12150,10 +12124,10 @@
         "count" : 3
       },
       "aggregateScore" : {
-        "rank" : 14,
-        "percentage" : 0.0272727274,
-        "percentile" : 0.641025641,
-        "z" : 0.0803233253
+        "rank" : 12,
+        "percentage" : 0.0303030305,
+        "percentile" : 0.6666666667,
+        "z" : 0.1106244308
       }
     }, {
       "name" : "this",
@@ -12163,10 +12137,10 @@
         "count" : 3
       },
       "aggregateScore" : {
-        "rank" : 15,
-        "percentage" : 0.0272727274,
-        "percentile" : 0.6153846154,
-        "z" : 0.0803233253
+        "rank" : 13,
+        "percentage" : 0.0303030305,
+        "percentile" : 0.6388888889,
+        "z" : 0.1106244308
       }
     }, {
       "name" : "who",
@@ -12176,10 +12150,10 @@
         "count" : 3
       },
       "aggregateScore" : {
-        "rank" : 16,
-        "percentage" : 0.0272727274,
-        "percentile" : 0.5897435897,
-        "z" : 0.0803233253
+        "rank" : 14,
+        "percentage" : 0.0303030305,
+        "percentile" : 0.6111111111,
+        "z" : 0.1106244308
       }
     }, {
       "name" : "but",
@@ -12189,23 +12163,10 @@
         "count" : 2
       },
       "aggregateScore" : {
-        "rank" : 17,
-        "percentage" : 0.0181818183,
-        "percentile" : 0.5641025641,
-        "z" : -0.3671923424
-      }
-    }, {
-      "name" : "do",
-      "score" : {
-        "raw" : 2,
-        "normalized" : 0.0064308682,
-        "count" : 2
-      },
-      "aggregateScore" : {
-        "rank" : 18,
-        "percentage" : 0.0181818183,
-        "percentile" : 0.5384615385,
-        "z" : -0.3671923424
+        "rank" : 15,
+        "percentage" : 0.0202020203,
+        "percentile" : 0.5833333333,
+        "z" : -0.331873251
       }
     }, {
       "name" : "for",
@@ -12215,10 +12176,10 @@
         "count" : 2
       },
       "aggregateScore" : {
-        "rank" : 19,
-        "percentage" : 0.0181818183,
-        "percentile" : 0.5128205128,
-        "z" : -0.3671923424
+        "rank" : 16,
+        "percentage" : 0.0202020203,
+        "percentile" : 0.5555555556,
+        "z" : -0.331873251
       }
     }, {
       "name" : "of",
@@ -12228,10 +12189,10 @@
         "count" : 2
       },
       "aggregateScore" : {
-        "rank" : 20,
-        "percentage" : 0.0181818183,
-        "percentile" : 0.4871794872,
-        "z" : -0.3671923424
+        "rank" : 17,
+        "percentage" : 0.0202020203,
+        "percentile" : 0.5277777778,
+        "z" : -0.331873251
       }
     }, {
       "name" : "on",
@@ -12241,10 +12202,10 @@
         "count" : 2
       },
       "aggregateScore" : {
-        "rank" : 21,
-        "percentage" : 0.0181818183,
-        "percentile" : 0.4615384615,
-        "z" : -0.3671923424
+        "rank" : 18,
+        "percentage" : 0.0202020203,
+        "percentile" : 0.5,
+        "z" : -0.331873251
       }
     }, {
       "name" : "or",
@@ -12254,10 +12215,10 @@
         "count" : 2
       },
       "aggregateScore" : {
-        "rank" : 22,
-        "percentage" : 0.0181818183,
-        "percentile" : 0.4358974359,
-        "z" : -0.3671923424
+        "rank" : 19,
+        "percentage" : 0.0202020203,
+        "percentile" : 0.4722222222,
+        "z" : -0.331873251
       }
     }, {
       "name" : "what",
@@ -12267,10 +12228,10 @@
         "count" : 2
       },
       "aggregateScore" : {
-        "rank" : 23,
-        "percentage" : 0.0181818183,
-        "percentile" : 0.4102564103,
-        "z" : -0.3671923424
+        "rank" : 20,
+        "percentage" : 0.0202020203,
+        "percentile" : 0.4444444444,
+        "z" : -0.331873251
       }
     }, {
       "name" : "above",
@@ -12280,10 +12241,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 24,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.3846153846,
-        "z" : -0.8147080102
+        "rank" : 21,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.4166666667,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "all",
@@ -12293,10 +12254,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 25,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.358974359,
-        "z" : -0.8147080102
+        "rank" : 22,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.3888888889,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "any",
@@ -12306,10 +12267,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 26,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.3333333333,
-        "z" : -0.8147080102
+        "rank" : 23,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.3611111111,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "as",
@@ -12319,10 +12280,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 27,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.3076923077,
-        "z" : -0.8147080102
+        "rank" : 24,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.3333333333,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "might",
@@ -12332,10 +12293,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 28,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.2820512821,
-        "z" : -0.8147080102
+        "rank" : 25,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.3055555556,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "never",
@@ -12345,10 +12306,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 29,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.2564102564,
-        "z" : -0.8147080102
+        "rank" : 26,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.2777777778,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "nor",
@@ -12358,10 +12319,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 30,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.2307692308,
-        "z" : -0.8147080102
+        "rank" : 27,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.25,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "now",
@@ -12371,10 +12332,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 31,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.2051282051,
-        "z" : -0.8147080102
+        "rank" : 28,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.2222222222,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "rather",
@@ -12384,10 +12345,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 32,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.1794871795,
-        "z" : -0.8147080102
+        "rank" : 29,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.1944444444,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "should",
@@ -12397,10 +12358,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 33,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.1538461538,
-        "z" : -0.8147080102
+        "rank" : 30,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.1666666667,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "those",
@@ -12410,10 +12371,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 34,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.1282051282,
-        "z" : -0.8147080102
+        "rank" : 31,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.1388888889,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "thus",
@@ -12423,10 +12384,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 35,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.1025641026,
-        "z" : -0.8147080102
+        "rank" : 32,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.1111111111,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "whether",
@@ -12436,10 +12397,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 36,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.0769230769,
-        "z" : -0.8147080102
+        "rank" : 33,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.0833333333,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "which",
@@ -12449,10 +12410,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 37,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.0512820513,
-        "z" : -0.8147080102
+        "rank" : 34,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.0555555556,
+        "z" : -0.7743709328
       }
     }, {
       "name" : "will",
@@ -12462,24 +12423,24 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 38,
-        "percentage" : 0.0090909091,
-        "percentile" : 0.0256410256,
-        "z" : -0.8147080102
+        "rank" : 35,
+        "percentage" : 0.0101010102,
+        "percentile" : 0.0277777778,
+        "z" : -0.7743709328
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 110,
-        "normalized" : 0.3536977492,
-        "count" : 39
+        "raw" : 99,
+        "normalized" : 0.3183279743,
+        "count" : 36
       },
       "stats" : {
         "min" : 0.0032154341,
         "max" : 0.0353697749,
-        "mean" : 0.0090691731,
+        "mean" : 0.0088424437,
         "median" : 0.0064308682,
-        "stddev" : 0.0071850760355787156308249308267477317713201045989990234375
+        "stddev" : 0.007266555809380881823800191199325126945041120052337646484375
       }
     }
   },
@@ -13044,13 +13005,7 @@
       }
     }
   },
-  "OOPDatesAnnotation" : [ {
-    "name" : "four score and seven years ago",
-    "value" : 1
-  }, {
-    "name" : "now",
-    "value" : 1
-  } ],
+  "OOPDatesAnnotation" : [ ],
   "OOPIfAnnotation" : [ ],
   "OOPBecauseAnnotation" : [ ],
   "OOPQuotesAnnotation" : [ ],
@@ -14388,148 +14343,148 @@
   "OOPFleschKincaidAnnotation" : {
     "name" : "OOPFleschKincaidAnnotation",
     "aggregatedScores" : [ {
-      "name" : "4",
+      "name" : "2",
       "score" : {
-        "raw" : 1.21220000000000016626700016786344349384307861328125,
-        "normalized" : 0.0038977492,
-        "count" : 1.21220000000000016626700016786344349384307861328125
+        "raw" : 1.033790909090909426737425746978260576725006103515625,
+        "normalized" : 0.0033240865,
+        "count" : 1.033790909090909426737425746978260576725006103515625
       },
       "aggregateScore" : {
         "rank" : 0,
-        "percentage" : 0.1166605715,
+        "percentage" : 0.1630237847,
         "percentile" : 1,
-        "z" : 0.4794337643
-      }
-    }, {
-      "name" : "2",
-      "score" : {
-        "raw" : 1.2020500000000000628830321147688664495944976806640625,
-        "normalized" : 0.0038651125,
-        "count" : 1.2020500000000000628830321147688664495944976806640625
-      },
-      "aggregateScore" : {
-        "rank" : 1,
-        "percentage" : 0.1156837486,
-        "percentile" : 0.9,
-        "z" : 0.4513241696
-      }
-    }, {
-      "name" : "3",
-      "score" : {
-        "raw" : 1.2020500000000000628830321147688664495944976806640625,
-        "normalized" : 0.0038651125,
-        "count" : 1.2020500000000000628830321147688664495944976806640625
-      },
-      "aggregateScore" : {
-        "rank" : 2,
-        "percentage" : 0.1156837486,
-        "percentile" : 0.8,
-        "z" : 0.4513241696
+        "z" : 1.4505630327
       }
     }, {
       "name" : "7",
       "score" : {
-        "raw" : 1.1919000000000001815436689867055974900722503662109375,
-        "normalized" : 0.0038324759,
-        "count" : 1.1919000000000001815436689867055974900722503662109375
+        "raw" : 0.80777142857142880671972307027317583560943603515625,
+        "normalized" : 0.0025973358,
+        "count" : 0.80777142857142880671972307027317583560943603515625
       },
       "aggregateScore" : {
-        "rank" : 3,
-        "percentage" : 0.1147069256,
-        "percentile" : 0.7,
-        "z" : 0.423214575
-      }
-    }, {
-      "name" : "8",
-      "score" : {
-        "raw" : 1.1919000000000001815436689867055974900722503662109375,
-        "normalized" : 0.0038324759,
-        "count" : 1.1919000000000001815436689867055974900722503662109375
-      },
-      "aggregateScore" : {
-        "rank" : 4,
-        "percentage" : 0.1147069256,
-        "percentile" : 0.6,
-        "z" : 0.423214575
-      }
-    }, {
-      "name" : "1",
-      "score" : {
-        "raw" : 1.18175000000000007815970093361102044582366943359375,
-        "normalized" : 0.0037998392,
-        "count" : 1.18175000000000007815970093361102044582366943359375
-      },
-      "aggregateScore" : {
-        "rank" : 5,
-        "percentage" : 0.1137301026,
-        "percentile" : 0.5,
-        "z" : 0.3951049804
+        "rank" : 1,
+        "percentage" : 0.1273816149,
+        "percentile" : 0.9,
+        "z" : 0.6302185518
       }
     }, {
       "name" : "5",
       "score" : {
-        "raw" : 1.171600000000000196820337805547751486301422119140625,
-        "normalized" : 0.0037672026,
-        "count" : 1.171600000000000196820337805547751486301422119140625
+        "raw" : 0.762342105263158043015891962568275630474090576171875,
+        "normalized" : 0.0024512608,
+        "count" : 0.762342105263158043015891962568275630474090576171875
       },
       "aggregateScore" : {
-        "rank" : 6,
-        "percentage" : 0.1127532797,
-        "percentile" : 0.4,
-        "z" : 0.3669953858
+        "rank" : 2,
+        "percentage" : 0.1202176321,
+        "percentile" : 0.8,
+        "z" : 0.4653314608
+      }
+    }, {
+      "name" : "3",
+      "score" : {
+        "raw" : 0.7603000000000001978861519091879017651081085205078125,
+        "normalized" : 0.0024446945,
+        "count" : 0.7603000000000001978861519091879017651081085205078125
+      },
+      "aggregateScore" : {
+        "rank" : 3,
+        "percentage" : 0.1198956021,
+        "percentile" : 0.7,
+        "z" : 0.4579195786
+      }
+    }, {
+      "name" : "4",
+      "score" : {
+        "raw" : 0.72615454545454571899654183653183281421661376953125,
+        "normalized" : 0.0023349021,
+        "count" : 0.72615454545454571899654183653183281421661376953125
+      },
+      "aggregateScore" : {
+        "rank" : 4,
+        "percentage" : 0.1145110304,
+        "percentile" : 0.6,
+        "z" : 0.3339876276
       }
     }, {
       "name" : "6",
       "score" : {
-        "raw" : 1.171600000000000196820337805547751486301422119140625,
-        "normalized" : 0.0037672026,
-        "count" : 1.171600000000000196820337805547751486301422119140625
+        "raw" : 0.6869142857142860325581068536848761141300201416015625,
+        "normalized" : 0.0022087276,
+        "count" : 0.6869142857142860325581068536848761141300201416015625
+      },
+      "aggregateScore" : {
+        "rank" : 5,
+        "percentage" : 0.1083230328,
+        "percentile" : 0.5,
+        "z" : 0.1915639284
+      }
+    }, {
+      "name" : "8",
+      "score" : {
+        "raw" : 0.60052692307692334683366652825498022139072418212890625,
+        "normalized" : 0.0019309547,
+        "count" : 0.60052692307692334683366652825498022139072418212890625
+      },
+      "aggregateScore" : {
+        "rank" : 6,
+        "percentage" : 0.0947001671,
+        "percentile" : 0.4,
+        "z" : -0.1219815943
+      }
+    }, {
+      "name" : "1",
+      "score" : {
+        "raw" : 0.485250000000000347721851312599028460681438446044921875,
+        "normalized" : 0.0015602894,
+        "count" : 0.485250000000000347721851312599028460681438446044921875
       },
       "aggregateScore" : {
         "rank" : 7,
-        "percentage" : 0.1127532797,
+        "percentage" : 0.0765215585,
         "percentile" : 0.3,
-        "z" : 0.3669953858
+        "z" : -0.5403826427
       }
     }, {
       "name" : "0",
       "score" : {
-        "raw" : 0.78872857142857155654525058707804419100284576416015625,
-        "normalized" : 0.0025361047,
-        "count" : 0.78872857142857155654525058707804419100284576416015625
+        "raw" : 0.478300000000000113953291247526067309081554412841796875,
+        "normalized" : 0.0015379421,
+        "count" : 0.478300000000000113953291247526067309081554412841796875
       },
       "aggregateScore" : {
         "rank" : 8,
-        "percentage" : 0.075906225,
+        "percentage" : 0.0754255774,
         "percentile" : 0.2,
-        "z" : -0.6933357123
+        "z" : -0.5656078761
       }
     }, {
       "name" : "9",
       "score" : {
-        "raw" : 0.077050000000000118394183346026693470776081085205078125,
-        "normalized" : 0.0002477492,
-        "count" : 0.077050000000000118394183346026693470776081085205078125
+        "raw" : 0,
+        "normalized" : 0,
+        "count" : 0
       },
       "aggregateScore" : {
         "rank" : 9,
-        "percentage" : 0.0074151931,
+        "percentage" : 0,
         "percentile" : 0.1,
-        "z" : -2.6642712922
+        "z" : -2.3016120661
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 10.390828571428572801860212848623632453382015228271484375,
-        "normalized" : 0.0334110243,
+        "raw" : 6.3413501971712520344226504676043987274169921875,
+        "normalized" : 0.0203901936,
         "count" : 10
       },
       "stats" : {
-        "min" : 0.077050000000000118394183346026693470776081085205078125,
-        "max" : 1.21220000000000016626700016786344349384307861328125,
-        "mean" : 1.0390828571,
-        "median" : 1.171600000000000196820337805547751486301422119140625,
-        "stddev" : 0.36108667308342756729899747369927354156970977783203125
+        "min" : 0,
+        "max" : 1.033790909090909426737425746978260576725006103515625,
+        "mean" : 0.6341350197,
+        "median" : 0.60052692307692334683366652825498022139072418212890625,
+        "stddev" : 0.275517768194703915884957723392290063202381134033203125
       }
     }
   },
@@ -14544,9 +14499,9 @@
       },
       "aggregateScore" : {
         "rank" : 0,
-        "percentage" : 0.2777777775,
+        "percentage" : 0.2631578944,
         "percentile" : 1,
-        "z" : 2.9972209435
+        "z" : 3.1408282104
       }
     }, {
       "name" : "be",
@@ -14557,9 +14512,9 @@
       },
       "aggregateScore" : {
         "rank" : 1,
-        "percentage" : 0.1111111117,
-        "percentile" : 0.9166666667,
-        "z" : 0.4281744357
+        "percentage" : 0.1052631584,
+        "percentile" : 0.9230769231,
+        "z" : 0.477952125
       }
     }, {
       "name" : "create_mentally",
@@ -14570,9 +14525,9 @@
       },
       "aggregateScore" : {
         "rank" : 2,
-        "percentage" : 0.1111111117,
-        "percentile" : 0.8333333333,
-        "z" : 0.4281744357
+        "percentage" : 0.1052631584,
+        "percentile" : 0.8461538462,
+        "z" : 0.477952125
       }
     }, {
       "name" : "assay",
@@ -14583,9 +14538,9 @@
       },
       "aggregateScore" : {
         "rank" : 3,
-        "percentage" : 0.0555555558,
-        "percentile" : 0.75,
-        "z" : -0.4281744091
+        "percentage" : 0.0526315792,
+        "percentile" : 0.7692307692,
+        "z" : -0.409673246
       }
     }, {
       "name" : "bring_down",
@@ -14596,9 +14551,22 @@
       },
       "aggregateScore" : {
         "rank" : 4,
-        "percentage" : 0.0555555558,
-        "percentile" : 0.6666666667,
-        "z" : -0.4281744091
+        "percentage" : 0.0526315792,
+        "percentile" : 0.6923076923,
+        "z" : -0.409673246
+      }
+    }, {
+      "name" : "change",
+      "score" : {
+        "raw" : 1,
+        "normalized" : 0.0032154341,
+        "count" : 1
+      },
+      "aggregateScore" : {
+        "rank" : 5,
+        "percentage" : 0.0526315792,
+        "percentile" : 0.6153846154,
+        "z" : -0.409673246
       }
     }, {
       "name" : "declare",
@@ -14608,10 +14576,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 5,
-        "percentage" : 0.0555555558,
-        "percentile" : 0.5833333333,
-        "z" : -0.4281744091
+        "rank" : 6,
+        "percentage" : 0.0526315792,
+        "percentile" : 0.5384615385,
+        "z" : -0.409673246
       }
     }, {
       "name" : "enthrone",
@@ -14621,10 +14589,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 6,
-        "percentage" : 0.0555555558,
-        "percentile" : 0.5,
-        "z" : -0.4281744091
+        "rank" : 7,
+        "percentage" : 0.0526315792,
+        "percentile" : 0.4615384615,
+        "z" : -0.409673246
       }
     }, {
       "name" : "give_up",
@@ -14634,10 +14602,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 7,
-        "percentage" : 0.0555555558,
-        "percentile" : 0.4166666667,
-        "z" : -0.4281744091
+        "rank" : 8,
+        "percentage" : 0.0526315792,
+        "percentile" : 0.3846153846,
+        "z" : -0.409673246
       }
     }, {
       "name" : "increase",
@@ -14647,10 +14615,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 8,
-        "percentage" : 0.0555555558,
-        "percentile" : 0.3333333333,
-        "z" : -0.4281744091
+        "rank" : 9,
+        "percentage" : 0.0526315792,
+        "percentile" : 0.3076923077,
+        "z" : -0.409673246
       }
     }, {
       "name" : "judge",
@@ -14660,10 +14628,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 9,
-        "percentage" : 0.0555555558,
-        "percentile" : 0.25,
-        "z" : -0.4281744091
+        "rank" : 10,
+        "percentage" : 0.0526315792,
+        "percentile" : 0.2307692308,
+        "z" : -0.409673246
       }
     }, {
       "name" : "move",
@@ -14673,10 +14641,10 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 10,
-        "percentage" : 0.0555555558,
-        "percentile" : 0.1666666667,
-        "z" : -0.4281744091
+        "rank" : 11,
+        "percentage" : 0.0526315792,
+        "percentile" : 0.1538461538,
+        "z" : -0.409673246
       }
     }, {
       "name" : "tell",
@@ -14686,24 +14654,24 @@
         "count" : 1
       },
       "aggregateScore" : {
-        "rank" : 11,
-        "percentage" : 0.0555555558,
-        "percentile" : 0.0833333333,
-        "z" : -0.4281744091
+        "rank" : 12,
+        "percentage" : 0.0526315792,
+        "percentile" : 0.0769230769,
+        "z" : -0.409673246
       }
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 18,
-        "normalized" : 0.0578778135,
-        "count" : 12
+        "raw" : 19,
+        "normalized" : 0.0610932476,
+        "count" : 13
       },
       "stats" : {
         "min" : 0.0032154341,
         "max" : 0.0160771704,
-        "mean" : 0.0048231511,
+        "mean" : 0.0046994806,
         "median" : 0.0032154341,
-        "stddev" : 0.0037548180505589741524918867554561074939556419849395751953125
+        "stddev" : 0.0036225126106234849764076155764769282541237771511077880859375
       }
     }
   },
@@ -14964,9 +14932,9 @@
     "aggregatedScores" : [ {
       "name" : "Liberty",
       "score" : {
-        "raw" : 35584,
-        "normalized" : 114.4180064309,
-        "count" : 35584
+        "raw" : 37329,
+        "normalized" : 120.0289389068,
+        "count" : 37329
       },
       "aggregateScore" : {
         "rank" : 0,
@@ -14977,14 +14945,14 @@
     } ],
     "scoreStats" : {
       "score" : {
-        "raw" : 35584,
-        "normalized" : 114.4180064309,
+        "raw" : 37329,
+        "normalized" : 120.0289389068,
         "count" : 1
       },
       "stats" : {
-        "min" : 114.4180064309,
-        "max" : 114.4180064309,
-        "mean" : 114.4180064309,
+        "min" : 120.0289389068,
+        "max" : 120.0289389068,
+        "mean" : 120.0289389068,
         "median" : 0,
         "stddev" : 0
       }

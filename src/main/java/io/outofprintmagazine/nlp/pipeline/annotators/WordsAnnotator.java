@@ -89,6 +89,6 @@ public class WordsAnnotator extends AbstractPosAnnotator implements Annotator, I
 
 	@Override
 	public String getDescription() {
-		return "word frequency - all tokens.";
+		return "word frequency - all lemmas.";
 	}
 }

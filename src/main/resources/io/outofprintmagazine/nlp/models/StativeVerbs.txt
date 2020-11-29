@@ -10,7 +10,6 @@ begin
 believe
 bring
 care
-come
 concern
 consist
 contain
@@ -27,7 +26,6 @@ feel
 fit
 forget
 get
-go
 happen
 hate
 have
@@ -56,7 +54,6 @@ please
 possess
 prefer
 promise
-put
 realize
 realise
 recognize

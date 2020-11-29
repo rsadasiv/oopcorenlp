@@ -114,7 +114,7 @@
   }, {
     "OOPQuotesAnnotation" : "CoreNLP: QuoteAnnotator plus NER speaker."
   }, {
-    "OOPWordsAnnotation" : "word frequency - all tokens."
+    "OOPWordsAnnotation" : "word frequency - all lemmas."
   }, {
     "OOPFleschKincaidAnnotation" : "(206.835 - (1.015*wordCount/sentenceCount) - (84.6*syllableCount/wordCount))/100"
   }, {
@@ -135,32 +135,23 @@
     "OOPSettingsAnnotation" : "OOPLocationAnnotation with sentiment, quotes, coref, and universal dependencies nsubj, nmod:poss, advmod, amod (http://universaldependencies.org/docsv1/en/dep/index.html)."
   } ],
   "coreNlpProperties" : [ {
-    "name" : "pos.maxlen",
+    "name" : "ner.additional.regexner.mapping",
+    "value" : "io/outofprintmagazine/nlp/models/NER/regexner.txt"
+  }, {
+    "name" : "parse.model",
+    "value" : "edu/stanford/nlp/models/srparser/englishSR.ser.gz"
+  }, {
+    "name" : "ner.maxlen",
     "value" : "70"
-  }, {
-    "name" : "quote.asciiQuotes",
-    "value" : "true"
-  }, {
-    "name" : "coref.maxMentionDistanceWithStringMatch",
-    "value" : "50"
-  }, {
-    "name" : "ner.useSUTime",
-    "value" : "true"
-  }, {
-    "name" : "coref.algorithm",
-    "value" : "statistical"
-  }, {
-    "name" : "quote.singleQuotes",
-    "value" : "true"
-  }, {
-    "name" : "quote.maxLength",
-    "value" : "70"
-  }, {
-    "name" : "ner.combinationMode",
-    "value" : "NORMAL"
   }, {
     "name" : "annotators",
     "value" : "tokenize,ssplit,pos,lemma,ner,parse,sentiment,depparse,coref,quote"
+  }, {
+    "name" : "pos.maxlen",
+    "value" : "70"
+  }, {
+    "name" : "ner.useSUTime",
+    "value" : "true"
   }, {
     "name" : "ner.applyNumericClassifiers",
     "value" : "true"
@@ -168,8 +159,11 @@
     "name" : "enforceRequirements",
     "value" : "true"
   }, {
-    "name" : "quote.attributeQuotes",
+    "name" : "quote.singleQuotes",
     "value" : "true"
+  }, {
+    "name" : "ner.combinationMode",
+    "value" : "NORMAL"
   }, {
     "name" : "parse.maxlen",
     "value" : "70"
@@ -177,46 +171,52 @@
     "name" : "coref.maxMentionDistance",
     "value" : "15"
   }, {
-    "name" : "ner.additional.regexner.mapping",
-    "value" : "io/outofprintmagazine/nlp/models/NER/regexner.txt"
+    "name" : "quote.attributeQuotes",
+    "value" : "true"
   }, {
-    "name" : "ner.applyFineGrained",
-    "value" : "false"
-  }, {
-    "name" : "ner.maxlen",
-    "value" : "70"
-  }, {
-    "name" : "parse.model",
-    "value" : "edu/stanford/nlp/models/srparser/englishSR.ser.gz"
+    "name" : "coref.maxMentionDistanceWithStringMatch",
+    "value" : "50"
   }, {
     "name" : "coref.statisical.pairwiseScoreThresholds",
     "value" : ".15"
+  }, {
+    "name" : "coref.algorithm",
+    "value" : "statistical"
+  }, {
+    "name" : "quote.maxLength",
+    "value" : "70"
+  }, {
+    "name" : "quote.asciiQuotes",
+    "value" : "true"
+  }, {
+    "name" : "ner.applyFineGrained",
+    "value" : "false"
   } ],
   "customProperties" : [ {
-    "name" : "DocDateAnnotation",
-    "value" : "277-15-2020"
-  }, {
-    "name" : "DocIDAnnotation",
-    "value" : "1"
-  }, {
     "name" : "DocSourceTypeAnnotation",
     "value" : "IT"
+  }, {
+    "name" : "DocTypeAnnotation",
+    "value" : "OOP"
   }, {
     "name" : "AuthorAnnotation",
     "value" : "Abraham Lincoln"
   }, {
+    "name" : "DocIDAnnotation",
+    "value" : "1"
+  }, {
+    "name" : "DocDateAnnotation",
+    "value" : "334-46-2020"
+  }, {
     "name" : "DocTitleAnnotation",
     "value" : "GettysburgAddress"
-  }, {
-    "name" : "DocTypeAnnotation",
-    "value" : "OOP"
   } ],
   "analysis" : [ {
-    "startTime" : "2020-10-03 16:15:37.532-0400"
+    "startTime" : "2020-11-29 13:46:21.074-0500"
   }, {
-    "endTime" : "2020-10-03 16:16:42.025-0400"
+    "endTime" : "2020-11-29 13:47:00.179-0500"
   }, {
-    "elapsedMS" : "64493"
+    "elapsedMS" : "39105"
   }, {
     "host" : "Harrison/192.168.56.1"
   } ]

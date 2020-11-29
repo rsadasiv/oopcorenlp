@@ -5,7 +5,7 @@
     "DocSourceTypeAnnotation" : "IT",
     "DocTypeAnnotation" : "OOP",
     "AuthorAnnotation" : "Abraham Lincoln",
-    "DocDateAnnotation" : "277-15-2020",
+    "DocDateAnnotation" : "334-46-2020",
     "OOPThumbnailAnnotation" : "blank.png"
   },
   "corefs" : [ {
@@ -126,7 +126,7 @@
     } ]
   }, {
     "41" : [ {
-      "id" : 1,
+      "id" : 0,
       "text" : "our",
       "type" : "PRONOMINAL",
       "number" : "PLURAL",
@@ -260,7 +260,7 @@
     } ]
   }, {
     "26" : [ {
-      "id" : 4,
+      "id" : 3,
       "text" : "a new nation",
       "type" : "NOMINAL",
       "number" : "SINGULAR",
@@ -374,17 +374,13 @@
         "characterOffsetBegin" : 0,
         "characterOffsetEnd" : 4,
         "pos" : "CD",
-        "ner" : "DATE",
+        "ner" : "O",
         "before" : "",
         "after" : " "
       },
       "OOPCharCountAnnotation" : "4",
       "OOPSyllableCountAnnotation" : "1",
-      "OOPTokenCountAnnotation" : "1",
-      "OOPDatesAnnotation" : [ {
-        "name" : "four score and seven years ago",
-        "value" : 1
-      } ]
+      "OOPTokenCountAnnotation" : "1"
     }, {
       "tokenIndex" : 2,
       "TokensAnnotation" : {
@@ -394,7 +390,7 @@
         "characterOffsetBegin" : 5,
         "characterOffsetEnd" : 10,
         "pos" : "NN",
-        "ner" : "DATE",
+        "ner" : "O",
         "before" : " ",
         "after" : " "
       },
@@ -406,9 +402,6 @@
       "OOPTokenCountAnnotation" : "1",
       "OOPNounsAnnotation" : {
         "score" : "1"
-      },
-      "OOPSVOAnnotation" : {
-        "subject" : "1"
       },
       "OOPWordnetGlossAnnotation" : "a number or letter indicating quality (especially of a student's performance); \"she made good marks in algebra\"; \"grade A milk\"; \"what was your score on your homework?\"",
       "OOPNounGroupsAnnotation" : {
@@ -432,7 +425,7 @@
         "characterOffsetBegin" : 11,
         "characterOffsetEnd" : 14,
         "pos" : "CC",
-        "ner" : "DATE",
+        "ner" : "O",
         "before" : " ",
         "after" : " "
       },
@@ -463,7 +456,7 @@
         "characterOffsetBegin" : 15,
         "characterOffsetEnd" : 20,
         "pos" : "CD",
-        "ner" : "DATE",
+        "ner" : "O",
         "before" : " ",
         "after" : " "
       },
@@ -479,7 +472,7 @@
         "characterOffsetBegin" : 21,
         "characterOffsetEnd" : 26,
         "pos" : "NNS",
-        "ner" : "DATE",
+        "ner" : "O",
         "before" : " ",
         "after" : " "
       },
@@ -491,9 +484,6 @@
       "OOPTokenCountAnnotation" : "1",
       "OOPNounsAnnotation" : {
         "year" : "1"
-      },
-      "OOPSVOAnnotation" : {
-        "subject" : "1"
       },
       "OOPWordnetGlossAnnotation" : "a period of time containing 365 (or 366) days; \"she is 4 years old\"; \"in the year 1920\"",
       "OOPNounGroupsAnnotation" : {
@@ -517,7 +507,7 @@
         "characterOffsetBegin" : 27,
         "characterOffsetEnd" : 30,
         "pos" : "IN",
-        "ner" : "DATE",
+        "ner" : "O",
         "before" : " ",
         "after" : " "
       },
@@ -628,6 +618,9 @@
       },
       "OOPActionlessVerbsAnnotation" : {
         "bring" : "1"
+      },
+      "OOPSVOAnnotation" : {
+        "subject" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "bring" : "1"
@@ -1325,9 +1318,6 @@
       "OOPCommonWordsAnnotation" : {
         "be" : "1"
       },
-      "OOPFunctionWordsAnnotation" : {
-        "be" : "1"
-      },
       "OOPVerbGroupsAnnotation" : {
         "stative" : "1"
       },
@@ -1503,7 +1493,7 @@
       "Liberty" : "1"
     },
     "OOPSVOAnnotation" : {
-      "subject" : "2",
+      "subject" : "1",
       "verb" : "1",
       "indirectObject" : "1"
     },
@@ -1527,7 +1517,6 @@
       "all" : "1",
       "a" : "1",
       "that" : "1",
-      "be" : "1",
       "in" : "1",
       "and" : "2",
       "this" : "1",
@@ -1560,10 +1549,6 @@
     "OOPMyersBriggsAnnotation" : {
       "sensing" : "1"
     },
-    "OOPDatesAnnotation" : [ {
-      "name" : "four score and seven years ago",
-      "value" : 1
-    } ],
     "OOPWordsAnnotation" : {
       "continent" : "1",
       "be" : "1",
@@ -1592,7 +1577,7 @@
       "equal" : "1",
       "to" : "1"
     },
-    "OOPFleschKincaidAnnotation" : "0.78872857142857155654525058707804419100284576416015625",
+    "OOPFleschKincaidAnnotation" : "0.478300000000000113953291247526067309081554412841796875",
     "OOPVerbHypernymsAnnotation" : {
       "create_mentally" : "1",
       "employ" : "1"
@@ -1627,7 +1612,7 @@
         "characterOffsetBegin" : 178,
         "characterOffsetEnd" : 181,
         "pos" : "RB",
-        "ner" : "DATE",
+        "ner" : "O",
         "before" : "\n\n",
         "after" : " "
       },
@@ -1647,10 +1632,6 @@
       "OOPFunctionWordsAnnotation" : {
         "now" : "1"
       },
-      "OOPDatesAnnotation" : [ {
-        "name" : "now",
-        "value" : 1
-      } ],
       "OOPWordsAnnotation" : {
         "now" : "1"
       },
@@ -1718,9 +1699,6 @@
         "be" : "1"
       },
       "OOPCommonWordsAnnotation" : {
-        "be" : "1"
-      },
-      "OOPFunctionWordsAnnotation" : {
         "be" : "1"
       },
       "OOPVerbGroupsAnnotation" : {
@@ -2614,7 +2592,6 @@
       "a" : "1",
       "that" : "1",
       "can" : "1",
-      "be" : "1",
       "or" : "1",
       "in" : "1",
       "whether" : "1",
@@ -2640,10 +2617,6 @@
       "sensing" : "2",
       "extrovert" : "2"
     },
-    "OOPDatesAnnotation" : [ {
-      "name" : "now",
-      "value" : 1
-    } ],
     "OOPWordsAnnotation" : {
       "a" : "1",
       "dedicated" : "1",
@@ -2668,7 +2641,7 @@
       "endure" : "1",
       "so" : "2"
     },
-    "OOPFleschKincaidAnnotation" : "1.18175000000000007815970093361102044582366943359375",
+    "OOPFleschKincaidAnnotation" : "0.485250000000000347721851312599028460681438446044921875",
     "OOPVerbHypernymsAnnotation" : {
       "create_mentally" : "1",
       "move" : "1",
@@ -2750,9 +2723,6 @@
         "be" : "1"
       },
       "OOPCommonWordsAnnotation" : {
-        "be" : "1"
-      },
-      "OOPFunctionWordsAnnotation" : {
         "be" : "1"
       },
       "OOPVerbGroupsAnnotation" : {
@@ -3170,7 +3140,6 @@
     "OOPFunctionWordsAnnotation" : {
       "a" : "1",
       "that" : "1",
-      "be" : "1",
       "of" : "1",
       "we" : "1",
       "on" : "1"
@@ -3201,7 +3170,7 @@
       "we" : "1",
       "on" : "1"
     },
-    "OOPFleschKincaidAnnotation" : "1.2020500000000000628830321147688664495944976806640625",
+    "OOPFleschKincaidAnnotation" : "1.033790909090909426737425746978260576725006103515625",
     "OOPNounHypernymsAnnotation" : {
       "parcel" : "1",
       "action" : "2"
@@ -3284,9 +3253,6 @@
       "OOPCommonWordsAnnotation" : {
         "have" : "1"
       },
-      "OOPFunctionWordsAnnotation" : {
-        "have" : "1"
-      },
       "OOPVerbGroupsAnnotation" : {
         "possession" : "1"
       },
@@ -3319,7 +3285,7 @@
       "OOPVerbTenseAnnotation" : {
         "past" : "1"
       },
-      "OOPActionlessVerbsAnnotation" : {
+      "OOPVerbsAnnotation" : {
         "come" : "1"
       },
       "OOPSVOAnnotation" : {
@@ -3331,8 +3297,12 @@
       "OOPVerbGroupsAnnotation" : {
         "change" : "1"
       },
+      "OOPVerbnetGroupsAnnotation" : { },
       "OOPWordsAnnotation" : {
         "come" : "1"
+      },
+      "OOPVerbHypernymsAnnotation" : {
+        "change" : "1"
       },
       "OOPBiberDimensionsAnnotation" : {
         "DimensionFivePositive" : "1"
@@ -3455,9 +3425,6 @@
       "OOPTokenCountAnnotation" : "1",
       "OOPNounsAnnotation" : {
         "portion" : "1"
-      },
-      "OOPSVOAnnotation" : {
-        "object" : "1"
       },
       "OOPWordnetGlossAnnotation" : "something determined in relation to something that includes it; \"he wanted to feel a part of something bigger than himself\"; \"I read a portion of the manuscript\"; \"the smaller component is hard to reach\"; \"the animal constituent of plankton\"",
       "OOPNounGroupsAnnotation" : {
@@ -3690,22 +3657,19 @@
         "lemma" : "resting",
         "characterOffsetBegin" : 419,
         "characterOffsetEnd" : 426,
-        "pos" : "JJ",
+        "pos" : "NN",
         "ner" : "O",
         "before" : " ",
         "after" : " "
       },
       "OOPBiberAnnotation" : {
-        "JJ" : "1"
+        "NN" : "1"
       },
       "OOPCharCountAnnotation" : "7",
       "OOPSyllableCountAnnotation" : "2",
       "OOPTokenCountAnnotation" : "1",
-      "OOPAdjectivesAnnotation" : {
+      "OOPNounsAnnotation" : {
         "resting" : "1"
-      },
-      "OOPAdjectiveCategoriesAnnotation" : {
-        "descriptive" : "1"
       },
       "OOPWordlessWordsAnnotation" : {
         "resting" : "1"
@@ -3738,9 +3702,6 @@
       "OOPTokenCountAnnotation" : "1",
       "OOPNounsAnnotation" : {
         "place" : "1"
-      },
-      "OOPSVOAnnotation" : {
-        "indirectObject" : "1"
       },
       "OOPWordnetGlossAnnotation" : "where you live at a particular time; \"deliver the package to my home\"; \"he doesn't have a home to go to\"; \"your place or mine?\"",
       "OOPNounGroupsAnnotation" : {
@@ -4187,8 +4148,8 @@
       }
     } ],
     "OOPBiberAnnotation" : {
-      "NN" : "4",
-      "JJ" : "2",
+      "NN" : "5",
+      "JJ" : "1",
       "PEAS" : "1",
       "TOBJ" : "2",
       "FPP1" : "1",
@@ -4222,11 +4183,10 @@
       "Period" : "1"
     },
     "OOPAdjectivesAnnotation" : {
-      "resting" : "1",
       "final" : "1"
     },
     "OOPAdjectiveCategoriesAnnotation" : {
-      "descriptive" : "2"
+      "descriptive" : "1"
     },
     "OOPPointlessAdverbsAnnotation" : {
       "here" : "1"
@@ -4247,14 +4207,15 @@
     "OOPVerbsAnnotation" : {
       "dedicate" : "1",
       "give" : "1",
+      "come" : "1",
       "live" : "1"
     },
     "OOPActionlessVerbsAnnotation" : {
-      "have" : "1",
-      "come" : "1"
+      "have" : "1"
     },
     "OOPNounsAnnotation" : {
       "field" : "1",
+      "resting" : "1",
       "nation" : "1",
       "portion" : "1",
       "place" : "1",
@@ -4263,9 +4224,7 @@
     "OOPSVOAnnotation" : {
       "auxVerb" : "1",
       "subject" : "1",
-      "verb" : "1",
-      "indirectObject" : "1",
-      "object" : "1"
+      "verb" : "1"
     },
     "OOPCommonWordsAnnotation" : {
       "here" : "1",
@@ -4287,14 +4246,13 @@
     "OOPFunctionWordsAnnotation" : {
       "here" : "1",
       "a" : "2",
-      "might" : "1",
-      "for" : "1",
-      "we" : "1",
       "that" : "3",
       "as" : "1",
+      "might" : "1",
       "of" : "1",
-      "have" : "1",
+      "for" : "1",
       "to" : "1",
+      "we" : "1",
       "those" : "1",
       "they" : "1",
       "who" : "1"
@@ -4346,11 +4304,12 @@
       "live" : "1",
       "who" : "1"
     },
-    "OOPFleschKincaidAnnotation" : "1.2020500000000000628830321147688664495944976806640625",
+    "OOPFleschKincaidAnnotation" : "0.7603000000000001978861519091879017651081085205078125",
     "OOPVerbHypernymsAnnotation" : {
       "employ" : "1",
       "be" : "1",
-      "give_up" : "1"
+      "give_up" : "1",
+      "change" : "1"
     },
     "OOPNounHypernymsAnnotation" : {
       "parcel" : "1",
@@ -4437,9 +4396,6 @@
         "auxVerb" : "1"
       },
       "OOPCommonWordsAnnotation" : {
-        "be" : "1"
-      },
-      "OOPFunctionWordsAnnotation" : {
         "be" : "1"
       },
       "OOPVerbGroupsAnnotation" : {
@@ -4724,9 +4680,6 @@
       "OOPCommonWordsAnnotation" : {
         "do" : "1"
       },
-      "OOPFunctionWordsAnnotation" : {
-        "do" : "1"
-      },
       "OOPVerbGroupsAnnotation" : {
         "social" : "1"
       },
@@ -4858,12 +4811,10 @@
     },
     "OOPFunctionWordsAnnotation" : {
       "that" : "1",
-      "be" : "1",
       "and" : "1",
       "should" : "1",
       "this" : "1",
       "it" : "1",
-      "do" : "1",
       "we" : "1"
     },
     "OOPVerbGroupsAnnotation" : {
@@ -4888,7 +4839,7 @@
       "fitting" : "1",
       "we" : "1"
     },
-    "OOPFleschKincaidAnnotation" : "1.21220000000000016626700016786344349384307861328125",
+    "OOPFleschKincaidAnnotation" : "0.72615454545454571899654183653183281421661376953125",
     "OOPBiberDimensionsAnnotation" : {
       "DimensionOnePositive" : "7",
       "DimensionSixPositive" : "3",
@@ -5196,11 +5147,8 @@
       "OOPCharCountAnnotation" : "3",
       "OOPSyllableCountAnnotation" : "1",
       "OOPTokenCountAnnotation" : "1",
-      "OOPAdverbsAnnotation" : {
+      "OOPPointlessAdverbsAnnotation" : {
         "not" : "1"
-      },
-      "OOPAdverbCategoriesAnnotation" : {
-        "descriptive" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "not" : "1"
@@ -5366,11 +5314,8 @@
       "OOPCharCountAnnotation" : "3",
       "OOPSyllableCountAnnotation" : "1",
       "OOPTokenCountAnnotation" : "1",
-      "OOPAdverbsAnnotation" : {
+      "OOPPointlessAdverbsAnnotation" : {
         "not" : "1"
-      },
-      "OOPAdverbCategoriesAnnotation" : {
-        "descriptive" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "not" : "1"
@@ -5534,11 +5479,8 @@
       "OOPCharCountAnnotation" : "3",
       "OOPSyllableCountAnnotation" : "1",
       "OOPTokenCountAnnotation" : "1",
-      "OOPAdverbsAnnotation" : {
+      "OOPPointlessAdverbsAnnotation" : {
         "not" : "1"
-      },
-      "OOPAdverbCategoriesAnnotation" : {
-        "descriptive" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "not" : "1"
@@ -5716,11 +5658,8 @@
     "OOPAdjectiveCategoriesAnnotation" : {
       "comparative" : "1"
     },
-    "OOPAdverbsAnnotation" : {
+    "OOPPointlessAdverbsAnnotation" : {
       "not" : "3"
-    },
-    "OOPAdverbCategoriesAnnotation" : {
-      "descriptive" : "3"
     },
     "OOPPrepositionCategoriesAnnotation" : {
       "coordinating" : "1",
@@ -5793,7 +5732,7 @@
       "not" : "3",
       "ground" : "1"
     },
-    "OOPFleschKincaidAnnotation" : "1.171600000000000196820337805547751486301422119140625",
+    "OOPFleschKincaidAnnotation" : "0.762342105263158043015891962568275630474090576171875",
     "OOPVerbHypernymsAnnotation" : {
       "employ" : "2",
       "declare" : "1"
@@ -6203,9 +6142,6 @@
         "auxVerb" : "1"
       },
       "OOPCommonWordsAnnotation" : {
-        "have" : "1"
-      },
-      "OOPFunctionWordsAnnotation" : {
         "have" : "1"
       },
       "OOPVerbGroupsAnnotation" : {
@@ -6755,7 +6691,6 @@
       "here" : "1",
       "or" : "1",
       "and" : "1",
-      "have" : "1",
       "above" : "1",
       "it" : "1",
       "to" : "1",
@@ -6806,7 +6741,7 @@
       "struggle" : "1",
       "who" : "1"
     },
-    "OOPFleschKincaidAnnotation" : "1.171600000000000196820337805547751486301422119140625",
+    "OOPFleschKincaidAnnotation" : "0.6869142857142860325581068536848761141300201416015625",
     "OOPVerbHypernymsAnnotation" : {
       "be" : "1",
       "bring_down" : "1",
@@ -7544,9 +7479,6 @@
       "OOPCommonWordsAnnotation" : {
         "do" : "1"
       },
-      "OOPFunctionWordsAnnotation" : {
-        "do" : "1"
-      },
       "OOPVerbGroupsAnnotation" : {
         "social" : "1"
       },
@@ -7716,7 +7648,6 @@
       "what" : "2",
       "will" : "1",
       "it" : "1",
-      "do" : "1",
       "we" : "1",
       "they" : "1"
     },
@@ -7755,7 +7686,7 @@
       "they" : "1",
       "little" : "1"
     },
-    "OOPFleschKincaidAnnotation" : "1.1919000000000001815436689867055974900722503662109375",
+    "OOPFleschKincaidAnnotation" : "0.80777142857142880671972307027317583560943603515625",
     "OOPVerbHypernymsAnnotation" : {
       "tell" : "1"
     },
@@ -7840,9 +7771,6 @@
         "auxVerb" : "1"
       },
       "OOPCommonWordsAnnotation" : {
-        "be" : "1"
-      },
-      "OOPFunctionWordsAnnotation" : {
         "be" : "1"
       },
       "OOPVerbGroupsAnnotation" : {
@@ -7974,9 +7902,6 @@
       "OOPTokenCountAnnotation" : "1",
       "OOPNounsAnnotation" : {
         "living" : "1"
-      },
-      "OOPSVOAnnotation" : {
-        "object" : "1"
       },
       "OOPWordnetGlossAnnotation" : "the experience of being alive; the course of human events and activities; \"he could no longer cope with the complexities of life\"",
       "OOPNounGroupsAnnotation" : {
@@ -8121,9 +8046,6 @@
         "be" : "1"
       },
       "OOPCommonWordsAnnotation" : {
-        "be" : "1"
-      },
-      "OOPFunctionWordsAnnotation" : {
         "be" : "1"
       },
       "OOPVerbGroupsAnnotation" : {
@@ -8523,9 +8445,6 @@
       "OOPCommonWordsAnnotation" : {
         "have" : "1"
       },
-      "OOPFunctionWordsAnnotation" : {
-        "have" : "1"
-      },
       "OOPVerbGroupsAnnotation" : {
         "possession" : "1"
       },
@@ -8802,8 +8721,7 @@
     "OOPSVOAnnotation" : {
       "auxVerb" : "1",
       "subject" : "1",
-      "verb" : "1",
-      "object" : "1"
+      "verb" : "1"
     },
     "OOPUncommonWordsAnnotation" : {
       "nobly" : "1"
@@ -8825,18 +8743,16 @@
       "who" : "1"
     },
     "OOPFunctionWordsAnnotation" : {
+      "the" : "2",
       "here" : "2",
       "which" : "1",
-      "be" : "2",
       "thus" : "1",
       "rather" : "1",
       "for" : "1",
       "it" : "1",
-      "we" : "1",
-      "the" : "2",
-      "have" : "1",
       "to" : "2",
       "so" : "1",
+      "we" : "1",
       "they" : "1",
       "who" : "1"
     },
@@ -8880,7 +8796,7 @@
       "fight" : "1",
       "who" : "1"
     },
-    "OOPFleschKincaidAnnotation" : "1.1919000000000001815436689867055974900722503662109375",
+    "OOPFleschKincaidAnnotation" : "0.60052692307692334683366652825498022139072418212890625",
     "OOPVerbHypernymsAnnotation" : {
       "employ" : "1"
     },
@@ -10669,7 +10585,7 @@
     "OOPMyersBriggsAnnotation" : {
       "judging" : "3"
     },
-    "OOPFleschKincaidAnnotation" : "0.077050000000000118394183346026693470776081085205078125",
+    "OOPFleschKincaidAnnotation" : "0",
     "OOPBiberDimensionsAnnotation" : {
       "DimensionOnePositive" : "8",
       "DimensionSixPositive" : "9",
@@ -10681,8 +10597,8 @@
     }
   } ],
   "OOPBiberAnnotation" : {
-    "NN" : "24",
-    "JJ" : "17",
+    "NN" : "25",
+    "JJ" : "16",
     "PEAS" : "2",
     "THVC" : "1",
     "BEMA" : "1",
@@ -10753,7 +10669,6 @@
     "larger" : "1",
     "new" : "1",
     "dedicated" : "1",
-    "resting" : "1",
     "advanced" : "1",
     "proper" : "1",
     "dead" : "1",
@@ -10771,10 +10686,9 @@
   },
   "OOPAdjectiveCategoriesAnnotation" : {
     "comparative" : "1",
-    "descriptive" : "16"
+    "descriptive" : "15"
   },
   "OOPAdverbsAnnotation" : {
-    "not" : "3",
     "nobly" : "1",
     "long" : "1",
     "little" : "1"
@@ -10783,6 +10697,7 @@
     "here" : "6",
     "never" : "1",
     "altogether" : "1",
+    "not" : "3",
     "thus" : "1",
     "rather" : "1",
     "far" : "2",
@@ -10791,7 +10706,7 @@
     "so" : "3"
   },
   "OOPAdverbCategoriesAnnotation" : {
-    "descriptive" : "6"
+    "descriptive" : "3"
   },
   "OOPPossessivesAnnotation" : {
     "their" : "1",
@@ -10823,6 +10738,7 @@
     "give" : "1",
     "note" : "1",
     "test" : "1",
+    "come" : "1",
     "conceive" : "2",
     "consecrate" : "2",
     "dedicate" : "4",
@@ -10841,13 +10757,13 @@
     "be" : "6",
     "bring" : "1",
     "have" : "3",
-    "come" : "1",
     "say" : "1",
     "do" : "2"
   },
   "OOPNounsAnnotation" : {
     "continent" : "1",
     "living" : "1",
+    "resting" : "1",
     "year" : "1",
     "nation" : "4",
     "work" : "1",
@@ -10871,10 +10787,10 @@
   },
   "OOPSVOAnnotation" : {
     "auxVerb" : "6",
-    "subject" : "8",
+    "subject" : "7",
     "verb" : "7",
-    "indirectObject" : "4",
-    "object" : "3"
+    "indirectObject" : "3",
+    "object" : "1"
   },
   "OOPLikeAnnotation" : [ ],
   "OOPAsAnnotation" : [ ],
@@ -10934,10 +10850,8 @@
   "OOPFunctionWordsAnnotation" : {
     "here" : "6",
     "but" : "2",
-    "be" : "6",
     "rather" : "1",
     "for" : "2",
-    "do" : "2",
     "we" : "11",
     "nor" : "1",
     "that" : "7",
@@ -10947,7 +10861,6 @@
     "whether" : "1",
     "now" : "1",
     "of" : "2",
-    "have" : "3",
     "should" : "1",
     "above" : "1",
     "so" : "3",
@@ -11028,13 +10941,7 @@
     "thinking" : "2",
     "perceiving" : "1"
   },
-  "OOPDatesAnnotation" : [ {
-    "name" : "four score and seven years ago",
-    "value" : 1
-  }, {
-    "name" : "now",
-    "value" : 1
-  } ],
+  "OOPDatesAnnotation" : [ ],
   "OOPIfAnnotation" : [ ],
   "OOPBecauseAnnotation" : [ ],
   "OOPQuotesAnnotation" : [ ],
@@ -11141,7 +11048,7 @@
     "engage" : "1",
     "fitting" : "1"
   },
-  "OOPFleschKincaidAnnotation" : "0.92627500000000007052136652418994344770908355712890625",
+  "OOPFleschKincaidAnnotation" : "0.69024699940582312507331153028644621372222900390625",
   "OOPVerbHypernymsAnnotation" : {
     "create_mentally" : "2",
     "employ" : "5",
@@ -11149,12 +11056,13 @@
     "be" : "2",
     "bring_down" : "1",
     "declare" : "1",
+    "change" : "1",
+    "tell" : "1",
+    "increase" : "1",
     "enthrone" : "1",
     "give_up" : "1",
     "assay" : "1",
-    "tell" : "1",
-    "judge" : "1",
-    "increase" : "1"
+    "judge" : "1"
   },
   "OOPNounHypernymsAnnotation" : {
     "parent" : "1",
@@ -11177,7 +11085,7 @@
     "natural_object" : "1"
   },
   "OOPWikipediaPageviewTopicsAnnotation" : {
-    "Liberty" : "35584"
+    "Liberty" : "37329"
   },
   "OOPWikipediaCategoriesAnnotation" : [ {
     "name" : "Happiness",

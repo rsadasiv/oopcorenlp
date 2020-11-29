@@ -83,26 +83,27 @@ public class FleschKincaidAnnotator extends AbstractPosAnnotator implements Anno
 		int syllableCount = 0;
 		int sentenceCount = 0;
 		for (CoreSentence sentence : document.sentences()) {
-			sentenceCount++;
 			int sentenceWordCount = 0;
 			int sentenceSyllableCount = 0;
 			List<CoreLabel> tokens = sentence.tokens();
-
+			boolean hasSyllable = false;
 			for (int i = 0; i < tokens.size(); i++) {
 				CoreLabel token = tokens.get(i);
-				if (!isDictionaryWord(token)) {
-					wordCount++;
-					wordCount+=StringUtils.countMatches(token.lemma(), "-");
-					sentenceWordCount++;
+				if (isDictionaryWord(token)) {
 					if (token.containsKey(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSyllableCountAnnotation.class)) {
+						wordCount++;
+						wordCount+=StringUtils.countMatches(token.lemma(), "-");
+						sentenceWordCount++;
+						sentenceWordCount+=StringUtils.countMatches(token.lemma(), "-");
 						BigDecimal rawScore = (BigDecimal) token.get(io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPSyllableCountAnnotation.class);
 						syllableCount += rawScore.intValue();
 						sentenceSyllableCount += rawScore.intValue();
-					}
-					else {
-						syllableCount++;
+						hasSyllable = true;
 					}
 				}
+			}
+			if (hasSyllable) {
+				sentenceCount++;
 			}
 			double fk = (206.835 - (1.015*sentenceWordCount) - (84.6*sentenceSyllableCount/sentenceWordCount))/100;
 			try {

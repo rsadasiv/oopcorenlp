@@ -214,9 +214,7 @@ ilene
 iman
 inderjit
 indira
-indira
 indrajit
-indrani
 indrani
 indu
 indumati
@@ -339,7 +337,6 @@ madhuri
 madhurima
 madhuurima
 madiha
-madonna
 mahalakshmi
 maham
 mahasweta
@@ -373,7 +370,6 @@ manorama
 mansha
 mantra
 manya
-maria
 marina
 mariyam
 maryam
@@ -391,9 +387,7 @@ meghna
 mehr
 mehreen
 mehwish
-merle
 minissha
-mink
 mira
 mishi
 mishti
@@ -467,7 +461,6 @@ nirmala
 nirmalamma
 nirosha
 nirupa
-nisha
 nisha
 nishi
 nithya
@@ -658,7 +651,6 @@ savitri
 sayali
 sayani
 sayyeshaa
-scarlett
 seema
 seerat
 seeta
@@ -676,7 +668,6 @@ shamim
 shamita
 shanta
 shanti
-sharmila
 sharmila
 sharmilee
 shashi
@@ -775,7 +766,6 @@ swapna
 swaran
 swarna
 swaroop
-swastika
 swati
 syra
 tabu
@@ -825,7 +815,6 @@ varsha
 vasanta
 vasanti
 vasundhara
-veda
 veena
 vibha
 vidhubala

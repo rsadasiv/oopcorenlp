@@ -52,6 +52,7 @@ mostly
 much
 nearly
 never
+not
 now
 obviously
 of
@@ -82,6 +83,7 @@ still
 then
 there
 thereafter
+therefore
 though
 thus
 together
