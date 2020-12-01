@@ -5,7 +5,7 @@
     "DocSourceTypeAnnotation" : "IT",
     "DocTypeAnnotation" : "OOP",
     "AuthorAnnotation" : "Abraham Lincoln",
-    "DocDateAnnotation" : "334-46-2020",
+    "DocDateAnnotation" : "335-33-2020",
     "OOPThumbnailAnnotation" : "blank.png"
   },
   "corefs" : [ {
@@ -126,7 +126,7 @@
     } ]
   }, {
     "41" : [ {
-      "id" : 0,
+      "id" : 1,
       "text" : "our",
       "type" : "PRONOMINAL",
       "number" : "PLURAL",
@@ -260,7 +260,7 @@
     } ]
   }, {
     "26" : [ {
-      "id" : 3,
+      "id" : 4,
       "text" : "a new nation",
       "type" : "NOMINAL",
       "number" : "SINGULAR",
@@ -374,13 +374,17 @@
         "characterOffsetBegin" : 0,
         "characterOffsetEnd" : 4,
         "pos" : "CD",
-        "ner" : "O",
+        "ner" : "DATE",
         "before" : "",
         "after" : " "
       },
       "OOPCharCountAnnotation" : "4",
       "OOPSyllableCountAnnotation" : "1",
-      "OOPTokenCountAnnotation" : "1"
+      "OOPTokenCountAnnotation" : "1",
+      "OOPDatesAnnotation" : [ {
+        "name" : "four score and seven years ago",
+        "value" : 1
+      } ]
     }, {
       "tokenIndex" : 2,
       "TokensAnnotation" : {
@@ -390,7 +394,7 @@
         "characterOffsetBegin" : 5,
         "characterOffsetEnd" : 10,
         "pos" : "NN",
-        "ner" : "O",
+        "ner" : "DATE",
         "before" : " ",
         "after" : " "
       },
@@ -402,6 +406,9 @@
       "OOPTokenCountAnnotation" : "1",
       "OOPNounsAnnotation" : {
         "score" : "1"
+      },
+      "OOPSVOAnnotation" : {
+        "subject" : "1"
       },
       "OOPWordnetGlossAnnotation" : "a number or letter indicating quality (especially of a student's performance); \"she made good marks in algebra\"; \"grade A milk\"; \"what was your score on your homework?\"",
       "OOPNounGroupsAnnotation" : {
@@ -425,7 +432,7 @@
         "characterOffsetBegin" : 11,
         "characterOffsetEnd" : 14,
         "pos" : "CC",
-        "ner" : "O",
+        "ner" : "DATE",
         "before" : " ",
         "after" : " "
       },
@@ -456,7 +463,7 @@
         "characterOffsetBegin" : 15,
         "characterOffsetEnd" : 20,
         "pos" : "CD",
-        "ner" : "O",
+        "ner" : "DATE",
         "before" : " ",
         "after" : " "
       },
@@ -472,7 +479,7 @@
         "characterOffsetBegin" : 21,
         "characterOffsetEnd" : 26,
         "pos" : "NNS",
-        "ner" : "O",
+        "ner" : "DATE",
         "before" : " ",
         "after" : " "
       },
@@ -484,6 +491,9 @@
       "OOPTokenCountAnnotation" : "1",
       "OOPNounsAnnotation" : {
         "year" : "1"
+      },
+      "OOPSVOAnnotation" : {
+        "subject" : "1"
       },
       "OOPWordnetGlossAnnotation" : "a period of time containing 365 (or 366) days; \"she is 4 years old\"; \"in the year 1920\"",
       "OOPNounGroupsAnnotation" : {
@@ -507,7 +517,7 @@
         "characterOffsetBegin" : 27,
         "characterOffsetEnd" : 30,
         "pos" : "IN",
-        "ner" : "O",
+        "ner" : "DATE",
         "before" : " ",
         "after" : " "
       },
@@ -618,9 +628,6 @@
       },
       "OOPActionlessVerbsAnnotation" : {
         "bring" : "1"
-      },
-      "OOPSVOAnnotation" : {
-        "subject" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "bring" : "1"
@@ -1493,7 +1500,7 @@
       "Liberty" : "1"
     },
     "OOPSVOAnnotation" : {
-      "subject" : "1",
+      "subject" : "2",
       "verb" : "1",
       "indirectObject" : "1"
     },
@@ -1549,6 +1556,10 @@
     "OOPMyersBriggsAnnotation" : {
       "sensing" : "1"
     },
+    "OOPDatesAnnotation" : [ {
+      "name" : "four score and seven years ago",
+      "value" : 1
+    } ],
     "OOPWordsAnnotation" : {
       "continent" : "1",
       "be" : "1",
@@ -1612,7 +1623,7 @@
         "characterOffsetBegin" : 178,
         "characterOffsetEnd" : 181,
         "pos" : "RB",
-        "ner" : "O",
+        "ner" : "DATE",
         "before" : "\n\n",
         "after" : " "
       },
@@ -1632,6 +1643,10 @@
       "OOPFunctionWordsAnnotation" : {
         "now" : "1"
       },
+      "OOPDatesAnnotation" : [ {
+        "name" : "now",
+        "value" : 1
+      } ],
       "OOPWordsAnnotation" : {
         "now" : "1"
       },
@@ -2617,6 +2632,10 @@
       "sensing" : "2",
       "extrovert" : "2"
     },
+    "OOPDatesAnnotation" : [ {
+      "name" : "now",
+      "value" : 1
+    } ],
     "OOPWordsAnnotation" : {
       "a" : "1",
       "dedicated" : "1",
@@ -3426,6 +3445,9 @@
       "OOPNounsAnnotation" : {
         "portion" : "1"
       },
+      "OOPSVOAnnotation" : {
+        "object" : "1"
+      },
       "OOPWordnetGlossAnnotation" : "something determined in relation to something that includes it; \"he wanted to feel a part of something bigger than himself\"; \"I read a portion of the manuscript\"; \"the smaller component is hard to reach\"; \"the animal constituent of plankton\"",
       "OOPNounGroupsAnnotation" : {
         "relation" : "1"
@@ -3657,19 +3679,22 @@
         "lemma" : "resting",
         "characterOffsetBegin" : 419,
         "characterOffsetEnd" : 426,
-        "pos" : "NN",
+        "pos" : "JJ",
         "ner" : "O",
         "before" : " ",
         "after" : " "
       },
       "OOPBiberAnnotation" : {
-        "NN" : "1"
+        "JJ" : "1"
       },
       "OOPCharCountAnnotation" : "7",
       "OOPSyllableCountAnnotation" : "2",
       "OOPTokenCountAnnotation" : "1",
-      "OOPNounsAnnotation" : {
+      "OOPAdjectivesAnnotation" : {
         "resting" : "1"
+      },
+      "OOPAdjectiveCategoriesAnnotation" : {
+        "descriptive" : "1"
       },
       "OOPWordlessWordsAnnotation" : {
         "resting" : "1"
@@ -3702,6 +3727,9 @@
       "OOPTokenCountAnnotation" : "1",
       "OOPNounsAnnotation" : {
         "place" : "1"
+      },
+      "OOPSVOAnnotation" : {
+        "indirectObject" : "1"
       },
       "OOPWordnetGlossAnnotation" : "where you live at a particular time; \"deliver the package to my home\"; \"he doesn't have a home to go to\"; \"your place or mine?\"",
       "OOPNounGroupsAnnotation" : {
@@ -4148,8 +4176,8 @@
       }
     } ],
     "OOPBiberAnnotation" : {
-      "NN" : "5",
-      "JJ" : "1",
+      "NN" : "4",
+      "JJ" : "2",
       "PEAS" : "1",
       "TOBJ" : "2",
       "FPP1" : "1",
@@ -4183,10 +4211,11 @@
       "Period" : "1"
     },
     "OOPAdjectivesAnnotation" : {
+      "resting" : "1",
       "final" : "1"
     },
     "OOPAdjectiveCategoriesAnnotation" : {
-      "descriptive" : "1"
+      "descriptive" : "2"
     },
     "OOPPointlessAdverbsAnnotation" : {
       "here" : "1"
@@ -4215,7 +4244,6 @@
     },
     "OOPNounsAnnotation" : {
       "field" : "1",
-      "resting" : "1",
       "nation" : "1",
       "portion" : "1",
       "place" : "1",
@@ -4224,7 +4252,9 @@
     "OOPSVOAnnotation" : {
       "auxVerb" : "1",
       "subject" : "1",
-      "verb" : "1"
+      "verb" : "1",
+      "indirectObject" : "1",
+      "object" : "1"
     },
     "OOPCommonWordsAnnotation" : {
       "here" : "1",
@@ -7903,6 +7933,9 @@
       "OOPNounsAnnotation" : {
         "living" : "1"
       },
+      "OOPSVOAnnotation" : {
+        "object" : "1"
+      },
       "OOPWordnetGlossAnnotation" : "the experience of being alive; the course of human events and activities; \"he could no longer cope with the complexities of life\"",
       "OOPNounGroupsAnnotation" : {
         "cognition" : "1"
@@ -8721,7 +8754,8 @@
     "OOPSVOAnnotation" : {
       "auxVerb" : "1",
       "subject" : "1",
-      "verb" : "1"
+      "verb" : "1",
+      "object" : "1"
     },
     "OOPUncommonWordsAnnotation" : {
       "nobly" : "1"
@@ -10597,8 +10631,8 @@
     }
   } ],
   "OOPBiberAnnotation" : {
-    "NN" : "25",
-    "JJ" : "16",
+    "NN" : "24",
+    "JJ" : "17",
     "PEAS" : "2",
     "THVC" : "1",
     "BEMA" : "1",
@@ -10669,6 +10703,7 @@
     "larger" : "1",
     "new" : "1",
     "dedicated" : "1",
+    "resting" : "1",
     "advanced" : "1",
     "proper" : "1",
     "dead" : "1",
@@ -10686,7 +10721,7 @@
   },
   "OOPAdjectiveCategoriesAnnotation" : {
     "comparative" : "1",
-    "descriptive" : "15"
+    "descriptive" : "16"
   },
   "OOPAdverbsAnnotation" : {
     "nobly" : "1",
@@ -10763,7 +10798,6 @@
   "OOPNounsAnnotation" : {
     "continent" : "1",
     "living" : "1",
-    "resting" : "1",
     "year" : "1",
     "nation" : "4",
     "work" : "1",
@@ -10787,10 +10821,10 @@
   },
   "OOPSVOAnnotation" : {
     "auxVerb" : "6",
-    "subject" : "7",
+    "subject" : "8",
     "verb" : "7",
-    "indirectObject" : "3",
-    "object" : "1"
+    "indirectObject" : "4",
+    "object" : "3"
   },
   "OOPLikeAnnotation" : [ ],
   "OOPAsAnnotation" : [ ],
@@ -10941,7 +10975,13 @@
     "thinking" : "2",
     "perceiving" : "1"
   },
-  "OOPDatesAnnotation" : [ ],
+  "OOPDatesAnnotation" : [ {
+    "name" : "four score and seven years ago",
+    "value" : 1
+  }, {
+    "name" : "now",
+    "value" : 1
+  } ],
   "OOPIfAnnotation" : [ ],
   "OOPBecauseAnnotation" : [ ],
   "OOPQuotesAnnotation" : [ ],
