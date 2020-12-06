@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -138,7 +139,7 @@ public class Annotator_Test {
 	}
 
 
-	private void runPrereqs(IOOPAnnotator annotator, CoreDocument document) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	private void runPrereqs(IOOPAnnotator annotator, CoreDocument document) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		List<String> prereqs = new ArrayList<String>();
 
 		for (Class clazz : annotator.requires()) {
@@ -157,7 +158,7 @@ public class Annotator_Test {
 
 		for (String ac : Analyzer.customAnnotatorClassNames) {
 			if (prereqs.contains(ac)) {
-				Object prereq = Class.forName(ac).newInstance();
+				Object prereq = Class.forName(ac).getConstructor().newInstance();
 				if (prereq instanceof IOOPAnnotator) {
 					IOOPAnnotator oopAnnotator = (IOOPAnnotator) prereq;
 					oopAnnotator.init(parameterStore);
@@ -168,7 +169,8 @@ public class Annotator_Test {
 		}
 	}
 	
-	private void serializePrereqs(IOOPAnnotator annotator, CoreDocument document, ObjectNode json) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	@SuppressWarnings("unused")
+	private void serializePrereqs(IOOPAnnotator annotator, CoreDocument document, ObjectNode json) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		List<String> prereqs = new ArrayList<String>();
 
 		for (Class clazz : annotator.requires()) {
@@ -187,7 +189,7 @@ public class Annotator_Test {
 
 		for (String ac : Analyzer.customAnnotatorClassNames) {
 			if (prereqs.contains(ac)) {
-				Object prereq = Class.forName(ac).newInstance();
+				Object prereq = Class.forName(ac).getConstructor().newInstance();
 				if (prereq instanceof IOOPAnnotator) {
 					IOOPAnnotator oopAnnotator = (IOOPAnnotator) prereq;
 					oopAnnotator.init(parameterStore);
@@ -198,7 +200,7 @@ public class Annotator_Test {
 	}
 
 	@Test
-	public void ActorsAnnotator_Test() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public void ActorsAnnotator_Test() throws Throwable {
 		try {
 			String text = "WE met next day as he had arranged, and inspected the rooms at No. 221B, 5 Baker Street, of which he had spoken at our meeting. They consisted of a couple of comfortable bed-rooms and a single large airy sitting-room, cheerfully furnished, and illuminated by two broad windows. So desirable in every way were the apartments, and so moderate did the terms seem when divided between us, that the bargain was concluded upon the spot, and we at once entered into possession. That very evening I moved my things round from the hotel, and on the following morning Sherlock Holmes followed me with several boxes and portmanteaus. For a day or two we were busily employed in unpacking and laying out our property to the best advantage. That done, we gradually began to settle down and to accommodate ourselves to our new surroundings.\n" + 
 					"\n" + 
@@ -2119,7 +2121,7 @@ public class Annotator_Test {
 		);
 
 		assertEquals(
-				new Integer(0),
+				Integer.valueOf(0),
 				(
 						(Integer)
 						document.sentences().get(0).coreMap().get(
@@ -2129,7 +2131,7 @@ public class Annotator_Test {
 		);
 
 		assertEquals(
-				new Integer(1),
+				Integer.valueOf(1),
 				(
 						(Integer)
 						document.sentences().get(1).coreMap().get(

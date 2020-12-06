@@ -46,7 +46,7 @@ public class BigDecimalSumDocumentScorer extends BigDecimalSum implements IScore
 	@Override
 	public Map<String, BigDecimal> getDocumentAggregatableScores(CoreDocument document) {
 		Map<String, BigDecimal> rawScores = new HashMap<String, BigDecimal>();
-		rawScores.put(new Integer(0).toString(), (BigDecimal) document.annotation().get(getAnnotationClass()));
+		rawScores.put(Integer.valueOf(0).toString(), (BigDecimal) document.annotation().get(getAnnotationClass()));
 		return rawScores;
 	}
 	

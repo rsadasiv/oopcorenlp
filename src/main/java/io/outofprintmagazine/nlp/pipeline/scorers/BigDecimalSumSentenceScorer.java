@@ -50,10 +50,10 @@ public class BigDecimalSumSentenceScorer extends BigDecimalSum implements IScore
 		for (int i=0;i<document.sentences().size();i++) {
 			CoreSentence sentence = document.sentences().get(i);
 			if (sentence.coreMap().containsKey(getAnnotationClass())) {
-				rawScores.put(Integer.toString(i), (BigDecimal) sentence.coreMap().get(getAnnotationClass()));
+				rawScores.put(Integer.valueOf(i).toString(), (BigDecimal) sentence.coreMap().get(getAnnotationClass()));
 			}
 			else {
-				rawScores.put(Integer.toString(i), new BigDecimal(0));
+				rawScores.put(Integer.valueOf(i).toString(), new BigDecimal(0));
 			}
 		}
 		return rawScores;

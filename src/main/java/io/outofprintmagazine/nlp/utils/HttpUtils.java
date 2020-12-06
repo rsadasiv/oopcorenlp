@@ -128,7 +128,7 @@ public class HttpUtils {
 
                 			@Override
 							public long getRetryInterval() {
-                				return new Long(5).longValue();
+                				return 5;
                 			}
                 		})
                 .setRedirectStrategy(new LaxRedirectStrategy())

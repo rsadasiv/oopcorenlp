@@ -92,29 +92,29 @@ public class BigDecimalAvg extends BigDecimalScorer implements IScorer {
 				retval.getAggregatedScores().add(new AggregatedScore(rawScore.getKey(), rawScore.getValue(), normalizer, rawScore.getValue()));
 			}
 			retval.getScoreStats().getScore().setRaw(rawSum);
-			retval.getScoreStats().getScore().setNormalized(rawSum.divide(normalizer, 10, BigDecimal.ROUND_HALF_UP));
+			retval.getScoreStats().getScore().setNormalized(rawSum.divide(normalizer, 10, RoundingMode.HALF_UP));
 			retval.getScoreStats().getScore().setCount(new BigDecimal(rawScores.size()));
 			retval.getScoreStats().getStats().setStddev(new BigDecimal(new StandardDeviation().evaluate(primitiveNormalizedScores)));
-			retval.getScoreStats().getStats().setMean(retval.getScoreStats().getScore().getRaw().divide(new BigDecimal(rawScores.size()), 10, BigDecimal.ROUND_HALF_UP));
+			retval.getScoreStats().getStats().setMean(retval.getScoreStats().getScore().getRaw().divide(new BigDecimal(rawScores.size()), 10, RoundingMode.HALF_UP));
 			
 			Collections.sort(retval.getAggregatedScores());
 			Iterator<AggregatedScore> aggregatedScoresIter = retval.getAggregatedScores().iterator();
 			for (int i=0; i<retval.getAggregatedScores().size() && aggregatedScoresIter.hasNext(); i++) {
 				AggregatedScore aggregatedScore = aggregatedScoresIter.next();
 				if (aggregatedScore.getScore().getRaw().compareTo(new BigDecimal(0)) > 0) {
-					aggregatedScore.getAggregateScore().setPercentage(aggregatedScore.getScore().getRaw().divide(retval.getScoreStats().getScore().getRaw(), 10, BigDecimal.ROUND_HALF_UP));
+					aggregatedScore.getAggregateScore().setPercentage(aggregatedScore.getScore().getRaw().divide(retval.getScoreStats().getScore().getRaw(), 10, RoundingMode.HALF_UP));
 				}
 				else {
 					aggregatedScore.getAggregateScore().setPercentage(new BigDecimal(0));
 				}
 				if (retval.getScoreStats().getStats().getStddev().compareTo(new BigDecimal(0)) != 0) {
-					aggregatedScore.getAggregateScore().setZ(aggregatedScore.getScore().getRaw().subtract(retval.getScoreStats().getStats().getMean()).divide(retval.getScoreStats().getStats().getStddev(), 10, BigDecimal.ROUND_HALF_UP));
+					aggregatedScore.getAggregateScore().setZ(aggregatedScore.getScore().getRaw().subtract(retval.getScoreStats().getStats().getMean()).divide(retval.getScoreStats().getStats().getStddev(), 10, RoundingMode.HALF_UP));
 				}
 				else {
 					aggregatedScore.getAggregateScore().setZ(new BigDecimal(0));
 				}
 				aggregatedScore.getAggregateScore().setRank(new BigDecimal(i));
-				aggregatedScore.getAggregateScore().setPercentile(new BigDecimal(1).subtract(new BigDecimal(i).divide(new BigDecimal(retval.getAggregatedScores().size()), 10, BigDecimal.ROUND_HALF_UP)));
+				aggregatedScore.getAggregateScore().setPercentile(new BigDecimal(1).subtract(new BigDecimal(i).divide(new BigDecimal(retval.getAggregatedScores().size()), 10, RoundingMode.HALF_UP)));
 				if (retval.getScoreStats().getStats().getMin().equals(new BigDecimal(0)) || retval.getScoreStats().getStats().getMin().compareTo(aggregatedScore.getScore().getRaw()) > 0) {
 					retval.getScoreStats().getStats().setMin(aggregatedScore.getScore().getRaw());
 					

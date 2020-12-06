@@ -17,6 +17,7 @@
 package io.outofprintmagazine.util;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,7 +50,7 @@ public class AggregatedScore implements Comparable<AggregatedScore>{
 	public AggregatedScore(String name, BigDecimal raw, BigDecimal normalizer) {
 		this(name);
 		this.getScore().setRaw(raw);
-		this.getScore().setNormalized(raw.divide(normalizer, 10, BigDecimal.ROUND_HALF_UP));
+		this.getScore().setNormalized(raw.divide(normalizer, 10, RoundingMode.HALF_UP));
 	}
 	
 	public AggregatedScore(String name, BigDecimal raw, BigDecimal normalizer, BigDecimal count) {

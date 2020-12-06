@@ -17,6 +17,7 @@
 package io.outofprintmagazine.nlp;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
@@ -72,7 +73,7 @@ public class Analyzer {
 	private ArrayList<IOOPAnnotator> customAnnotators = new ArrayList<IOOPAnnotator>();
 	private IParameterStore parameterStore;
 	
-	public Analyzer(IParameterStore parameterStore, List<String> annotatorClassNames) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public Analyzer(IParameterStore parameterStore, List<String> annotatorClassNames) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		super();
 		this.parameterStore = parameterStore;
 		//order is important
@@ -80,7 +81,7 @@ public class Analyzer {
 			for (String annotatorClassName : annotatorClassNames) {
 				if (annotatorClassName.equals(customAnnotatorClassName)) {
 					logger.debug("Adding CustomAnnotator: " + annotatorClassName);
-					Object annotator = Class.forName(annotatorClassName).newInstance();
+					Object annotator = Class.forName(annotatorClassName).getConstructor().newInstance();
 					if (annotator instanceof IOOPAnnotator) {
 						IOOPAnnotator oopAnnotator = (IOOPAnnotator) annotator;
 						oopAnnotator.init(parameterStore);

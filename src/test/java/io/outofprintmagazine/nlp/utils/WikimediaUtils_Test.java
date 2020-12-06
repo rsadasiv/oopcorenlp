@@ -1,7 +1,5 @@
 package io.outofprintmagazine.nlp.utils;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;

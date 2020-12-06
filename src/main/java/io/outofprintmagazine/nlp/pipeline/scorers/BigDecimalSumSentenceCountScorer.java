@@ -54,7 +54,7 @@ public class BigDecimalSumSentenceCountScorer extends BigDecimalSum implements I
 			CoreSentence sentence = document.sentences().get(i);
 			if (sentence.coreMap().containsKey(ParagraphIndexAnnotation.class)) {
 				if (paragraphIdx < sentence.coreMap().get(ParagraphIndexAnnotation.class).intValue()) {
-					rawScores.put(new Integer(paragraphIdx).toString(), new BigDecimal(++sentenceCount));
+					rawScores.put(Integer.valueOf(paragraphIdx).toString(), new BigDecimal(++sentenceCount));
 
 					sentenceCount = 0;
 					paragraphIdx++;
@@ -64,7 +64,7 @@ public class BigDecimalSumSentenceCountScorer extends BigDecimalSum implements I
 				}
 			}
 		}
-		rawScores.put(new Integer(paragraphIdx).toString(), new BigDecimal(++sentenceCount));
+		rawScores.put(Integer.valueOf(paragraphIdx).toString(), new BigDecimal(++sentenceCount));
 		return rawScores;
 	}
 

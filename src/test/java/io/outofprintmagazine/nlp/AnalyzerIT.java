@@ -2,11 +2,11 @@ package io.outofprintmagazine.nlp;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import io.outofprintmagazine.util.ParameterStoreLocal;
 
 public class AnalyzerIT {
 
-	public AnalyzerIT() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public AnalyzerIT() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		super();
 		loadGoldSource();
 		loadCandidate();
@@ -89,7 +89,7 @@ public class AnalyzerIT {
 		}
 	}
 	
-	private void loadCandidate() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+	private void loadCandidate() throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		if (candidate == null || output == null) {
 			SimpleDateFormat fmt = new SimpleDateFormat("DD-mm-YYYY");
 			Properties props = new Properties();
@@ -971,8 +971,9 @@ public class AnalyzerIT {
 	
 	@Test
 	public void wikipediaCategoriesAnnotatorIT_Test() {
-		String annotationName = "OOPWikipediaCategoriesAnnotation";
 		//unreliable
+//		String annotationName = "OOPWikipediaCategoriesAnnotation";
+//
 //		assertTrue(
 //				Math.abs(
 //						(((ArrayNode)goldSource.get(annotationName)).size()) - (((ArrayNode)candidate.get(annotationName)).size())
