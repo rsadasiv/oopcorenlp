@@ -72,6 +72,7 @@ public abstract class AbstractPosAnnotator extends AbstractAnnotator implements 
 	
 	//is this right generally?
 	//not sure that it matters, pipeline does not grok custom annotators in requirements satisfied
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Set<Class<? extends CoreAnnotation>> requires() {
 		return Collections.unmodifiableSet(

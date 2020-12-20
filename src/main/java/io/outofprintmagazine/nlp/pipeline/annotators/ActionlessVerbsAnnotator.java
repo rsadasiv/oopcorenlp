@@ -57,6 +57,7 @@ public class ActionlessVerbsAnnotator extends AbstractPosAnnotator implements An
 	/**
 	 * @see io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPActionlessVerbsAnnotation 
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Class getAnnotationClass() {
 		return io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPActionlessVerbsAnnotation.class;

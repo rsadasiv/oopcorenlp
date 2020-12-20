@@ -21,7 +21,6 @@ import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +45,6 @@ import edu.stanford.nlp.pipeline.CoreSentence;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
 import edu.stanford.nlp.trees.GrammaticalRelation;
 import edu.stanford.nlp.trees.TypedDependency;
-import edu.stanford.nlp.util.ArraySet;
 import io.outofprintmagazine.nlp.pipeline.ContextualAnnotation;
 import io.outofprintmagazine.nlp.pipeline.OOPAnnotations.OOPWikipediaGlossAnnotation;
 import io.outofprintmagazine.nlp.pipeline.PhraseAnnotation;
@@ -73,6 +71,7 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 		super();
 	}
 		
+	@SuppressWarnings("rawtypes")
 	public abstract Class getEntityAnnotationClass();
 
 	protected abstract ContextualAnnotation getConcreteAnnotation();
@@ -161,6 +160,7 @@ public abstract class AbstractContextualAnnotator extends AbstractPosAnnotator i
 		//pass
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void serialize(CoreDocument document, ObjectNode json) {
 		if (document.annotation().containsKey(getAnnotationClass())) {

@@ -125,6 +125,7 @@ public abstract class AbstractAnnotator implements Annotator, IOOPAnnotator {
 		this.scorer = scorer;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public abstract Class getAnnotationClass();
 	
@@ -138,6 +139,7 @@ public abstract class AbstractAnnotator implements Annotator, IOOPAnnotator {
 		return parameterStore;
 	}
 		
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Set<Class<? extends CoreAnnotation>> requirementsSatisfied() {
 		Set<Class<? extends CoreAnnotation>> retval = new ArraySet<Class<? extends CoreAnnotation>>();
@@ -145,6 +147,7 @@ public abstract class AbstractAnnotator implements Annotator, IOOPAnnotator {
 		return retval;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public abstract Set<Class<? extends CoreAnnotation>> requires();
 	
