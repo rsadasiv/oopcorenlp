@@ -91,11 +91,12 @@ public class BigDecimalAvg extends BigDecimalScorer implements IScorer {
 				primitiveNormalizedScores[i] = rawScore.getValue().doubleValue();
 				retval.getAggregatedScores().add(new AggregatedScore(rawScore.getKey(), rawScore.getValue(), normalizer, rawScore.getValue()));
 			}
-			retval.getScoreStats().getScore().setRaw(rawSum);
+			BigDecimal rawAvg = rawSum.divide(new BigDecimal(rawScores.size()), 10, RoundingMode.HALF_UP);
+			retval.getScoreStats().getScore().setRaw(rawAvg);
 			retval.getScoreStats().getScore().setNormalized(rawSum.divide(normalizer, 10, RoundingMode.HALF_UP));
 			retval.getScoreStats().getScore().setCount(new BigDecimal(rawScores.size()));
 			retval.getScoreStats().getStats().setStddev(new BigDecimal(new StandardDeviation().evaluate(primitiveNormalizedScores)));
-			retval.getScoreStats().getStats().setMean(retval.getScoreStats().getScore().getRaw().divide(new BigDecimal(rawScores.size()), 10, RoundingMode.HALF_UP));
+			retval.getScoreStats().getStats().setMean(rawAvg);
 			
 			Collections.sort(retval.getAggregatedScores());
 			Iterator<AggregatedScore> aggregatedScoresIter = retval.getAggregatedScores().iterator();

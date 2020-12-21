@@ -26,6 +26,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import edu.stanford.nlp.ling.CoreAnnotation;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
@@ -38,6 +40,7 @@ import io.outofprintmagazine.nlp.pipeline.scorers.BigDecimalAvg;
 import io.outofprintmagazine.nlp.pipeline.scorers.IScorer;
 import io.outofprintmagazine.nlp.pipeline.serializers.BigDecimalSerializer;
 import io.outofprintmagazine.nlp.pipeline.serializers.ISerializer;
+import io.outofprintmagazine.util.DocumentAggregateScore;
 
 public class FleschKincaidAnnotator extends AbstractPosAnnotator implements Annotator, IOOPAnnotator {
 
@@ -106,10 +109,15 @@ public class FleschKincaidAnnotator extends AbstractPosAnnotator implements Anno
 				sentenceCount++;
 			}
 			double fk = (206.835 - (1.015*sentenceWordCount) - (84.6*sentenceSyllableCount/sentenceWordCount))/100;
-			try {
-				sentence.coreMap().set(getAnnotationClass(), new BigDecimal(fk));
+			if (fk > 0) {
+				try {
+					sentence.coreMap().set(getAnnotationClass(), new BigDecimal(fk));
+				}
+				catch (NumberFormatException nfe) {
+					sentence.coreMap().set(getAnnotationClass(), new BigDecimal(0));
+				}
 			}
-			catch (NumberFormatException nfe) {
+			else {
 				sentence.coreMap().set(getAnnotationClass(), new BigDecimal(0));
 			}
 		}
@@ -133,4 +141,12 @@ public class FleschKincaidAnnotator extends AbstractPosAnnotator implements Anno
 	 * 50.0–30.0	College	Difficult to read.
 	 * 30.0–0.0		College graduate	Very difficult to read. Best understood by university graduates.
 	 */
+
+	@Override
+	public void serializeAggregateDocument(CoreDocument document, ObjectNode json) {
+		DocumentAggregateScore retval = (DocumentAggregateScore) getScorer().aggregateDocument(document);
+		retval.getScoreStats().getScore().setRaw((BigDecimal)document.annotation().get(getAnnotationClass()));
+		getSerializer().serializeAggregate(retval, json);
+	}
+	
 }

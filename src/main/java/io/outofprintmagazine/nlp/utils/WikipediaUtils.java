@@ -215,7 +215,7 @@ public class WikipediaUtils {
 									&& !categoryName.startsWith("Names")
 									&& !categoryName.startsWith("Harv and Sfn")
 									&& !categoryName.startsWith("Engvar")
-									&& !categoryName.startsWith("Short description is different from Wikidata")
+									&& !categoryName.contains(" Wikidata")
 									&& !categoryName.contains(" ISO ")) {
 								//System.out.println(categoryName);
 								BigDecimal existingScore = scoreMap.get(categoryName);
