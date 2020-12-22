@@ -69,7 +69,7 @@ public class BiberAnnotator extends AbstractPosAnnotator implements Annotator, I
 	
 	@Override
 	public String getDescription() {
-		return "Biber: Variation across speech and writing. https://sites.google.com/site/multidimensionaltagger/MAT%20v%201.2%20-%20Manual.pdf.";
+		return "Biber: Variation across speech and writing. https://drive.google.com/file/d/11BAw-Dl5FDLTJFXqixc2uIgQQtU0g0no/view.";
 	}
 
 

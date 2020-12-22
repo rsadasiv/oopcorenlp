@@ -168,7 +168,7 @@ public class BiberDimensionsAnnotator extends AbstractPosAnnotator implements An
 	
 	@Override
 	public String getDescription() {
-		return "Biber: Variation across speech and writing, Dimensions 1-6. https://sites.google.com/site/multidimensionaltagger/MAT%20v%201.2%20-%20Manual.pdf.";
+		return "Biber: Variation across speech and writing, Dimensions 1-6. https://drive.google.com/file/d/11BAw-Dl5FDLTJFXqixc2uIgQQtU0g0no/view.";
 	}
 
 	@Override
