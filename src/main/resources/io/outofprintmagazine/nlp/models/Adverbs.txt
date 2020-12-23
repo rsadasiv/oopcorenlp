@@ -13,7 +13,6 @@ always
 anymore
 anyway
 around
-as
 away
 back
 barely
@@ -23,7 +22,6 @@ close
 completely
 duly
 either
-else
 enough
 especially
 even
@@ -51,11 +49,8 @@ most
 mostly
 much
 nearly
-never
-not
 now
 obviously
-of
 off
 often
 once
@@ -80,7 +75,6 @@ somewhere
 soon
 stay
 still
-then
 there
 thereafter
 therefore
@@ -93,16 +87,3 @@ vaguely
 very
 well
 yet
-first
-second
-third
-fourth
-fifth
-sixth
-seventh
-eighth
-ninth
-tenth
-eleventh
-twelfth
-thirteenth
