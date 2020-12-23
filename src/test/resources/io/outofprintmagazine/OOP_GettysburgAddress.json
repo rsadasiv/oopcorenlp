@@ -5,7 +5,7 @@
     "DocSourceTypeAnnotation" : "IT",
     "DocTypeAnnotation" : "OOP",
     "AuthorAnnotation" : "Abraham Lincoln",
-    "DocDateAnnotation" : "335-33-2020",
+    "DocDateAnnotation" : "358-00-2020",
     "OOPThumbnailAnnotation" : "blank.png"
   },
   "corefs" : [ {
@@ -5177,8 +5177,11 @@
       "OOPCharCountAnnotation" : "3",
       "OOPSyllableCountAnnotation" : "1",
       "OOPTokenCountAnnotation" : "1",
-      "OOPPointlessAdverbsAnnotation" : {
+      "OOPAdverbsAnnotation" : {
         "not" : "1"
+      },
+      "OOPAdverbCategoriesAnnotation" : {
+        "descriptive" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "not" : "1"
@@ -5344,8 +5347,11 @@
       "OOPCharCountAnnotation" : "3",
       "OOPSyllableCountAnnotation" : "1",
       "OOPTokenCountAnnotation" : "1",
-      "OOPPointlessAdverbsAnnotation" : {
+      "OOPAdverbsAnnotation" : {
         "not" : "1"
+      },
+      "OOPAdverbCategoriesAnnotation" : {
+        "descriptive" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "not" : "1"
@@ -5509,8 +5515,11 @@
       "OOPCharCountAnnotation" : "3",
       "OOPSyllableCountAnnotation" : "1",
       "OOPTokenCountAnnotation" : "1",
-      "OOPPointlessAdverbsAnnotation" : {
+      "OOPAdverbsAnnotation" : {
         "not" : "1"
+      },
+      "OOPAdverbCategoriesAnnotation" : {
+        "descriptive" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "not" : "1"
@@ -5688,8 +5697,11 @@
     "OOPAdjectiveCategoriesAnnotation" : {
       "comparative" : "1"
     },
-    "OOPPointlessAdverbsAnnotation" : {
+    "OOPAdverbsAnnotation" : {
       "not" : "3"
+    },
+    "OOPAdverbCategoriesAnnotation" : {
+      "descriptive" : "3"
     },
     "OOPPrepositionCategoriesAnnotation" : {
       "coordinating" : "1",
@@ -7366,8 +7378,11 @@
       "OOPCharCountAnnotation" : "5",
       "OOPSyllableCountAnnotation" : "2",
       "OOPTokenCountAnnotation" : "1",
-      "OOPPointlessAdverbsAnnotation" : {
+      "OOPAdverbsAnnotation" : {
         "never" : "1"
+      },
+      "OOPAdverbCategoriesAnnotation" : {
+        "descriptive" : "1"
       },
       "OOPCommonWordsAnnotation" : {
         "never" : "1"
@@ -7619,14 +7634,14 @@
       "descriptive" : "1"
     },
     "OOPAdverbsAnnotation" : {
+      "never" : "1",
       "little" : "1"
     },
     "OOPPointlessAdverbsAnnotation" : {
-      "here" : "2",
-      "never" : "1"
+      "here" : "2"
     },
     "OOPAdverbCategoriesAnnotation" : {
-      "descriptive" : "1"
+      "descriptive" : "2"
     },
     "OOPPrepositionCategoriesAnnotation" : {
       "coordinating" : "2"
@@ -10724,15 +10739,15 @@
     "descriptive" : "16"
   },
   "OOPAdverbsAnnotation" : {
+    "never" : "1",
+    "not" : "3",
     "nobly" : "1",
     "long" : "1",
     "little" : "1"
   },
   "OOPPointlessAdverbsAnnotation" : {
     "here" : "6",
-    "never" : "1",
     "altogether" : "1",
-    "not" : "3",
     "thus" : "1",
     "rather" : "1",
     "far" : "2",
@@ -10741,7 +10756,7 @@
     "so" : "3"
   },
   "OOPAdverbCategoriesAnnotation" : {
-    "descriptive" : "3"
+    "descriptive" : "7"
   },
   "OOPPossessivesAnnotation" : {
     "their" : "1",
@@ -11125,7 +11140,7 @@
     "natural_object" : "1"
   },
   "OOPWikipediaPageviewTopicsAnnotation" : {
-    "Liberty" : "37329"
+    "Liberty" : "41093"
   },
   "OOPWikipediaCategoriesAnnotation" : [ {
     "name" : "Happiness",
@@ -11144,9 +11159,6 @@
     "value" : 1
   }, {
     "name" : "Social concepts",
-    "value" : 1
-  }, {
-    "name" : "Short description matches Wikidata",
     "value" : 1
   }, {
     "name" : "Libertarian theory",

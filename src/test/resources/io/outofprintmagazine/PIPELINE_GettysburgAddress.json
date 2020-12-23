@@ -1,6 +1,6 @@
 {
   "annotations" : [ {
-    "OOPBiberAnnotation" : "Biber: Variation across speech and writing. https://sites.google.com/site/multidimensionaltagger/MAT%20v%201.2%20-%20Manual.pdf."
+    "OOPBiberAnnotation" : "Biber: Variation across speech and writing. https://drive.google.com/file/d/11BAw-Dl5FDLTJFXqixc2uIgQQtU0g0no/view."
   }, {
     "ParagraphIndexAnnotation" : "CoreAnnotations.ParagraphIndexAnnotation.class. Recorded per sentence, index starts at 0."
   }, {
@@ -128,7 +128,7 @@
   }, {
     "OOPWikipediaCategoriesAnnotation" : "Wikipedia page categories (https://en.wikipedia.org/w/api.php?format=json&action=query&prop=categories&utf8=1&titles=Shakespeare) for Topics (NNP,NNPS)."
   }, {
-    "OOPBiberDimensionsAnnotation" : "Biber: Variation across speech and writing, Dimensions 1-6. https://sites.google.com/site/multidimensionaltagger/MAT%20v%201.2%20-%20Manual.pdf."
+    "OOPBiberDimensionsAnnotation" : "Biber: Variation across speech and writing, Dimensions 1-6. https://drive.google.com/file/d/11BAw-Dl5FDLTJFXqixc2uIgQQtU0g0no/view."
   }, {
     "OOPActorsAnnotation" : "OOPPeopleAnnotation with sentiment, quotes, coref, and universal dependencies nsubj, nmod:poss, advmod, amod (http://universaldependencies.org/docsv1/en/dep/index.html)."
   }, {
@@ -206,18 +206,18 @@
     "value" : "1"
   }, {
     "name" : "DocDateAnnotation",
-    "value" : "335-33-2020"
+    "value" : "358-00-2020"
   }, {
     "name" : "DocTitleAnnotation",
     "value" : "GettysburgAddress"
   } ],
   "analysis" : [ {
-    "startTime" : "2020-11-30 15:33:26.966-0500"
+    "startTime" : "2020-12-23 20:00:05.740+0000"
   }, {
-    "endTime" : "2020-11-30 15:34:29.970-0500"
+    "endTime" : "2020-12-23 20:01:12.012+0000"
   }, {
-    "elapsedMS" : "63004"
+    "elapsedMS" : "66272"
   }, {
-    "host" : "Harrison/192.168.56.1"
+    "host" : "ip-10-0-1-216.ec2.internal/10.0.1.216"
   } ]
 }
