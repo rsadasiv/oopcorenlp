@@ -38,6 +38,8 @@ import edu.mit.jverbnet.index.IVerbIndex;
 import edu.mit.jverbnet.index.VerbIndex;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
+import edu.mit.jwi.RAMDictionary;
+import edu.mit.jwi.data.ILoadPolicy;
 import edu.mit.jwi.item.IIndexWord;
 import edu.mit.jwi.item.ISenseKey;
 import edu.mit.jwi.item.ISynset;
@@ -59,7 +61,7 @@ public class WordnetUtils {
 	private IParameterStore parameterStore = null;
 
 	private WordnetUtils(IParameterStore parameterStore) throws IOException {
-		wordnet = new Dictionary(
+		wordnet = new RAMDictionary(
 				new URL(
 						"file", 
 						null, 
@@ -67,8 +69,10 @@ public class WordnetUtils {
 								"wordNet_location"
 						)
 //						"C:\\Users\\rsada\\eclipse-workspace\\oopcorenlp\\data\\wn3.1.dict\\dict"
-				)
+				), 
+				ILoadPolicy.IMMEDIATE_LOAD
 		);
+
 		wordnet.open();
 		this.parameterStore = parameterStore;
 	}
