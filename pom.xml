@@ -22,7 +22,7 @@
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-core -->
 		<!-- https://mvnrepository.com/artifact/org.apache.lucene/lucene-analyzers-common -->
-		<lucene.version>8.1.1</lucene.version>
+		<lucene.version>8.10.0</lucene.version>
 		
 		<!-- https://mvnrepository.com/artifact/com.github.apanimesh061/vader-sentiment-analyzer -->
 		<vader-sentiment-analyzer.version>1.0</vader-sentiment-analyzer.version>
