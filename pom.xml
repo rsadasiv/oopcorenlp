@@ -32,7 +32,7 @@
 				
 		<!-- https://mvnrepository.com/artifact/com.flickr4java/flickr4java -->
 		<!-- MERGED https://github.com/rsadasiv/Flickr4Java.git -->
-		<flickr4java.version>3.0.6</flickr4java.version>
+		<flickr4java.version>3.0.8</flickr4java.version>
 		
 
 	</properties>
